@@ -9,7 +9,7 @@ export const queryKeys = {
   restaurants: {
     all: ["restaurants"] as const,
     list: (filters?: { city?: string }) =>
-      ["restaurants", filters] as const,
+      ["restaurants", filters || "all"] as const,
     details: (id: string) => ["restaurants", id] as const,
   },
 

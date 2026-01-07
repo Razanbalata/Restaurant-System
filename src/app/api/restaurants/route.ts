@@ -80,3 +80,21 @@ out tags center;
     return NextResponse.json({ error: "Unexpected server error" }, { status: 500 });
   }
 }
+
+
+
+export async function POST(req: NextRequest) {
+  const body = await req.json();
+
+  const { data, error } = await supabase
+    .from("restaurants")
+    .insert(body)
+    .select()
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 403 });
+  }
+
+  return NextResponse.json({ restaurant: data });
+}

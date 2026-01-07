@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { User } from "../model/type";
+import { queryKeys } from "@/shared/keys/query-keys";
 
 type MeResponse = {
   user: User | null;
@@ -7,7 +8,7 @@ type MeResponse = {
 
 export function useMe() {
   return useQuery<User | null>({
-    queryKey: ["auth", "me"],
+    queryKey: queryKeys.user.me(),
     queryFn: async () => {
       const res = await fetch("/api/auth/me");
 

@@ -1,6 +1,7 @@
 // src/app/api/restaurants/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/shared/api/supabaseClient";
+import { getCurrentUser, withAuth } from "@/shared/libs/auth/auth-file";
 
 const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
 
@@ -45,7 +46,10 @@ out tags center;
     });
 
     if (!res.ok) {
-      return NextResponse.json({ error: "Failed to fetch from Overpass" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Failed to fetch from Overpass" },
+        { status: 500 }
+      );
     }
 
     const overpassData = await res.json();
@@ -64,7 +68,7 @@ out tags center;
     // 4️⃣ حفظ المطاعم الجديدة في الداتابيز
     const { data: inserted, error: insertError } = await supabase
       .from("restaurants")
-      .insert(restaurants)
+      .upsert(restaurants)
       .select("*");
 
     if (insertError) {
@@ -77,24 +81,42 @@ out tags center;
     return NextResponse.json({ restaurants: inserted });
   } catch (error) {
     console.error("Error fetching restaurants:", error);
-    return NextResponse.json({ error: "Unexpected server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Unexpected server error" },
+      { status: 500 }
+    );
   }
 }
 
-
-
 export async function POST(req: NextRequest) {
-  const body = await req.json();
+  try {
+    const user = await getCurrentUser(req);
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data, error } = await supabase
-    .from("restaurants")
-    .insert(body)
-    .select()
-    .single();
+    const body = await req.json();
+    // تحقق من الأعمدة الأساسية
+    if (!body.name || !body.city || !body.country) {
+      return NextResponse.json({ error: "name, city, and country are required" }, { status: 400 });
+    }
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 403 });
+    const { data, error } = await supabase
+      .from("restaurants")
+      .insert([{
+        ...body,
+        owner_id: user.userId, // ربط المطعم باليوزر الحالي
+      }])
+      .select()
+      .single();
+
+    console.log("Supabase insert output:", { data, error });
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ restaurant: data }, { status: 201 });
+  } catch (err: any) {
+    console.error("POST /restaurants error:", err);
+    return NextResponse.json({ error: err.message || "Unknown error" }, { status: 500 });
   }
-
-  return NextResponse.json({ restaurant: data });
 }

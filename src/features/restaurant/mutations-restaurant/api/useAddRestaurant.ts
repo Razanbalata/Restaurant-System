@@ -18,6 +18,7 @@ export const useAddRestaurant = () => {
             throw new Error("فشل إضافة المطعم");
         }
         const data = await res.json();
+        console.log("تمت إضافة المطعم:", data.restaurant);
         return data.restaurant;
     },
     onSuccess: (variables) => {

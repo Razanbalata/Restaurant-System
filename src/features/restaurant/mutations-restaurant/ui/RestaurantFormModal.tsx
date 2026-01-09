@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -8,12 +9,15 @@ import {
   Button,
   TextField,
   Box,
-  Typography,
 } from "@mui/material";
-import { useUpdateRestaurant } from "../api/useUpdateRestaurant";
-import { useRestaurants } from "../../get-restaurants/api/useRestaurants";
+import { useRouter } from "next/navigation";
+
 import { useAddRestaurant } from "../api/useAddRestaurant";
-import { useEffect, useState } from "react";
+import { useUpdateRestaurant } from "../api/useUpdateRestaurant";
+import { MenuChoiceModal } from "./MenuChoiceModal"; 
+import { MenuItemForm } from "./MenuItemForm"; 
+import { useAddMenuItem } from "@/features/menu/mutation-hooks/useAddmenu";
+import AIMenuModal from "@/features/menu/ui/AIMenuModal";
 
 type Props = {
   open: boolean;
@@ -28,102 +32,160 @@ export default function RestaurantModal({
   mode,
   restaurant,
 }: Props) {
-  console.log(restaurant);
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
 
-  const editMutation = useUpdateRestaurant();
-  const addMutation = useAddRestaurant();
+  // 🆕 states خاصة بالمنيو
+  const [menuChoiceOpen, setMenuChoiceOpen] = useState(false);
+  const [manualMenuModalOpen, setManualMenuModalOpen] = useState(false);
+  const [createdRestaurantId, setCreatedRestaurantId] = useState<number | null>(
+    null
+  );
+  const [aiMenuModalOpen, setAiMenuModalOpen] = useState(false);
 
-  // 2. مراقبة التغيرات (هنا يكمن السر)
+  const addMutation = useAddRestaurant();
+  const editMutation = useUpdateRestaurant();
+
+  const addMenuMutation = useAddMenuItem(createdRestaurantId ? createdRestaurantId.toString() : "");
+
+  // تعبئة البيانات عند الفتح
   useEffect(() => {
-    if (open) {
-      if (mode === "edit" && restaurant) {
-        // إذا كنا في وضع التعديل، نضع البيانات الموجودة
-        setName(restaurant.name || "");
-        setCity(restaurant.city || "");
-      } else {
-        // إذا كنا في وضع الإضافة، نفرغ الحقول
-        setName("");
-        setCity("");
-      }
+    if (!open) return;
+
+    if (mode === "edit" && restaurant) {
+      setName(restaurant.name || "");
+      setCity(restaurant.city || "");
+    } else {
+      setName("");
+      setCity("");
     }
   }, [open, mode, restaurant]);
 
   const handleSave = () => {
-    // التأكد من أن المستخدم أدخل البيانات الأساسية
     if (!name.trim() || !city.trim()) {
       alert("يرجى ملء جميع الحقول");
       return;
     }
 
+    // ➕ إضافة مطعم
     if (mode === "add") {
-      // نمرر الكائن الذي يتوقعه السيرفر (اسم المطعم والمدينة)
       addMutation.mutate(
         {
-          name: name,
-          city: city,
-          country: "Palestine", // مثال إذا كان الحقل ثابتاً أو مخفياً
+          name,
+          city,
+          country: "Palestine",
         },
         {
-          onSuccess: () => {
-            onClose(); // إغلاق المودال عند النجاح
-            console.log("تمت إضافة المطعم بنجاح", name, city);
+          onSuccess: (data: any) => {
+            // نحفظ ID المطعم الجديد
+            setCreatedRestaurantId(data.id);
+
+            // نفتح مودال اختيار المنيو
+            setMenuChoiceOpen(true);
           },
         }
       );
-    } else {
-      // في التعديل، نحتاج المعرف (id) والبيانات الجديدة
+    }
+
+    // ✏️ تعديل مطعم
+    if (mode === "edit" && restaurant) {
       editMutation.mutate(
         {
           id: restaurant.id,
-          updates: {
-            // 💡 يجب وضع البيانات داخل كائن اسمه updates
-            name: name,
-            city: city,
-          },
+          updates: { name, city },
         },
-        {
-          onSuccess: () => {
-            console.log("تم تحديث المطعم بنجاح", name, city);
-            onClose(); // إغلاق المودال عند النجاح
-          },
-        }
+        { onSuccess: () => onClose() }
       );
     }
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>
-        {mode === "add" ? "إضافة مطعم جديد" : "تعديل بيانات المطعم"}
-      </DialogTitle>
+    <>
+      {/* مودال المطعم */}
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle>
+          {mode === "add" ? "إضافة مطعم جديد" : "تعديل بيانات المطعم"}
+        </DialogTitle>
 
-      <DialogContent dividers>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
-          <TextField
-            label="اسم المطعم"
-            fullWidth
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            label="المدينة"
-            fullWidth
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          />
-        </Box>
-      </DialogContent>
+        <DialogContent dividers>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+            <TextField
+              label="اسم المطعم"
+              fullWidth
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <TextField
+              label="المدينة"
+              fullWidth
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+          </Box>
+        </DialogContent>
 
-      <DialogActions>
-        <Button onClick={onClose} color="inherit">
-          إلغاء
-        </Button>
-        <Button onClick={handleSave} variant="contained" color="primary">
-          {mode === "add" ? "إضافة" : "حفظ التعديلات"}
-        </Button>
-      </DialogActions>
-    </Dialog>
+        <DialogActions>
+          <Button onClick={onClose} color="inherit">
+            إلغاء
+          </Button>
+          <Button
+            onClick={handleSave}
+            variant="contained"
+            color="primary"
+            disabled={addMutation.isPending || editMutation.isPending}
+          >
+            {mode === "add" ? "إضافة" : "حفظ التعديلات"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* مودال اختيار طريقة إنشاء المنيو */}
+      {menuChoiceOpen && (
+        <MenuChoiceModal
+          open={menuChoiceOpen}
+          onClose={() => setMenuChoiceOpen(false)}
+          onChoice={(choice) => {
+            setMenuChoiceOpen(false);
+
+            if (!createdRestaurantId) return;
+
+            if (choice === "manual") {
+              setManualMenuModalOpen(true); // فتح الفورم اليدوي
+            }
+
+            if (choice === "ai") {
+              // لاحقًا مودال AI
+              alert("ستظهر المساعدة بالذكاء الاصطناعي هنا");
+              setAiMenuModalOpen(true);
+            }
+          }}
+        />
+      )}
+
+      {/* مودال إضافة/تعديل وجبة يدوي */}
+      {manualMenuModalOpen && createdRestaurantId && (
+        <MenuItemForm
+          open={manualMenuModalOpen}
+          mode="add"
+          restaurantId={createdRestaurantId}
+          onClose={() => setManualMenuModalOpen(false)}
+          addMutation={addMenuMutation}
+        />
+      )}
+ 
+      {/* مودال مساعد الذكاء الاصطناعي - قيد التطوير */}
+      {aiMenuModalOpen && createdRestaurantId && (
+        <AIMenuModal
+          open={aiMenuModalOpen}
+          onClose={() => setAiMenuModalOpen(false)}
+          restaurantId={createdRestaurantId.toString()}
+          restaurantName={name}
+          category=""
+        />
+      )}
+
+    </>
   );
 }

@@ -12,7 +12,19 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "City is required" }, { status: 400 });
     }
 
-    // 1️⃣ تحقق من وجود المطاعم في الداتابيز
+    // --- دالة مساعدة لإضافة الصورة الديناميكية بناءً على التصنيف والـ ID ---
+    const enrichWithImage = (res: any) => {
+      const categorySearch = res.category || "restaurant,food";
+      // نستخدم sig=${res.id} لضمان أن كل مطعم يحجز صورته ولا تتغير عند التحديث
+      // استخدمي هذا الرابط بدلاً من القديم
+const dynamicImage = `https://picsum.photos/seed/${res.id}/800/600`;      
+      return {
+        ...res,
+        image_url: res.image_url || dynamicImage,
+      };
+    };
+
+    // 1️⃣ البحث عن المطاعم الموجودة مسبقاً في الداتابيز لهذه المدينة
     const { data: existingRestaurants, error: dbError } = await supabase
       .from("restaurants")
       .select("*")
@@ -23,22 +35,23 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Database error" }, { status: 500 });
     }
 
+    // إذا وُجدت مطاعم، نرجعها فوراً مع الصور
     if (existingRestaurants && existingRestaurants.length > 0) {
-      // ارجع المطاعم الموجودة من الداتابيز
-      return NextResponse.json({ restaurants: existingRestaurants });
+      const restaurantsWithImages = existingRestaurants.map(enrichWithImage);
+      return NextResponse.json({ restaurants: restaurantsWithImages });
     }
 
-    // 2️⃣ إذا ما لقيت، ارسل طلب للـ Overpass API
+    // 2️⃣ إذا لم توجد بيانات، نطلبها من Overpass API
     const query = `
-[out:json][timeout:25];
-area["name:en"="${city}"]->.searchArea;
-(
-  node["amenity"="restaurant"](area.searchArea);
-  node["amenity"="fast_food"](area.searchArea);
-  way["amenity"="restaurant"](area.searchArea);
-);
-out tags center;
-`;
+      [out:json][timeout:25];
+      area["name:en"="${city}"]->.searchArea;
+      (
+        node["amenity"="restaurant"](area.searchArea);
+        node["amenity"="fast_food"](area.searchArea);
+        way["amenity"="restaurant"](area.searchArea);
+      );
+      out tags center;
+    `;
 
     const res = await fetch(OVERPASS_URL, {
       method: "POST",
@@ -46,17 +59,14 @@ out tags center;
     });
 
     if (!res.ok) {
-      return NextResponse.json(
-        { error: "Failed to fetch from Overpass" },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to fetch from Overpass" }, { status: 500 });
     }
 
     const overpassData = await res.json();
 
-    // 3️⃣ تحويل البيانات لهيئة جاهزة للداتابيز
-    const restaurants = overpassData.elements.map((el: any) => ({
-      name: el.tags?.name || "Unknown",
+    // 3️⃣ تحويل بيانات الخريطة لتناسب جدول الداتابيز
+    const restaurantsToInsert = overpassData.elements.map((el: any) => ({
+      name: el.tags?.name || "مطعم غير معروف",
       category: el.tags?.cuisine || "Restaurant",
       lat: el.lat || el.center?.lat || null,
       lng: el.lon || el.center?.lon || null,
@@ -65,26 +75,33 @@ out tags center;
       created_at: new Date().toISOString(),
     }));
 
-    // 4️⃣ حفظ المطاعم الجديدة في الداتابيز
-    const { data: inserted, error: insertError } = await supabase
+    if (restaurantsToInsert.length === 0) {
+      return NextResponse.json({ restaurants: [] });
+    }
+
+    // 4️⃣ حفظ المطاعم الجديدة في Supabase
+    const { data: insertedRestaurants, error: insertError } = await supabase
       .from("restaurants")
-      .upsert(restaurants)
+      .insert(restaurantsToInsert)
       .select("*");
 
     if (insertError) {
       console.error("Insert DB error:", insertError);
-      // حتى لو الفشل حصل، نرجع البيانات اللي حصلنا عليها من API
-      return NextResponse.json({ restaurants }, { status: 200 });
+      // في حال فشل الحفظ، نرجع البيانات المستخرجة مع صور عشوائية مؤقتة
+      return NextResponse.json({ 
+        restaurants: restaurantsToInsert.map(enrichWithImage) 
+      });
     }
 
-    // 5️⃣ إرجاع البيانات للواجهة
-    return NextResponse.json({ restaurants: inserted });
+    // 5️⃣ إرجاع المطاعم الجديدة بعد أن أخذت IDs حقيقية لضمان ثبات الصور
+    const finalData = insertedRestaurants.map(enrichWithImage);
+    console.log("Inserted restaurants:", finalData);
+
+    return NextResponse.json({ restaurants: finalData });
+
   } catch (error) {
-    console.error("Error fetching restaurants:", error);
-    return NextResponse.json(
-      { error: "Unexpected server error" },
-      { status: 500 }
-    );
+    console.error("Unexpected error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 

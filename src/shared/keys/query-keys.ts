@@ -16,4 +16,8 @@ export const queryKeys = {
   cart: {
     all: ["cart"] as const,
   },
+  orders: {
+    all: ["orders"] as const,
+    details: (orderId: string) => ["orders", orderId] as const,
+  },
 };

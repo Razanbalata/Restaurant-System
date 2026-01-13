@@ -21,26 +21,37 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useDeleteMenuItem } from "../mutation-hooks/useDeleteMenu";
 import { useMe } from "@/features/user/api/use-me";
 import { MenuItemMutationButton } from "./MenuItemMutationButton";
+import { useAddToCart } from "@/features/cart/api/useAddToCart";
 
 export const MenuDrawer = ({ isOpen, onClose, restaurant }) => {
   const restaurantId = restaurant?.id;
+  console.log("restaurantId",restaurant)
 
   const { data: menuItems = [], isLoading } = useMenu(restaurantId);
+  console.log("menuItems",menuItems)
   const deleteItem = useDeleteMenuItem(restaurantId);
   const { data: user } = useMe();
+  const addToCartMutation = useAddToCart();
 
   // ⭐ تحديد هل المستخدم صاحب المطعم
   const isOwner = user && restaurant?.owner_id === user.id;
 
   const handleDelete = (itemId: number) => {
     if (window.confirm("هل أنت متأكد من حذف هذه الوجبة؟")) {
-      deleteItem.mutate(itemId);
+      deleteItem.mutate(itemId.toString());
     }
   };
 
   const handleAddToCart = (item) => {
-    console.log("🛒 Added to cart:", item);
-    // TODO: ربطها لاحقًا مع cart context أو API
+    if (!user?.id) {
+    alert("يرجى تسجيل الدخول");
+    return;
+  }
+  
+  // نرسل الـ id والـ menuItemId معاً هنا
+  addToCartMutation.mutate({ 
+    menuItemId: item.id, 
+  });
   };
 
   return (

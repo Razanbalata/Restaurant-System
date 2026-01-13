@@ -21,6 +21,7 @@
     "@tanstack/react-query-devtools": "^5.91.2",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
+    "dayjs": "^1.11.19",
     "framer-motion": "^12.24.11",
     "jose": "^6.1.3",
     "jsonwebtoken": "^9.0.3",
@@ -29,6 +30,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.70.0",
+    "sonner": "^2.0.7",
     "sooner": "^1.1.4",
     "zod": "^4.3.5"
   },

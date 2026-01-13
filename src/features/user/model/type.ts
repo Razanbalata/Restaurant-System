@@ -3,6 +3,8 @@ export type User = {
   email: string;
   name: string;
   createdAt: string;
+  hasRestaurant: boolean; // الحقل الجديد
+  restaurant?: { id: number; name: string } | null;
 };
 
 export type LoginPayload = {

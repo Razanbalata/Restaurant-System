@@ -1,12 +1,25 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, SignupFormValues } from "../libs/signup.schema";
 import { useSignup } from "../api/use-signup";
+import { 
+  TextField, 
+  Button, 
+  Stack, 
+  InputAdornment, 
+  IconButton, 
+  Alert, 
+  CircularProgress,
+  Typography
+} from "@mui/material";
+import { User, Mail, Lock, Eye, EyeOff, UserPlus } from "lucide-react";
 
 export function SignupForm() {
   const signup = useSignup();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -20,22 +33,118 @@ export function SignupForm() {
     signup.mutate(data);
   };
 
+  // ألوان الحقول لتناسب الخلفية المظلمة والفاتحة
+  const inputStyles = {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: 3,
+      backgroundColor: (theme: any) => 
+        theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)',
+      "&:hover": {
+        backgroundColor: (theme: any) => 
+          theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
+      }
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <input placeholder="Name" {...register("name")} />
-      {errors.name && <p>{errors.name.message}</p>}
+    <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={2.5} sx={{ width: "100%" }}>
+      
+      <Typography variant="h5" fontWeight={800} textAlign="center" gutterBottom>
+        إنشاء حساب جديد ✨
+      </Typography>
 
-      <input placeholder="Email" {...register("email")} />
-      {errors.email && <p>{errors.email.message}</p>}
+      {/* عرض خطأ السيرفر */}
+      {signup.isError && (
+        <Alert severity="error" variant="filled" sx={{ borderRadius: 2 }}>
+          {signup.error.message || "فشل إنشاء الحساب، حاول مجدداً"}
+        </Alert>
+      )}
 
-      <input type="password" placeholder="Password" {...register("password")} />
-      {errors.password && <p>{errors.password.message}</p>}
+      {/* حقل الاسم */}
+      <TextField
+        fullWidth
+        label="الاسم الكامل"
+        {...register("name")}
+        error={!!errors.name}
+        helperText={errors.name?.message}
+        sx={inputStyles}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <User size={20} color={errors.name ? "#f44336" : "#94a3b8"} />
+            </InputAdornment>
+          ),
+        }}
+      />
 
-      <button type="submit" disabled={signup.isPending}>
-        {signup.isPending ? "جاري التسجيل..." : "إنشاء حساب"}
-      </button>
+      {/* حقل البريد الإلكتروني */}
+      <TextField
+        fullWidth
+        label="البريد الإلكتروني"
+        {...register("email")}
+        error={!!errors.email}
+        helperText={errors.email?.message}
+        sx={inputStyles}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Mail size={20} color={errors.email ? "#f44336" : "#94a3b8"} />
+            </InputAdornment>
+          ),
+        }}
+      />
 
-      {signup.isError && <p>{signup.error.message}</p>}
-    </form>
+      {/* حقل كلمة المرور */}
+      <TextField
+        fullWidth
+        label="كلمة المرور"
+        type={showPassword ? "text" : "password"}
+        {...register("password")}
+        error={!!errors.password}
+        helperText={errors.password?.message}
+        sx={inputStyles}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Lock size={20} color={errors.password ? "#f44336" : "#94a3b8"} />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+
+      {/* زر الاشتراك */}
+      <Button
+        type="submit"
+        variant="contained"
+        fullWidth
+        size="large"
+        disabled={signup.isPending}
+        sx={{ 
+          py: 1.5, 
+          fontSize: "1.1rem", 
+          fontWeight: 800,
+          borderRadius: 3,
+          mt: 1,
+          boxShadow: "0 8px 16px rgba(249, 115, 22, 0.25)",
+          textTransform: "none"
+        }}
+      >
+        {signup.isPending ? (
+          <CircularProgress size={24} color="inherit" />
+        ) : (
+          <Stack direction="row" spacing={1} alignItems="center">
+            <UserPlus size={20} />
+            <span>فتح حساب</span>
+          </Stack>
+        )}
+      </Button>
+    </Stack>
   );
 }

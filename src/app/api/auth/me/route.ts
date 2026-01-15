@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
         id, 
         email, 
         name, 
+        role,
         created_at,
         restaurants (
           id,
@@ -54,6 +55,7 @@ export async function GET(req: NextRequest) {
         id: user.id,
         email: user.email,
         name: user.name,
+        role:user.role,
         createdAt: user.created_at,
         // بيانات المطعم الملحقة
         restaurant: restaurantData,

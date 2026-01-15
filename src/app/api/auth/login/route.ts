@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     const { data: user, error: dbError } = await supabase
       .from("users")
-      .select("id, email, name, password, created_at")
+      .select("id, email, name, password, role, created_at")
       .eq("email", email)
       .single();
 
@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
           id: user.id,
           email: user.email,
           name: user.name,
+          role: user.role, // 👈 مهم جدًا
           createdAt: user.created_at,
         },
       },

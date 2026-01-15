@@ -1,8 +1,3 @@
-/**
- * Register API Route (Next.js App Router)
- * مسؤول عن إنشاء حساب جديد للمستخدم
- */
-
 import { supabase } from "@/shared/api/supabaseClient"; 
 import { NextRequest, NextResponse } from "next/server";
 import { hashPassword, validatePasswordStrength } from "@/shared/libs/auth/password-hash";
@@ -12,62 +7,57 @@ import { createResponseWithSession } from "@/shared/libs/auth/cookies";
 export const POST = async (req: NextRequest) => {
   try {
     // 1️⃣ استقبال البيانات
-    const { email, name, password } = await req.json();
+    const { email, name, password, role } = await req.json();
 
     // 2️⃣ التحقق من وجود البيانات المطلوبة
-    if (!email || !password) {
-      console.warn("Missing email or password");
-      return NextResponse.json({ error: "الإيميل وكلمة المرور مطلوبان" }, { status: 400 });
+    if (!email || !password || !role) {
+      return NextResponse.json({ error: "الإيميل وكلمة المرور والدور مطلوبان" }, { status: 400 });
     }
 
     // 3️⃣ التحقق من صحة الإيميل
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      console.warn("Invalid email format:", email);
       return NextResponse.json({ error: "الإيميل غير صالح" }, { status: 400 });
     }
 
     // 4️⃣ التحقق من قوة كلمة المرور
     const passwordValidation = validatePasswordStrength(password);
     if (!passwordValidation.isValid) {
-      console.warn("Weak password:", passwordValidation.errors);
       return NextResponse.json(
-
         { error: "كلمة المرور ضعيفة", details: passwordValidation.errors },
         { status: 400 }
       );
     }
 
     // 5️⃣ التحقق من عدم وجود المستخدم مسبقًا
-    const { data: existingUser, error: checkError } = await supabase
+    const { data: existingUser } = await supabase
       .from("users")
       .select("id")
       .eq("email", email)
       .single();
 
     if (existingUser) {
-      console.warn("Email already in use:", email);
       return NextResponse.json({ error: "البريد الإلكتروني مستخدم بالفعل" }, { status: 409 });
     }
 
     // 6️⃣ تشفير كلمة المرور
     const hashedPassword = await hashPassword(password);
 
-    // 7️⃣ إنشاء المستخدم في قاعدة البيانات
+    // 7️⃣ إنشاء المستخدم مع حفظ الدور
     const { data: user, error: dbError } = await supabase
       .from("users")
       .insert({
         email,
         name: name || email.split("@")[0],
         password: hashedPassword,
+        role, // 👈 هنا نحفظ الدور مباشرة
         created_at: new Date().toISOString(),
       })
-      .select("id, email, name, created_at")
+      .select("id, email, name, role, created_at")
       .single();
 
     if (dbError || !user) {
-      console.error("Database insertion failed:", dbError);
-      return NextResponse.json({ error: "Failed to create user" }, { status: 500 });
+      return NextResponse.json({ error: "فشل إنشاء المستخدم" }, { status: 500 });
     }
 
     // 8️⃣ إنشاء JWT Token
@@ -75,6 +65,7 @@ export const POST = async (req: NextRequest) => {
       userId: user.id,
       email: user.email,
       name: user.name,
+      role: user.role, // 👈 نضيف الدور في التوكن
     });
 
     // 9️⃣ إرجاع الاستجابة مع Cookie آمنة
@@ -85,6 +76,7 @@ export const POST = async (req: NextRequest) => {
           id: user.id,
           email: user.email,
           name: user.name,
+          role: user.role, // 👈 رجعنا الدور
           createdAt: user.created_at,
         },
       },
@@ -95,4 +87,4 @@ export const POST = async (req: NextRequest) => {
     console.error("Register error:", error);
     return NextResponse.json({ error: "حدث خطأ أثناء التسجيل" }, { status: 500 });
   }
-}; 
+};

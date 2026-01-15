@@ -3,7 +3,7 @@ import Link from "next/link";
 import { User, Store, LogOut, ShoppingBag, ChevronDown, Sun, Moon } from "lucide-react";
 import { useMe } from "@/features/user/api/use-me";
 import { useLogout } from "@/features/user/api/use-logout";
-import { useCart } from "@/features/cart/api/useCart";
+import { useCart } from "@/features/(customer)/cart/api/useCart"; 
 import {
   IconButton,
   Badge,

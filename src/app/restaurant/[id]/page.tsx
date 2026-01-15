@@ -1,5 +1,5 @@
 // app/restaurant/[id]/page.tsx
-import RestaurantDetailPage from '@/features/restaurant/get-restaurants/ui/RestaurantDetails';
+import RestaurantDetailPage from '@/features/(customer)/get-restaurants/ui/RestaurantDetails';
 
 // في Next.js 13/14، الـ params بتوصل كـ Promise أو Object
 async function page({ params }: { params: Promise<{ id: string }> }) {

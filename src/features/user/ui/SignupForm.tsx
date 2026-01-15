@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, SignupFormValues } from "../libs/signup.schema";
@@ -16,51 +16,82 @@ import {
   Typography
 } from "@mui/material";
 import { User, Mail, Lock, Eye, EyeOff, UserPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function SignupForm() {
+  const router = useRouter();
   const signup = useSignup();
   const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState<"customer" | "restaurant_owner" | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignupFormValues>({
+  // قراءة الدور من localStorage
+  useEffect(() => {
+    const savedRole = localStorage.getItem("user_intent") as "customer" | "restaurant_owner";
+    setRole(savedRole);
+  }, []);
+
+  const { register, handleSubmit, formState: { errors } } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
   });
 
   const onSubmit = (data: SignupFormValues) => {
-    signup.mutate(data);
+    if (!role) {
+      alert("حدث خطأ: لم يتم تحديد المسار");
+      return;
+    }
+
+    signup.mutate(
+      { ...data, role },
+      {
+        onSuccess: (res) => {
+          console.log(res)
+          // عرض Alert النجاح
+          setSuccessMessage(`تم إنشاء الحساب! دورك: ${res.user.role}`);
+
+          // Redirect بعد ثانيتين
+          setTimeout(() => {
+            if (res.user.role === "customer") {
+              router.push("/restaurants");
+            } else {
+              router.push("/dashboard");
+            }
+          }, 2000);
+        },
+      }
+    );
   };
 
-  // ألوان الحقول لتناسب الخلفية المظلمة والفاتحة
   const inputStyles = {
     "& .MuiOutlinedInput-root": {
       borderRadius: 3,
-      backgroundColor: (theme: any) => 
-        theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)',
+      backgroundColor: (theme: any) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)',
       "&:hover": {
-        backgroundColor: (theme: any) => 
-          theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
+        backgroundColor: (theme: any) => theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
       }
     }
   };
 
   return (
     <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={2.5} sx={{ width: "100%" }}>
-      
       <Typography variant="h5" fontWeight={800} textAlign="center" gutterBottom>
         إنشاء حساب جديد ✨
       </Typography>
 
-      {/* عرض خطأ السيرفر */}
+      {/* Alert النجاح */}
+      {successMessage && (
+        <Alert severity="success" variant="filled" sx={{ borderRadius: 2 }}>
+          {successMessage}
+        </Alert>
+      )}
+
+      {/* Alert الخطأ */}
       {signup.isError && (
         <Alert severity="error" variant="filled" sx={{ borderRadius: 2 }}>
           {signup.error.message || "فشل إنشاء الحساب، حاول مجدداً"}
         </Alert>
       )}
 
-      {/* حقل الاسم */}
       <TextField
         fullWidth
         label="الاسم الكامل"
@@ -77,7 +108,6 @@ export function SignupForm() {
         }}
       />
 
-      {/* حقل البريد الإلكتروني */}
       <TextField
         fullWidth
         label="البريد الإلكتروني"
@@ -94,7 +124,6 @@ export function SignupForm() {
         }}
       />
 
-      {/* حقل كلمة المرور */}
       <TextField
         fullWidth
         label="كلمة المرور"
@@ -119,22 +148,13 @@ export function SignupForm() {
         }}
       />
 
-      {/* زر الاشتراك */}
       <Button
         type="submit"
         variant="contained"
         fullWidth
         size="large"
-        disabled={signup.isPending}
-        sx={{ 
-          py: 1.5, 
-          fontSize: "1.1rem", 
-          fontWeight: 800,
-          borderRadius: 3,
-          mt: 1,
-          boxShadow: "0 8px 16px rgba(249, 115, 22, 0.25)",
-          textTransform: "none"
-        }}
+        disabled={signup.isPending || !role}
+        sx={{ py: 1.5, fontSize: "1.1rem", fontWeight: 800, borderRadius: 3, mt: 1, boxShadow: "0 8px 16px rgba(249, 115, 22, 0.25)", textTransform: "none" }}
       >
         {signup.isPending ? (
           <CircularProgress size={24} color="inherit" />

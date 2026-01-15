@@ -1,58 +1,69 @@
 "use client";
-import { useRestaurants } from "@/features/restaurant/get-restaurants/api/useRestaurants";
-import { CategoriesSection } from "@/widgets/homePage/CategoriesSection";
-import { HeroSection } from "@/widgets/homePage/HeroSection";
-import { RestaurantList } from "@/widgets/homePage/RestaurantGrid";
-import { Box, Container, Typography } from "@mui/material";
-import { useRef, useState } from "react";
 
-export default function HomePage() {
-  const [cityInput, setCityInput] = useState("");
-  const [city, setCity] = useState("");
-  const resultsRef = useRef<HTMLDivElement>(null);
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Button, Stack, Typography, Container, Box } from "@mui/material";
+import { useMe } from "@/features/user/api/use-me"; 
 
-  const handleSearch = () => {
-    setCity(cityInput);
-    // بعد ما نحدث المدينة، ننزل لنتائج المطاعم
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }, 100);
+export default function LandingPage() {
+  const router = useRouter();
+  const { data: user } = useMe();
+
+  // 1️⃣ حماية الصفحة: لو المستخدم مسجل دخول بالفعل
+  useEffect(() => {
+    if (user) {
+      if (user.role === "customer") router.replace("/restaurants");
+      else if (user.role === "restaurant_owner") router.replace("/dashboard");
+    }
+  }, [user, router]);
+
+  // 2️⃣ اختيار الدور
+  const handleRoleSelect = (role: "customer" | "restaurant_owner") => {
+    localStorage.setItem("user_intent", role);
+    router.push("/signup"); // أو "/login" حسب Flowك
   };
 
-  // الهوك تبعك (useRestaurants) بياخد الـ city والـ category
-  const { data: restaurants, isLoading } = useRestaurants(city);
+  // 3️⃣ عرض الصفحة فقط إذا المستخدم مش موجود
+  if (user) return null;
 
   return (
-    <>
-      <HeroSection
-        city={cityInput}
-        setCity={setCityInput}
-        onSearch={handleSearch}
-      />
-      <CategoriesSection onCategorySelect={(cat) => setCategory(cat)} />
-      <Box
-        ref={resultsRef}
-        sx={{
-          scrollMarginTop: "100px", // مسافة عشان ما يلزق بالنافبار فوق
-          minHeight: "50vh", // عشان نضمن مساحة للنزول
-          py: 4,
-        }}
-      >
-        <Container maxWidth="lg">
-          <Typography variant="h4" mb={3}>
-            المطاعم المتاحة
-          </Typography>
+    <Container maxWidth="sm" sx={{ mt: 12, textAlign: "center" }}>
+      <Typography variant="h3" fontWeight={800} gutterBottom>
+        مرحباً بك في تطبيقنا 🍽️
+      </Typography>
+      <Typography variant="h6" sx={{ mb: 6 }}>
+        اختر دورك للبدء:
+      </Typography>
 
-          {/* قائمة المطاعم */}
-          <RestaurantList restaurants={restaurants} isLoading={isLoading} />
+      <Stack spacing={3} direction="column" alignItems="center">
+        <Button
+          variant="contained"
+          fullWidth
+          size="large"
+          onClick={() => handleRoleSelect("customer")}
+          sx={{ py: 1.5, fontSize: "1.1rem" }}
+        >
+          أنا زبون
+        </Button>
+        <Button
+          variant="outlined"
+          fullWidth
+          size="large"
+          onClick={() => handleRoleSelect("restaurant_owner")}
+          sx={{ py: 1.5, fontSize: "1.1rem" }}
+        >
+          أنا صاحب مطعم
+        </Button>
+      </Stack>
 
-          {/* الباجينيشن */}
-          {/* <PaginationSection /> */}
-        </Container>
+      <Box sx={{ mt: 6 }}>
+        <Typography variant="body2">
+          لديك حساب؟{" "}
+          <Button variant="text" onClick={() => router.push("/login")}>
+            تسجيل الدخول
+          </Button>
+        </Typography>
       </Box>
-    </>
+    </Container>
   );
 }

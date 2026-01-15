@@ -21,6 +21,7 @@ export type SignupPayload = {
   name: string;
   email: string;
   password: string;
+  role:string
 };
 
 export type SignupResponse = {

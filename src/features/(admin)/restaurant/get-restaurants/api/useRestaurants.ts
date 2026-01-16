@@ -2,14 +2,12 @@ import { Restaurant } from "@/features/(customer)/get-restaurants/libs/types";
 import { queryKeys } from "@/shared/keys/query-keys";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useRestaurants = (ownerId: string) => {
-  const queryClient = useQueryClient();
-
+export const useRestaurants = () => {
   // ✅ 1. جلب المطاعم الخاصة بالمالك
   const useAdminRestaurants = useQuery({
-    queryKey: ["restaurants", ownerId],
+    queryKey: ["admin-restaurants"],
     queryFn: async () => {
-      const res = await fetch(`/api/admin/restaurants?ownerId=${ownerId}`);
+      const res = await fetch(`/api/admin/restaurants`);
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err?.error || "فشل جلب المطاعم");
@@ -25,14 +23,14 @@ export const useRestaurants = (ownerId: string) => {
         name: string;
         description?: string;
         city?: string;
-        country?:string
+        country?: string;
       }) => {
         const res = await fetch("/api/admin/restaurants", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ...newRestaurant, owner_id: ownerId }),
+          body: JSON.stringify({ ...newRestaurant }),
         });
         if (!res.ok) {
           throw new Error("فشل إضافة المطعم");
@@ -43,7 +41,7 @@ export const useRestaurants = (ownerId: string) => {
       },
       onSuccess: (variables) => {
         queryClient.invalidateQueries({
-          queryKey: ["restaurants", ownerId],
+          queryKey: ["admin-restaurants"],
         });
       },
     });
@@ -73,7 +71,7 @@ export const useRestaurants = (ownerId: string) => {
       },
       onSuccess: (restaurant, { updates }) => {
         queryClient.invalidateQueries({
-          queryKey: ["restaurants", ownerId],
+          queryKey: ["admin-restaurants"],
         });
       },
     });
@@ -95,7 +93,7 @@ export const useRestaurants = (ownerId: string) => {
         // 3. الحل الأفضل للحذف هو عمل invalidate لكل الـ restaurants
         // لضمان اختفاء العنصر من أي قائمة يظهر فيها
         queryClient.invalidateQueries({
-          queryKey: ["restaurants", ownerId],
+          queryKey: ["admin-restaurants"],
         });
 
         console.log("تم الحذف وتحديث القائمة بنجاح");

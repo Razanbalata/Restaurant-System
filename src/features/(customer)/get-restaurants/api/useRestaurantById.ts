@@ -5,7 +5,7 @@ export const useRestaurant = (id: string) => {
  return useQuery({
     queryKey: ["restaurant", id],
     queryFn: async () => {
-      const response = await fetch(`/api/restaurants/${id}`,
+      const response = await fetch(`/api/customer/restaurants/${id}`,
         {
             method: "GET",
             headers: {
@@ -22,19 +22,3 @@ export const useRestaurant = (id: string) => {
   });
 };
 
-// 2. هوك جلب منيو المطعم
-export const useRestaurantMenu = (restaurantId: string) => {
-  return useQuery({
-    queryKey: ["menu", restaurantId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("menu_items") // تأكدي من اسم الجدول في الداتابيز
-        .select("*")
-        .eq("restaurant_id", restaurantId);
-
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!restaurantId,
-  });
-};

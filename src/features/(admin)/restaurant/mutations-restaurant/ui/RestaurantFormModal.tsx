@@ -12,11 +12,11 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-import { useAddRestaurant } from "../api/useAddRestaurant";
-import { useUpdateRestaurant } from "../api/useUpdateRestaurant";
+import { useAddRestaurant } from "../api(delete)/useAddRestaurant";
+import { useUpdateRestaurant } from "../api(delete)/useUpdateRestaurant";
 import { MenuChoiceModal } from "./MenuChoiceModal"; 
 import { MenuItemForm } from "./MenuItemForm"; 
-import { useAddMenuItem } from "@/features/(admin)/menu/mutation-hooks/useAddmenu";
+import { useAddMenuItem } from "@/features/(admin)/menu/mutation-hooks(delete)/useAddmenu";
 import AIMenuModal from "@/features/menu/ui/AIMenuModal";
 
 type Props = {

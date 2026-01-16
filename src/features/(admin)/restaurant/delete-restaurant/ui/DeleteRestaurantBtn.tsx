@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { DeleteIcon } from "lucide-react";
 import React from "react";
-import { useDeleteRestaurant } from "../api/useDeleteRestaurant";
+import { useDeleteRestaurant } from "../api(delete)/useDeleteRestaurant";
 
 function DeleteRestaurantBtn({r}) {
 

@@ -18,7 +18,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import { useDeleteMenuItem } from "../../../(admin)/menu/mutation-hooks/useDeleteMenu";
+import { useDeleteMenuItem } from "../../../(admin)/menu/mutation-hooks(delete)/useDeleteMenu";
 import { useMe } from "@/features/user/api/use-me";
 import { MenuItemMutationButton } from "./MenuItemMutationButton";
 import { useAddToCart } from "@/features/cart/api/useAddToCart";

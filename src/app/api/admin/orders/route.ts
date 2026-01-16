@@ -74,18 +74,40 @@
 // }
 
 
-import { supabase } from "@/shared/api/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/shared/api/supabaseClient";
+import { getCurrentUser } from "@/shared/libs/auth/auth-file";
 
 export async function GET(req: NextRequest) {
   const restaurantId = req.nextUrl.searchParams.get("restaurantId");
+  if (!restaurantId)
+    return NextResponse.json({ error: "restaurantId required" }, { status: 400 });
+
+  const user = await getCurrentUser(req);
+  if (!user || user.role !== "owner")
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { data, error } = await supabase
     .from("orders")
-    .select("*")
+    .select(`
+      id,
+      total,
+      status,
+      created_at,
+      customer_id,
+      order_items (
+        id,
+        name,
+        price,
+        qty
+      )
+    `)
     .eq("restaurant_id", restaurantId)
     .order("created_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 500 });
+
   return NextResponse.json(data);
 }
+

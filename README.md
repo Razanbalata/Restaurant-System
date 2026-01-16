@@ -1,36 +1,182 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍔 Restaurant Ordering System – Logic Documentation
 
-## Getting Started
+## 📌 Project Overview
+This project is a full-stack restaurant ordering system that supports:
+- 🔐 **Authentication & Authorization**
+- 🧑‍🍳 **Restaurant Owners (Admin)**
+- 👤 **Customers**
+- 📋 **Menu Management**
+- 🛒 **Cart System**
+- 📦 **Orders Management**
 
-First, run the development server:
+> **Note:** This document focuses only on the backend & business logic layer, excluding UI implementation.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🧠 Architecture Overview (Logic Layer)
+
+### Tech Stack (Logic)
+- **Framework:** Next.js App Router (API Routes)
+- **Database:** Supabase (PostgreSQL)
+- **Auth:** JWT + Cookies
+- **State Management:**
+  - **Server:** React Query
+  - **Client:** Zustand (Cart)
+
+---
+
+## 🔐 Authentication & Authorization
+
+### Authentication
+- **Method:** Register / Login using email & password.
+- **Storage:** JWT stored in HTTP-only cookies.
+- **Helper:** `getCurrentUser(req)` extracts user info from cookies.
+
+### Roles
+- **owner:** Restaurant Owner
+- **customer:** Regular User
+> ⚠️ Roles are validated on the server, never trusted from client input.
+
+### 🔒 Authorization Helper: `verifyRestaurantOwner`
+`verifyRestaurantOwner(restaurantId, userId)`
+
+**Purpose:** Ensures that the current user is the owner of a specific restaurant.
+
+**Used In:**
+- Update/Delete restaurant
+- Create/Update/Delete categories
+- Create/Update/Delete menu items
+- Update order status (owner side)
+> ❌ Never used in customer routes.
+
+---
+
+## 🧱 Database Schema (Logic Relevant)
+
+### `restaurants`
+- `id`, `name`, `description`, `city`, `country`, `owner_id`
+- `is_active` (soft delete), `created_at`, `updated_at`
+
+### `categories`
+- `id`, `restaurant_id`, `name`, `order`
+- `is_active`, `created_at`
+
+### `menu_items`
+- `id`, `category_id`, `name`, `description`, `price`
+- `is_active`, `created_at`
+
+### `orders`
+- `id`, `customer_id`, `restaurant_id`, `total_price`
+- `status` (pending → preparing → delivered)
+- `address`, `phone`, `notes`, `created_at`
+
+### `order_items`
+- `id`, `order_id`, `menu_item_id`, `quantity`, `price`
+
+---
+
+## 🧑‍🍳 Owner (Admin) Logic
+**Prefix:** `/api/admin/*`
+All admin routes require authentication and validated ownership.
+
+### Restaurants
+- **GET** `/api/admin/restaurants`: Retrieve all restaurants owned by logged-in user.
+- **POST** `/api/admin/restaurants`: Create restaurant (owner_id from session).
+- **PATCH** `/api/admin/restaurants/:id`: Update restaurant (ownership verified).
+- **DELETE** `/api/admin/restaurants/:id`: Soft delete (`is_active = false`).
+
+### Menu Categories
+- **GET** `/api/admin/menu/categories?restaurantId=`
+- **POST** `/api/admin/menu/categories`
+- **PATCH** `/api/admin/menu/categories/:id`
+- **DELETE** `/api/admin/menu/categories/:id` (Soft)
+
+### Menu Items
+- **GET** `/api/admin/menu_items?categoryId=`
+- **POST** `/api/admin/menu_items`
+- **PATCH** `/api/admin/menu_items/:id`
+- **DELETE** `/api/admin/menu_items/:id` (Soft)
+
+---
+
+## 👤 Customer Logic
+
+### Public Restaurants
+- **GET** `/api/restaurants`: Returns all `is_active = true` restaurants.
+- **GET** `/api/restaurants/:id`: Restaurant details.
+
+### Menu Display
+- **GET** `/api/restaurants/:id/menu`
+  - Returns active categories with nested active menu items.
+  - Uses Supabase nested select.
+
+---
+
+## 🛒 Cart System (Zustand)
+- **Storage:** Client-side only.
+- **Constraint:** One restaurant per cart.
+- **Action:** Clears after successful order.
+
+**State Shape:**
+```json
+{
+  "restaurantId": "uuid",
+  "items": [{ "menuItemId": "uuid", "name": "Burger", "price": 10, "quantity": 1 }],
+  "totalPrice": 10
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📦 Orders System
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Create Order (Customer)
+**POST** `/api/orders`
+1. Get customer from session.
+2. Validate cart.
+3. Create order & insert items.
+4. Clear cart.
 
-## Learn More
+### Get Orders
+- **Customer:** `GET /api/orders?customer=true`
+- **Owner:** `GET /api/orders?restaurantId=` (Ownership verified)
 
-To learn more about Next.js, take a look at the following resources:
+### Update Order Status (Owner)
+**PATCH** `/api/orders/:id`
+- Allowed transitions: `pending` → `preparing` → `delivered`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ⚛️ React Query Hooks (Logic Layer)
 
-## Deploy on Vercel
+| Admin Hooks | Customer Hooks |
+| :--- | :--- |
+| `useAdminRestaurants` | `useRestaurants` |
+| `useAddRestaurant` | `useRestaurantDetails` |
+| `useUpdateRestaurant` | `useRestaurantMenu` |
+| `useDeleteRestaurant` | `usePlaceOrder` |
+| `useAdminCategories` | `useCustomerOrders` |
+| `useAdminMenuItems` | |
+| `useRestaurantOrders` | |
+| `useUpdateOrderStatus` | |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔐 Security Principles Applied
+- ❌ Never trust client-provided IDs for ownership.
+- ✔️ Always extract user identity from cookies/session.
+- ✔️ Authorization handled in API layer.
+- ✔️ Soft delete instead of hard delete.
+- ✔️ Role-based access enforced server-side.
+
+---
+
+## ✅ Logic Completion Status
+- [x] Authentication
+- [x] Authorization
+- [x] Owner CRUD
+- [x] Menu Management
+- [x] Cart Logic
+- [x] Orders Flow
+- [x] React Query Hooks
+- [x] Database Relations

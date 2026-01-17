@@ -28,56 +28,28 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(data);
 }
 
-// export async function POST(req: NextRequest) {
-//   const user = await getCurrentUser(req);
-//   const userId = user?.userId;
-
-//   const body = await req.json();
-//   const { restaurant_id, name } = body;
-
-//   if (!restaurant_id || !name)
-//     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-
-//  const ownership = await verifyRestaurantOwner(restaurant_id, userId);
-//   if (!ownership.ok) return ownership.response;
-
-//   const { data, error } = await supabase
-//     .from("categories")
-//     .insert({
-//       restaurant_id,
-//       name,
-//     })
-//     .select("*")
-//     .single();
-
-//   if (error) {
-//     return NextResponse.json({ error: error.message }, { status: 500 });
-//   }
-
-//   return NextResponse.json(data, { status: 201 });
-// }
-
-
 export async function POST(req: NextRequest) {
   const user = await getCurrentUser(req);
   const userId = user?.userId;
   
+  console.log("user",user)
 
-  if (!userId || user.role !== "owner")
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  // if (!userId || user.role !== "owner")
+  //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const body = await req.json();
-  const { restaurant_id, name } = body;
+  console.log("body",body)
+  const { restaurantId, name } = body;
 
-  if (!restaurant_id || !name)
+  if (!restaurantId || !name)
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
-  const ownership = await verifyRestaurantOwner(restaurant_id, userId);
+  const ownership = await verifyRestaurantOwner(restaurantId, userId);
   if (!ownership.ok) return ownership.response;
 
   const { data, error } = await supabase
     .from("categories")
-    .insert({ restaurant_id, name })
+    .insert({ "restaurant_id":restaurantId, name })
     .select("*")
     .single();
 

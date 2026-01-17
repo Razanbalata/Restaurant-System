@@ -1,4 +1,5 @@
 import { supabase } from "@/shared/api/supabaseClient";
+import { getCurrentUser } from "@/shared/libs/auth/auth-file";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(

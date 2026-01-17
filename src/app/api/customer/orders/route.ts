@@ -108,20 +108,27 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabase
     .from("orders")
-    .select(`
+     .select(`
+    id,
+    total_price,
+    status,
+    created_at,
+    address,
+    phone,
+    notes,
+    order_items (
       id,
-      total,
-      status,
-      created_at,
-      order_items (
+      quantity,
+      price,
+      menu_item:menu_items (
         id,
-        name,
-        price,
-        qty
+        name
       )
-    `)
-    .eq("customer_id", user.userId)
+    )
+  `)
+    .eq("user_id", user.userId)
     .order("created_at", { ascending: false });
+  console.log("dataOrder",data)  
 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -147,7 +154,7 @@ export async function POST(req: NextRequest) {
   const { data: order, error: orderError } = await supabase
     .from("orders")
     .insert({
-      customer_id: user.userId,
+      user_id: user.userId,
       restaurant_id,
       total,
     })
@@ -164,11 +171,10 @@ export async function POST(req: NextRequest) {
       item_id: i.id,
       name: i.name,
       price: i.price,
-      qty: i.qty,
+      quantity: i.qty,
     })));
 
   if (itemsError) return NextResponse.json({ error: itemsError.message }, { status: 500 });
 
   return NextResponse.json(order, { status: 201 });
 }
-r

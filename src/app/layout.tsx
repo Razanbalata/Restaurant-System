@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import "./styles/globals.css";
 import ReactQueryProvider from "./providers/QueryProvider";
 import { Header } from "@/widgets/header/Header";
-import { useMe } from "@/features/user/api/use-me";
-import { getCurrentUser } from "@/shared/libs/auth/auth-file";
+import { getUserServer } from "@/shared/libs/auth/getCurrentUser"
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/shared/keys/query-keys";
 import ThemeRegistry from "./providers/ThemeProvider";
@@ -25,7 +24,7 @@ export  default async function RootLayout({
     try{
       await queryClient.prefetchQuery({
         queryKey:queryKeys.user.me(),
-        queryFn: getCurrentUser
+        queryFn: getUserServer
       })
       
       const dehydratedState = dehydrate(queryClient)

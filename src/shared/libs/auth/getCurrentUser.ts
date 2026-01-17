@@ -24,10 +24,10 @@ export const getUserServer = async () => {
         // 3. جلب بيانات المستخدم من قاعدة البيانات مباشرة
         const { data: user, error: dbError } = await supabase
             .from("users")
-            .select("id, email, name, created_at")
+            .select("id, email, name, created_at,role")
             .eq("id", payload.userId)
             .single();
-
+ console.log("userr",user)
         if (dbError || !user) {
             console.error("❌ Failed to fetch user from DB:", dbError);
             return null;
@@ -40,6 +40,7 @@ export const getUserServer = async () => {
                 email: user.email,
                 name: user.name,
                 createdAt: user.created_at,
+                role:user.role
             },
         };
     } catch (error) {

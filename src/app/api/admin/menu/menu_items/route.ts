@@ -48,8 +48,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "categoryId required" }, { status: 400 });
 
   const user = await getCurrentUser(req);
-  if (!user || user.role !== "owner")
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  // if (!user || user.role !== "owner")
+  //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   // جلب category للتحقق من ملكية المطعم
   const { data: category, error: catError } = await supabase
@@ -78,20 +78,21 @@ export async function GET(req: NextRequest) {
 // POST new item (Owner)
 export async function POST(req: NextRequest) {
   const user = await getCurrentUser(req);
-  if (!user || user.role !== "owner")
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  // if (!user || user.role !== "owner")
+  //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const body = await req.json();
-  const { category_id, name, description, price } = body;
+  const { categoryId, name, description, price } = body;
+  console.log("body",body)
 
-  if (!category_id || !name || !price)
+  if (!categoryId || !name || !price)
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
   // التحقق من ملكية المطعم عبر category
   const { data: category, error: catError } = await supabase
     .from("categories")
     .select("restaurant_id")
-    .eq("id", category_id)
+    .eq("id", categoryId)
     .single();
 
   if (catError || !category)
@@ -102,7 +103,7 @@ export async function POST(req: NextRequest) {
 
   const { data, error } = await supabase
     .from("menu_items")
-    .insert({ category_id, name, description, price })
+    .insert({ "category_id":categoryId, name, description, price })
     .select("*")
     .single();
 

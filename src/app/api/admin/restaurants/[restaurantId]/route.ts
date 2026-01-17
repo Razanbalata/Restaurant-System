@@ -53,7 +53,8 @@ export async function PATCH(
     .eq("id", restaurantId)
     .select()
     .single();
-
+ 
+  console.log("data",data)  
   if (error)
     return NextResponse.json({ error: error.message }, { status: 400 });
 

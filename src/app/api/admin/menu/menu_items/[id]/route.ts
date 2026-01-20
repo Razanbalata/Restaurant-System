@@ -34,12 +34,12 @@ import { getCurrentUser } from "@/shared/libs/auth/auth-file";
 //   return NextResponse.json(data);
 // }
 
-
-export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   const { id } = await params;
   const user = await getCurrentUser(req);
-  if (!user || user.role !== "owner")
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { name, description, price } = await req.json();
 
@@ -62,7 +62,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (catError || !category)
     return NextResponse.json({ error: "Category not found" }, { status: 404 });
 
-  const ownership = await verifyRestaurantOwner(category.restaurant_id, user.userId);
+  const ownership = await verifyRestaurantOwner(
+    category.restaurant_id,
+    user.userId,
+  );
   if (!ownership.ok) return ownership.response;
 
   const { data, error } = await supabase
@@ -72,17 +75,19 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     .select("*")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json(data);
 }
 
-
-
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   const { id } = await params;
   const user = await getCurrentUser(req);
-  if (!user || user.role !== "owner")
+  if (!user || user.role !== "restaurant_owner")
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { data: item, error: itemError } = await supabase
@@ -104,7 +109,10 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   if (catError || !category)
     return NextResponse.json({ error: "Category not found" }, { status: 404 });
 
-  const ownership = await verifyRestaurantOwner(category.restaurant_id, user.userId);
+  const ownership = await verifyRestaurantOwner(
+    category.restaurant_id,
+    user.userId,
+  );
   if (!ownership.ok) return ownership.response;
 
   const { data, error } = await supabase
@@ -114,7 +122,8 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     .select("*")
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json(data);
 }

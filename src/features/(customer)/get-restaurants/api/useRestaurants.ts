@@ -11,11 +11,10 @@ const fetchRestaurants = async (): Promise<Restaurant[]> => {
 };
 
 
-export const useRestaurants = (city?: string) => {
+export const useRestaurantsForCustomer = () => {
   return useQuery({
     queryKey: ["restaurants"],
     queryFn: () => fetchRestaurants(),
-    enabled: !!city, // ما يبدأ إلا لو city موجودة
     keepPreviousData: true,
     staleTime: 1000 * 60 * 5,
   });

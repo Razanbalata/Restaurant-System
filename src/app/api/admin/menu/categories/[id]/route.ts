@@ -37,7 +37,7 @@ export async function PATCH(
   // 3️⃣ تحديث الاسم
   const { data, error } = await supabase
     .from("categories")
-    .update({ name })
+    .update( name )
     .eq("id", id)
     .select("*")
     .single(); // ← مهم جداً عشان ترجع object وليس array فاضية
@@ -76,6 +76,7 @@ export async function DELETE(
     .select("*")
     .single();
 
+   console.log("d---------------====",data) 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 500 });
 

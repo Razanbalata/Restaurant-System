@@ -6,11 +6,17 @@ export function useMenu(restaurantId: string) {
     queryKey: queryKeys.restaurants.details(restaurantId),
     queryFn: async () => {
       if (!restaurantId) return [];
-      const res = await fetch(`/api/customer/menu/categories?${restaurantId}`);
+      const res = await fetch(`/api/customer/menu/categories?restaurantId=${restaurantId}`);
       if (!res.ok) throw new Error("فشل جلب المنيو");
-      const json = await res.json();
-      console.log("useMenu fetched data:", json.items);
-      return json.items ?? []; // لاحظ: "menu" مش "items"
+      const categories = await res.json();
+      console.log("useMenu fetched data:------------------", categories);
+      return categories.flatMap((category: any) =>
+        category.items.map((item: any) => ({
+          ...item,
+          categoryId: category.id,
+          categoryName: category.name,
+        }))
+      );
     },
     enabled: !!restaurantId,
   });

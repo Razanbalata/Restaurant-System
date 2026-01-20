@@ -42,15 +42,15 @@
 
 import { Box, Grid, Typography, Stack } from "@mui/material";
 import { useMe } from "@/features/user/api/use-me";
-import { useCartLogic } from "@/features/cart/model/use-cart-logic";
 import { CartSkeleton } from "@/shared/ui/Skeletons/CartSkeleton";
 import { CartItemRow } from "./CartItemRow"; 
 import { CartSummary } from "./CartSummary";
 import { AppCard } from "@/shared/ui/Card/AppCard"; 
+import { useCartStore } from "@/features/(customer)/cart/model/useCartStore";
 
 export function CartWidget() {
   const { data: user, isLoading: userLoading } = useMe();
-  const { cart, total, update, remove, isLoading: cartLoading } = useCartLogic(user?.id);
+  const { items:cart, totalPrice:total, updateQty:update, removeItem:remove } = useCartStore();
 
   if (userLoading || cartLoading) return <CartSkeleton />;
   if (!user) return <Typography sx={{ textAlign: 'center', mt: 10 }}>يرجى تسجيل الدخول</Typography>;
@@ -95,9 +95,9 @@ export function CartWidget() {
               price: item.price_at_time,
               quantity: item.quantity
             }}
-            onIncrease={() => update.mutate({ cartItemId: item.id, newQuantity: item.quantity + 1 })}
-            onDecrease={() => update.mutate({ cartItemId: item.id, newQuantity: item.quantity - 1 })}
-            onDelete={() => remove.mutate(item.id)}
+            onIncrease={() => update({ cartItemId: item.id, newQuantity: item.quantity + 1 })}
+            onDecrease={() => update({ cartItemId: item.id, newQuantity: item.quantity - 1 })}
+            onDelete={() => remove(item.id)}
           />
         </AppCard>
       ))

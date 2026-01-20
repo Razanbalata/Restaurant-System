@@ -12,6 +12,7 @@ export const useRestaurants = () => {
         const err = await res.json();
         throw new Error(err?.error || "فشل جلب المطاعم");
       }
+      console.log("res",res)
       return res.json();
     },
   });

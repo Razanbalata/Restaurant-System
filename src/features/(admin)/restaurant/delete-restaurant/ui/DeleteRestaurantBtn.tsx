@@ -1,9 +1,11 @@
 import { Button } from "@mui/material";
 import { DeleteIcon } from "lucide-react";
 import React from "react";
-import { useDeleteRestaurant } from "../api(delete)/useDeleteRestaurant";
+import { useRestaurants } from "../../get-restaurants/api/useRestaurants";
 
 function DeleteRestaurantBtn({r}) {
+
+ const {useDeleteRestaurant} = useRestaurants()
 
  const deleteMutation = useDeleteRestaurant()
 

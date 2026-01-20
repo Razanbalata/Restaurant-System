@@ -3,7 +3,7 @@
 
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { usePlaceOrder } from "@/features/(admin)/order/postOrder/api/usePlaceOrder";
+import { usePlaceOrder } from "../api/usePlaceOrder"; 
 
 export function PlaceOrderButton({ disabled }: { disabled?: boolean }) {
   const router = useRouter();

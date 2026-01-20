@@ -20,7 +20,7 @@ export default function LandingPage() {
   // 2️⃣ اختيار الدور
   const handleRoleSelect = (role: "customer" | "restaurant_owner") => {
     localStorage.setItem("user_intent", role);
-    router.push("/signup"); // أو "/login" حسب Flowك
+    router.push("/signnup"); // أو "/login" حسب Flowك
   };
 
   // 3️⃣ عرض الصفحة فقط إذا المستخدم مش موجود

@@ -57,7 +57,6 @@ export async function GET(req: NextRequest) {
     .select("restaurant_id")
     .eq("id", categoryId)
     .single();
-
   if (catError || !category)
     return NextResponse.json({ error: "Category not found" }, { status: 404 });
 
@@ -82,28 +81,29 @@ export async function POST(req: NextRequest) {
   //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const body = await req.json();
-  const { categoryId, name, description, price } = body;
+  const { category_id,restaurant_id ,name, description, price } = body.newItem;
   console.log("body",body)
+  console.log("name",name,"cateid",category_id,"price",price)
 
-  if (!categoryId || !name || !price)
+  if (!category_id || !name || !price)
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
   // التحقق من ملكية المطعم عبر category
   const { data: category, error: catError } = await supabase
     .from("categories")
     .select("restaurant_id")
-    .eq("id", categoryId)
+    .eq("id", category_id)
     .single();
 
   if (catError || !category)
     return NextResponse.json({ error: "Category not found" }, { status: 404 });
 
-  const ownership = await verifyRestaurantOwner(category.restaurant_id, user.userId);
+  const ownership = await verifyRestaurantOwner(restaurant_id, user.userId);
   if (!ownership.ok) return ownership.response;
 
   const { data, error } = await supabase
     .from("menu_items")
-    .insert({ "category_id":categoryId, name, description, price })
+    .insert({ "category_id":category_id, name, description, price,restaurant_id })
     .select("*")
     .single();
 

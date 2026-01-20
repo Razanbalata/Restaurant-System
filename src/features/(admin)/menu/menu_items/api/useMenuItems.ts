@@ -8,17 +8,18 @@ export const useMenuItems = (categoryId: string) => {
   const useAdminMenuItems = useQuery({
     queryKey: ["menu_items", categoryId],
     queryFn: async () => {
-      const res = await fetch(`/api/admin/menu_items?categoryId=${categoryId}`);
+      const res = await fetch(`/api/admin/menu/menu_items?categoryId=${categoryId}`);
       if (!res.ok) throw new Error("فشل جلب الأصناف");
       return res.json();
     },
+    enabled: !!categoryId
   });
 
   // 2️⃣ إضافة صنف
   const useAddMenuItem = () =>
     useMutation({
-      mutationFn: async (newItem: { name: string; price: number; description?: string }) => {
-        const res = await fetch("/api/admin/menu_items", {
+      mutationFn: async (newItem: { name: string; price: number; description?: string,image?:null }) => {
+        const res = await fetch("/api/admin/menu/menu_items", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...newItem, category_id: categoryId }),
@@ -33,7 +34,7 @@ export const useMenuItems = (categoryId: string) => {
   const useUpdateMenuItem = () =>
     useMutation({
       mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
-        const res = await fetch(`/api/admin/menu_items/${id}`, {
+        const res = await fetch(`/api/admin/menu/menu_items/${id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updates),
@@ -48,7 +49,7 @@ export const useMenuItems = (categoryId: string) => {
   const useDeleteMenuItem = () =>
     useMutation({
       mutationFn: async (id: string) => {
-        const res = await fetch(`/api/admin/menu_items/${id}`, { method: "DELETE" });
+        const res = await fetch(`/api/admin/menu/menu_items/${id}`, { method: "DELETE" });
         if (!res.ok) throw new Error("فشل حذف الصنف");
         return res.json();
       },

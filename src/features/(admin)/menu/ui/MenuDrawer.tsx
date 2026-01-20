@@ -1,185 +1,187 @@
 "use client";
-
-import { useMenu } from "../get-menu/useMenu";
 import {
-  Drawer,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  MenuItem,
+  Stack,
   Box,
   Typography,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
   CircularProgress,
-  Stack,
-  Avatar,
-  Button,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Close, CloudUpload } from "@mui/icons-material";
+import { useState, useEffect } from "react";
+import { useMenuItems } from "../menu_items/api/useMenuItems";
+import { useCategories } from "../categories/api/useCategories";
+import { useRestaurant } from "@/app/providers/RestaurantContext";
 
-import { useDeleteMenuItem } from "../../(admin)/menu/mutation-hooks/useDeleteMenu";
-import { useMe } from "@/features/user/api/use-me";
-import { MenuItemMutationButton } from "./MenuItemMutationButton";
-import { useAddToCart } from "@/features/cart/api/useAddToCart";
+// أضفنا initialData لمعرفة إذا كان هناك تعديل
+const MealModal = ({ open, onClose, initialData = null }) => {
+  const { selectedRestaurant } = useRestaurant();
+  const isEdit = !!initialData; // إذا وجد بيانات أولية، إذن نحن في وضع التعديل
 
-export const MenuDrawer = ({ isOpen, onClose, restaurant }) => {
-  const restaurantId = restaurant?.id;
-  console.log("restaurantId",restaurant)
+  // 1. حالات الفورم
+  const [formData, setFormData] = useState({
+    name: "",
+    price: "",
+    description: "",
+    category_id: "", // نستخدم الـ ID بدلاً من الاسم
+    image: null as File | null,
+  });
 
-  const { data: menuItems = [], isLoading } = useMenu(restaurantId);
-  console.log("menuItems",menuItems)
-  const deleteItem = useDeleteMenuItem(restaurantId);
-  const { data: user } = useMe();
-  const addToCartMutation = useAddToCart();
+  // 2. جلب التصنيفات الحقيقية من السيرفر
+  const { useAdminCategories } = useCategories(selectedRestaurant?.id);
+  const { data: categoriesData } = useAdminCategories;
 
-  // ⭐ تحديد هل المستخدم صاحب المطعم
-  const isOwner = user && restaurant?.owner_id === user.id;
+  // 3. هوكس الإضافة والتعديل
+  const { useAddMenuItem, useUpdateMenuItem } = useMenuItems(formData.category_id);
+  const addMenuItem = useAddMenuItem();
+  const updateMenuItem = useUpdateMenuItem();
 
-  const handleDelete = (itemId: number) => {
-    if (window.confirm("هل أنت متأكد من حذف هذه الوجبة؟")) {
-      deleteItem.mutate(itemId.toString());
+  const isLoading = addMenuItem.isPending || updateMenuItem.isPending;
+
+  // 4. تعبئة البيانات عند التعديل أو تصفيرها عند الإضافة
+  useEffect(() => {
+    if (isEdit && initialData) {
+      setFormData({
+        name: initialData.name || "",
+        price: initialData.price || "",
+        description: initialData.description || "",
+        category_id: initialData.category_id || "",
+        image: null,
+      });
+    } else {
+      setFormData({ name: "", price: "", description: "", category_id: "", image: null });
+    }
+  }, [initialData, open, isEdit]);
+
+  const onSave = () => {
+    const payload = { ...formData, restaurant_id: selectedRestaurant?.id };
+
+    if (isEdit) {
+      // منطق التعديل
+      updateMenuItem.mutate({ id: initialData.id, updates: payload }, {
+        onSuccess: () => {
+          onClose();
+        },
+      });
+    } else {
+      // منطق الإضافة
+      addMenuItem.mutate({ newItem: payload }, {
+        onSuccess: () => {
+          onClose();
+        },
+      });
     }
   };
 
-  const handleAddToCart = (item) => {
-    if (!user?.id) {
-    alert("يرجى تسجيل الدخول");
-    return;
-  }
-  
-  // نرسل الـ id والـ menuItemId معاً هنا
-  addToCartMutation.mutate({ 
-    menuItemId: item.id, 
-  });
-  };
-
   return (
-    <Drawer
-      anchor="right"
-      open={isOpen}
+    <Dialog
+      open={open}
       onClose={onClose}
-      PaperProps={{
-        sx: { width: { xs: "100%", sm: 420 } },
-      }}
-      slotProps={{
-        backdrop: { sx: { backdropFilter: "blur(4px)" } },
-      }}
+      fullWidth
+      maxWidth="sm"
+      PaperProps={{ sx: { borderRadius: "24px", p: 1 } }}
     >
-      {/* Header */}
-      <Box
-        sx={{
-          p: 2,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          bgcolor: "primary.main",
-          color: "white",
-        }}
-      >
-        <Typography fontWeight="bold">
-          {restaurant?.name || "قائمة الطعام"}
+      <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h6" fontWeight="800">
+          {isEdit ? "تعديل الوجبة" : "إضافة وجبة جديدة"}
         </Typography>
-        <IconButton onClick={onClose} sx={{ color: "white" }}>
-          <CloseIcon />
+        <IconButton onClick={onClose}>
+          <Close />
         </IconButton>
-      </Box>
+      </DialogTitle>
 
-      {/* Body */}
-      <Box sx={{ p: 2, flex: 1, overflowY: "auto" }}>
-        {/* زر إضافة وجبة (للمالك فقط) */}
-        {isOwner && (
-          <Box sx={{ mb: 2 }}>
-            <MenuItemMutationButton
-              mode="create"
-              restaurantId={restaurantId}
+      <DialogContent>
+        <Stack spacing={3} sx={{ mt: 1 }}>
+          {/* قسم رفع الصورة (كما هو في كودك) */}
+          <Box
+            sx={{
+              border: "2px dashed #e0e0e0",
+              borderRadius: "16px",
+              p: 4,
+              textAlign: "center",
+              cursor: "pointer",
+              "&:hover": { bgcolor: "#fafafa", borderColor: "#FF5B22" },
+            }}
+          >
+            <CloudUpload sx={{ fontSize: 40, color: "#FF5B22", mb: 1 }} />
+            <Typography variant="body2" color="textSecondary">
+              {formData.image ? "تم اختيار صورة" : "ارفع صورة الوجبة هنا"}
+            </Typography>
+          </Box>
+
+          <TextField
+            fullWidth
+            label="اسم الوجبة"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
+          />
+
+          <Stack direction="row" spacing={2}>
+            <TextField
+              fullWidth
+              select
+              label="التصنيف"
+              value={formData.category_id}
+              onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+              sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
+            >
+              {categoriesData?.map((cat) => (
+                <MenuItem key={cat.id} value={cat.id}>
+                  {cat.name}
+                </MenuItem>
+              ))}
+            </TextField>
+
+            <TextField
+              fullWidth
+              label="السعر ($)"
+              type="number"
+              value={formData.price}
+              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
             />
-          </Box>
-        )}
-
-        {isLoading ? (
-          <Stack alignItems="center" mt={8} spacing={2}>
-            <CircularProgress />
-            <Typography color="text.secondary">
-              جاري تحميل المنيو...
-            </Typography>
           </Stack>
-        ) : menuItems.length > 0 ? (
-          <List disablePadding>
-            {menuItems.map((item) => (
-              <Box key={item.id}>
-                <ListItem sx={{ py: 2 }}>
-                  <Avatar
-                    src={item.image_url}
-                    variant="rounded"
-                    sx={{ width: 56, height: 56, mr: 2 }}
-                  >
-                    {item.name?.[0]}
-                  </Avatar>
 
-                  <ListItemText
-                    primary={
-                      <Typography fontWeight="bold">
-                        {item.name}
-                      </Typography>
-                    }
-                    secondary={item.description}
-                    sx={{ mr: 2 }}
-                  />
+          <TextField
+            fullWidth
+            multiline
+            rows={3}
+            label="وصف الوجبة"
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
+          />
+        </Stack>
+      </DialogContent>
 
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-end",
-                      gap: 1,
-                    }}
-                  >
-                    <Typography fontWeight="bold" color="primary.main">
-                      {item.price}₪
-                    </Typography>
-
-                    {isOwner ? (
-                      <Stack direction="row" spacing={1}>
-                        <MenuItemMutationButton
-                          mode="edit"
-                          restaurantId={restaurantId}
-                          item={item}
-                        />
-
-                        <Button
-                          size="small"
-                          color="error"
-                          variant="outlined"
-                          startIcon={<DeleteIcon />}
-                          onClick={() => handleDelete(item.id)}
-                        >
-                          حذف
-                        </Button>
-                      </Stack>
-                    ) : (
-                      <Button
-                        size="small"
-                        variant="contained"
-                        onClick={() => handleAddToCart(item)}
-                      >
-                        أضف للسلة
-                      </Button>
-                    )}
-                  </Box>
-                </ListItem>
-                <Divider />
-              </Box>
-            ))}
-          </List>
-        ) : (
-          <Box textAlign="center" mt={10}>
-            <Typography color="text.secondary">
-              لا توجد وجبات حالياً
-            </Typography>
-          </Box>
-        )}
-      </Box>
-    </Drawer>
+      <DialogActions sx={{ p: 3 }}>
+        <Button onClick={onClose} sx={{ color: "#637381", fontWeight: 700 }}>
+          إلغاء
+        </Button>
+        <Button
+          variant="contained"
+          onClick={onSave}
+          disabled={isLoading}
+          sx={{
+            bgcolor: "#FF5B22",
+            borderRadius: "12px",
+            px: 4,
+            fontWeight: 700,
+            "&:hover": { bgcolor: "#e54a1a" },
+          }}
+        >
+          {isLoading ? <CircularProgress size={24} color="inherit" /> : isEdit ? "حفظ التعديلات" : "إضافة الوجبة"}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
+
+export default MealModal;

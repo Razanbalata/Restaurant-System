@@ -1,7 +1,7 @@
 // widgets/cart/ui/CartSummary.tsx
 import { Stack, Box, Typography, Button, Divider } from "@mui/material";
 import { AppCard } from "@/shared/ui/Card/AppCard";
-import { PlaceOrderButton } from "@/features/(admin)/order/postOrder/ui/PlaceOrderButton";
+import { PlaceOrderButton } from "@/features/(customer)/order/postOrder/ui/PlaceOrderButton"; 
 
 export function CartSummary({ total, subtotal, isEmpty }) {
   return (

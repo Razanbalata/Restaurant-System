@@ -38,18 +38,18 @@ export async function POST(req: NextRequest) {
   //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const body = await req.json();
-  console.log("body",body)
-  const { restaurantId, name } = body;
-
-  if (!restaurantId || !name)
+  console.log("body-------------------",body)
+  const { restaurant_id, name } = body;
+   
+  if (!restaurant_id || !name)
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
-  const ownership = await verifyRestaurantOwner(restaurantId, userId);
+  const ownership = await verifyRestaurantOwner(restaurant_id, userId);
   if (!ownership.ok) return ownership.response;
 
   const { data, error } = await supabase
     .from("categories")
-    .insert({ "restaurant_id":restaurantId, name })
+    .insert({ "restaurant_id":restaurant_id, name })
     .select("*")
     .single();
 

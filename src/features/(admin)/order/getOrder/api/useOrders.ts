@@ -1,13 +1,15 @@
 // hooks/useOrders.ts
+import { supabase } from "@/shared/api/supabaseRealTime"; 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export const useOrders = (restaurantId?: string) => {
   const queryClient = useQueryClient();
 
-  const useOrders = useQuery({
+  const useOrdersQuery = useQuery({
     queryKey: ["orders", restaurantId],
     queryFn: async () => {
-      const res = await fetch(`/api/orders?restaurantId=${restaurantId}`);
+      const res = await fetch(`/api/admin/orders?restaurantId=${restaurantId}`);
       if (!res.ok) throw new Error("Failed to fetch orders");
       return res.json();
     },
@@ -33,6 +35,32 @@ export const useOrders = (restaurantId?: string) => {
     },
   });
 
+  useEffect(() => {
+    if (!restaurantId) return;
 
-  return { useOrders, updateOrderStatus };
+    // الاشتراك في القناة
+    const channel = supabase
+      .channel(`orders-room-${restaurantId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*", // استمع للإضافة، التعديل، والحذف
+          schema: "public",
+          table: "orders",
+          filter: `restaurant_id=eq.${restaurantId}`, // راقب مطعمك فقط!
+        },
+        (payload) => {
+          console.log("تغيير جديد في الطلبات:", payload);
+          // تحديث البيانات فوراً في المتصفح
+          queryClient.invalidateQueries({ queryKey: ["orders", restaurantId] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [restaurantId, queryClient]);
+
+  return { useOrdersQuery, updateOrderStatus };
 };

@@ -25,6 +25,7 @@
 // };
 
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 type CartItem = {
   menuItemId: string;
@@ -45,8 +46,10 @@ type CartStore = {
   totalPrice: () => number;
 };
 
-export const useCartStore = create<CartStore>((set, get) => ({
-  restaurantId: null,
+export const useCartStore = create<CartStore>()(
+  persist(
+    (set, get) => ({
+        restaurantId: null,
   items: [],
 
   addItem: (item, restaurantId) => {
@@ -104,5 +107,12 @@ export const useCartStore = create<CartStore>((set, get) => ({
       (sum, i) => sum + i.price * i.quantity,
       0
     ),
-}));
+    }),
+    { name: "cart-storage" } // اسم المفتاح في localStorage
+  )
+);
+
+// export const useCartStore = create<CartStore>((set, get) => ({
+
+// }));
 

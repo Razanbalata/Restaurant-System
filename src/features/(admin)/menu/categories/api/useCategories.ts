@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useCategories = (restaurantId: string) => {
   const queryClient = useQueryClient();
+  console.log("idres",restaurantId)
 
   // 1️⃣ جلب كل التصنيفات مع الأصناف
   const useAdminCategories = useQuery({
@@ -12,6 +13,7 @@ export const useCategories = (restaurantId: string) => {
       if (!res.ok) throw new Error("فشل جلب التصنيفات");
       return res.json();
     },
+    enabled: !!restaurantId
   });
 
   // 2️⃣ إضافة تصنيف

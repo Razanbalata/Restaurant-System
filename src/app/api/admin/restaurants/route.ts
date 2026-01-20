@@ -13,7 +13,6 @@ export async function GET(req: NextRequest) {
     .from("restaurants")
     .select("*")
     .eq("owner_id", ownerId)
-    .eq("is_active", true);
 
   if (error)
     return NextResponse.json({ error: error.message }, { status: 400 });

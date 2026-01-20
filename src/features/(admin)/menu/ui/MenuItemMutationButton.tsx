@@ -1,83 +1,68 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Stack } from "@mui/material";
+import { 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogActions, 
+  Button, 
+  TextField, 
+  Stack, 
+  IconButton, 
+  Typography, 
+  Box,
+  CircularProgress
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-import { useUpdateMenuItem } from "../../(admin)/menu/mutation-hooks/useUpdateMenuItem";
-import { useAddMenuItem } from "../../(admin)/menu/mutation-hooks/useAddmenu";
+import { useMenuItems } from "../menu_items/api/useMenuItems";
+import MealModal from "./MenuDrawer";
 
-export const MenuItemMutationButton = ({ mode = "add", restaurantId, item }) => {
+interface Props {
+  mode?: "add" | "edit";
+  restaurantId: string;
+  categoryId?: string;
+  item?: any; // البيانات في حالة التعديل
+}
+
+export const MenuItemMutationButton = ({ mode = "add", restaurantId, categoryId, item }: Props) => {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", price: "", description: "" });
+  const handleClose = ()=>setOpen(false)
 
-  const updateMutation = useUpdateMenuItem(restaurantId);
-  const addMutation = useAddMenuItem(restaurantId);
-
-  // 🌟 إعادة تهيئة الفورم عند فتح المودال
-  useEffect(() => {
-    if (open) {
-      if (mode === "edit" && item) {
-        setFormData({
-          name: item.name || "",
-          price: item.price || "",
-          description: item.description || "",
-        });
-      } else {
-        setFormData({ name: "", price: "", description: "" }); // الفورم فارغ عند الإضافة
-      }
-    }
-  }, [open, mode, item]);
-
-  const handleSubmit = () => {
-    if (!formData.name || !formData.price) {
-      alert("يرجى تعبئة اسم الوجبة والسعر");
-      return;
-    }
-
-    const payload = {
-      name: formData.name,
-      description: formData.description,
-      price: Number(formData.price),
-      restaurant_id: restaurantId,
-    };
-
-    if (mode === "edit") {
-      updateMutation.mutate({ id: item.id, updatedData: payload }, { onSuccess: () => setOpen(false) });
-    } else {
-      addMutation.mutate(payload, { onSuccess: () => setOpen(false) });
-    }
-  };
 
   return (
     <>
+      {/* 1. الزر المشغل للمودال */}
       {mode === "edit" ? (
-        <Button variant="contained" size="small" startIcon={<EditIcon />} onClick={() => setOpen(true)}>
-          تعديل
-        </Button>
+        <IconButton 
+          onClick={() => setOpen(true)} 
+          size="small" 
+          sx={{ bgcolor: '#f5f5f5', '&:hover': { bgcolor: '#e0e0e0' } }}
+        >
+          <EditIcon fontSize="small" color="primary" />
+        </IconButton>
       ) : (
-        <Button variant="outlined" startIcon={<AddIcon />} onClick={() => setOpen(true)}>
+        <Button 
+          variant="contained" 
+          startIcon={<AddIcon />} 
+          onClick={() => setOpen(true)}
+          sx={{ 
+            bgcolor: "#000", 
+            borderRadius: "12px", 
+            px: 3,
+            "&:hover": { bgcolor: "#222" } 
+          }}
+        >
           إضافة وجبة
         </Button>
       )}
 
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
-        <DialogTitle>{mode === "edit" ? "تعديل الوجبة" : "إضافة وجبة جديدة"}</DialogTitle>
-        <DialogContent>
-          <Stack spacing={2} sx={{ mt: 1 }}>
-            <TextField label="اسم الوجبة" fullWidth value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-            <TextField label="السعر (₪)" type="number" fullWidth value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
-            <TextField label="الوصف" multiline rows={3} fullWidth value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>إلغاء</Button>
-          <Button variant="contained" onClick={handleSubmit} disabled={updateMutation.isPending || addMutation.isPending}>
-            حفظ
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* 2. النافذة المنبثقة (Modal) */}
+      <MealModal open={open} onClose={handleClose} initialData={item}/>
     </>
   );
 };

@@ -3,10 +3,13 @@ import { Box, Stack, Container, Typography } from "@mui/material";
 // نفترض وجود هوك لجلب البيانات من سوبابيز
 import { useOrders } from "@/features/(admin)/order/getOrder/api/useOrders";  
 import OrderColumn from "./OrderColumn";
+import { useRestaurant } from "@/app/providers/RestaurantContext";
 
 export default function OrdersAdminPage() {
-  const { data: orders = [], isLoading } = useOrders();
-  
+  const {selectedRestaurant} = useRestaurant();
+  const { useOrdersQuery } = useOrders(selectedRestaurant?.id || '');
+  const { data: orders=[] } = useOrdersQuery;
+   console.log("Fetched orders:", orders);
   // تفعيل التحديث التلقائي (Real-time)
   // useRealtimeOrders(); 
 
@@ -22,7 +25,7 @@ export default function OrdersAdminPage() {
       <Stack direction="row" spacing={3} alignItems="flex-start">
         <OrderColumn 
           title="طلبات جديدة" 
-          orders={orders.filter((o: any) => o.status === 'PENDING')} 
+          orders={orders.filter((o: any) => o.status === 'pending')} 
           onStatusChange={handleStatusUpdate}
         />
         <OrderColumn 

@@ -4,9 +4,13 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import { MenuItemMutationButton } from '@/features/(admin)/menu/ui/MenuItemMutationButton';
 import DeleteMenuItem from '@/features/(admin)/menu/ui/DeleteMenuItemBtn';
+import AddToCartBtn from '@/features/(customer)/cart/ui/AddToCartBtn';
+import { useMe } from '@/features/user/api/use-me';
 
-export default function FoodCard({ isAdmin,item }: { isAdmin: boolean ,item:{}}) {
-  console.log("item",item)
+export default function FoodCard({item }: {item:{}}) {
+ const {data:user} = useMe()
+ const isAdmin = user?.role === "restaurant_owner"; 
+
   return (
     <Paper 
       elevation={0}
@@ -56,17 +60,7 @@ export default function FoodCard({ isAdmin,item }: { isAdmin: boolean ,item:{}})
               <DeleteMenuItem r={item}/> 
             </Box>
           ) : (
-            <Button 
-              fullWidth variant="contained" 
-              sx={{ 
-                borderRadius: '12px', 
-                py: 1.2, 
-                backgroundColor: '#000',
-                '&:hover': { backgroundColor: '#333' } 
-              }}
-            >
-              أضف للسلة
-            </Button>
+            <AddToCartBtn item={item} restaurantId={item.restaurant_id}/>
           )}
         </Box>
       </Box>

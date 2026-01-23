@@ -1,8 +1,11 @@
 "use client";
 import { Stack, Tab, Tabs, Box } from "@mui/material";
 import { ManageCategoriesMenu } from "./ManageCategoriesMenu";
+import { useMe } from "@/features/user/api/use-me";
 
 export const CategoryTabs = ({ categories, activeTab, onTabChange, restaurantId }) => {
+   const {data:user} = useMe()
+  const isOwner = user?.role === "restaurant_owner"; // استبدل هذا بالمنطق الصحيح للتحقق من مالك المطعم
   return (
     <Stack 
       direction="row" 
@@ -24,7 +27,7 @@ export const CategoryTabs = ({ categories, activeTab, onTabChange, restaurantId 
 
       <Box sx={{ px: 1 }}>
         {/* المنيو المنسدل الذي يحتوي على كل خيارات الإدارة */}
-        <ManageCategoriesMenu categories={categories} restaurantId={restaurantId} />
+        {isOwner&&<ManageCategoriesMenu categories={categories} restaurantId={restaurantId} />}
       </Box>
     </Stack>
   );

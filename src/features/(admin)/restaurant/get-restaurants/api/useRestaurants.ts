@@ -1,6 +1,7 @@
 import { Restaurant } from "@/features/(customer)/get-restaurants/libs/types";
 import { queryKeys } from "@/shared/keys/query-keys";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {toast} from "sonner"
 
 export const useRestaurants = () => {
   // ✅ 1. جلب المطاعم الخاصة بالمالك
@@ -12,7 +13,6 @@ export const useRestaurants = () => {
         const err = await res.json();
         throw new Error(err?.error || "فشل جلب المطاعم");
       }
-      console.log("res",res)
       return res.json();
     },
   });
@@ -37,14 +37,17 @@ export const useRestaurants = () => {
           throw new Error("فشل إضافة المطعم");
         }
         const data = await res.json();
-        console.log("تمت إضافة المطعم:", data.restaurant);
         return data.restaurant;
       },
       onSuccess: (variables) => {
+        toast.success("تم اضافة المطعم بنجاح!")
         queryClient.invalidateQueries({
           queryKey: ["admin-restaurants"],
         });
       },
+      onError(error) {
+        toast.error(`حدث خطأ أثناء أنشاء المطعم`,error)
+      }
     });
   };
 
@@ -71,10 +74,14 @@ export const useRestaurants = () => {
         return data.restaurant;
       },
       onSuccess: (restaurant, { updates }) => {
+        toast.success("تم تعديل المطعم بنجاح!")
         queryClient.invalidateQueries({
           queryKey: ["admin-restaurants"],
         });
       },
+      onError(error) {
+        toast.error(`حدث خطأ أثناء أنشاء المطعم`,error)
+      }
     });
   };
 
@@ -91,14 +98,16 @@ export const useRestaurants = () => {
       },
 
       onSuccess: () => {
+        toast.success("تم حذف المطعم بنجاح!")
         // 3. الحل الأفضل للحذف هو عمل invalidate لكل الـ restaurants
         // لضمان اختفاء العنصر من أي قائمة يظهر فيها
         queryClient.invalidateQueries({
           queryKey: ["admin-restaurants"],
         });
-
-        console.log("تم الحذف وتحديث القائمة بنجاح");
       },
+      onError(error) {
+        toast.error(`حدث خطأ أثناء أنشاء المطعم`,error)
+      }
     });
   };
 

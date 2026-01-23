@@ -1,19 +1,21 @@
 // features/(admin)/menu/api/useCategories.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
+import { toast } from "sonner";
 export const useCategories = (restaurantId: string) => {
   const queryClient = useQueryClient();
-  console.log("idres",restaurantId)
+  console.log("idres", restaurantId);
 
   // 1️⃣ جلب كل التصنيفات مع الأصناف
   const useAdminCategories = useQuery({
     queryKey: ["categories", restaurantId],
     queryFn: async () => {
-      const res = await fetch(`/api/admin/menu/categories?restaurantId=${restaurantId}`);
+      const res = await fetch(
+        `/api/admin/menu/categories?restaurantId=${restaurantId}`,
+      );
       if (!res.ok) throw new Error("فشل جلب التصنيفات");
       return res.json();
     },
-    enabled: !!restaurantId
+    enabled: !!restaurantId,
   });
 
   // 2️⃣ إضافة تصنيف
@@ -32,7 +34,13 @@ export const useCategories = (restaurantId: string) => {
         return res.json();
       },
       onSuccess: () => {
-        queryClient.invalidateQueries({queryKey:["categories", restaurantId]});
+        toast.success("تم اضافة التصنيف بنجاح!");
+        queryClient.invalidateQueries({
+          queryKey: ["categories", restaurantId],
+        });
+      },
+      onError(error) {
+        toast.error(`حدث خطأ أثناء اضافة التصنيف`, error);
       },
     });
 
@@ -40,7 +48,7 @@ export const useCategories = (restaurantId: string) => {
   const useUpdateCategory = () =>
     useMutation({
       mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
-        console.log("update",updates)
+        console.log("update", updates);
         const res = await fetch(`/api/admin/menu/categories/${id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -50,19 +58,43 @@ export const useCategories = (restaurantId: string) => {
         if (!res.ok) throw new Error("فشل تعديل التصنيف");
         return res.json();
       },
-      onSuccess: () => queryClient.invalidateQueries({queryKey:["categories", restaurantId]}),
+      onSuccess: () => {
+        toast.success("تم اضافة التصنيف بنجاح!");
+        queryClient.invalidateQueries({
+          queryKey: ["categories", restaurantId],
+        });
+      },
+      onError(error) {
+        toast.error(`حدث خطأ أثناء تعديل التصنيف`, error);
+      },
     });
 
   // 4️⃣ حذف تصنيف (Soft Delete)
   const useDeleteCategory = () =>
     useMutation({
       mutationFn: async (id: string) => {
-        const res = await fetch(`/api/admin/menu/categories/${id}`, { method: "DELETE" });
+        const res = await fetch(`/api/admin/menu/categories/${id}`, {
+          method: "DELETE",
+        });
         if (!res.ok) throw new Error("فشل حذف التصنيف");
         return res.json();
       },
-      onSuccess: () => queryClient.invalidateQueries({queryKey:["categories", restaurantId]}),
+      onSuccess: () =>{
+        toast.success("تم حذف التصنيف بنجاح!");
+        queryClient.invalidateQueries({
+          queryKey: ["categories", restaurantId],
+        })
+      },
+      onError(error){
+        toast.error(`حدث خطأ أثناء تعديل التصنيف`, error);
+      }
+    
     });
 
-  return { useAdminCategories, useAddCategory, useUpdateCategory, useDeleteCategory };
+  return {
+    useAdminCategories,
+    useAddCategory,
+    useUpdateCategory,
+    useDeleteCategory,
+  };
 };

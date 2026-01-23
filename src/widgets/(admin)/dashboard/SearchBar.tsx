@@ -21,19 +21,32 @@ export const SearchBar = () => {
 
   const data = user?.role === "restaurant_owner" ? admin : customer;
 
-  const results = useMemo(() => {
-    if (!query) return [];
+ const results = useMemo(() => {
+    if (!query || !data) return []; // تأكد أن data موجودة أولاً
 
     const q = query.toLowerCase();
 
+    // نستخدم Array.isArray للتأكد 100% أننا نتعامل مع مصفوفة
+    const restaurants = Array.isArray(data?.restaurants) ? data.restaurants : [];
+    const menuItems = Array.isArray(data?.menuItems) ? data.menuItems : [];
+    const orders = Array.isArray(data?.orders) ? data.orders : [];
+    const categories = Array.isArray(data?.categories) ? data.categories : [];
+
+    console.log("Searching in data:", {
+      restaurants,
+      menuItems,
+      orders,
+      categories,
+    });
+
     const allItems = [
-      ...(data.restaurants || []).map((r) => ({ type: "مطعم", name: r.name, id: r.id })),
-      ...(data.menuItems || []).map((m) => ({ type: "وجبة", name: m.name, id: m.id })),
-      ...(data.orders || []).map((o) => ({ type: "طلب", name: `طلب #${o.id}`, id: o.id })),
-      ...(data.categories || []).map((c) => ({ type: "تصنيف", name: c.name, id: c.id })),
+      ...restaurants.map((r) => ({ type: "مطعم", name: r.name, id: r.id })),
+      ...menuItems.map((m) => ({ type: "وجبة", name: m.name, id: m.id })),
+      ...orders.map((o) => ({ type: "طلب", name: `طلب #${o.id}`, id: o.id })),
+      ...categories.map((c) => ({ type: "تصنيف", name: c.name, id: c.id })),
     ];
 
-    return allItems.filter((item) => item.name.toLowerCase().includes(q));
+    return allItems.filter((item) => item.name?.toLowerCase().includes(q));
   }, [query, data]);
 
   // ✅ لإغلاق القائمة عند الضغط خارج المكون

@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/shared/api/supabaseClient";
-import { getCurrentUser } from "@/shared/libs/auth/auth-file";
+import { getCurrentUser, withAuth } from "@/shared/libs/auth/auth-file";
 import { verifyRestaurantOwner } from "@/shared/libs/auth/verifyRestaurantOwner";
 
 // GET + POST
 export async function GET(req: NextRequest) {
-  const restaurantId = req.nextUrl.searchParams.get("restaurantId");
-
-  const user = await getCurrentUser(req);
-  console.log("user-----------------------------",user)
+return withAuth(req,async(req,user)=>{
+    const restaurantId = req.nextUrl.searchParams.get("restaurantId");
 
   if (!restaurantId)
     return NextResponse.json(
@@ -26,19 +24,18 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json(data);
+})
 }
 
 export async function POST(req: NextRequest) {
-  const user = await getCurrentUser(req);
+return withAuth(req,async(req,user)=>{
   const userId = user?.userId;
   
-  console.log("user",user)
 
-  // if (!userId || user.role !== "owner")
-  //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!userId || user.role !== "restaurant_owner")
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const body = await req.json();
-  console.log("body-------------------",body)
   const { restaurant_id, name } = body;
    
   if (!restaurant_id || !name)
@@ -56,4 +53,5 @@ export async function POST(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json(data, { status: 201 });
+})
 }

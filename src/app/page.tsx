@@ -12,7 +12,7 @@ export default function LandingPage() {
   // 1️⃣ حماية الصفحة: لو المستخدم مسجل دخول بالفعل
   useEffect(() => {
     if (user) {
-      if (user.role === "customer") router.replace("/restaurants");
+      if (user.role === "customer") router.replace("/dashboard");
       else if (user.role === "restaurant_owner") router.replace("/dashboard");
     }
   }, [user, router]);
@@ -20,7 +20,7 @@ export default function LandingPage() {
   // 2️⃣ اختيار الدور
   const handleRoleSelect = (role: "customer" | "restaurant_owner") => {
     localStorage.setItem("user_intent", role);
-    router.push("/signnup"); // أو "/login" حسب Flowك
+    router.push("/signUp"); // أو "/login" حسب Flowك
   };
 
   // 3️⃣ عرض الصفحة فقط إذا المستخدم مش موجود

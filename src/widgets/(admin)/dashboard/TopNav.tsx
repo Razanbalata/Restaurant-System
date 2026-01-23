@@ -62,9 +62,9 @@ const TopNav = () => {
         {/* الجزء الأيمن: الإشعارات والبروفايل */}
         <Stack direction="row" spacing={1} alignItems="center">
           {/* Dark Mode Toggle */}
-          <IconButton onClick={toggleColorMode} color="inherit">
+          {/* <IconButton onClick={toggleColorMode} color="inherit">
             {isDark ? <Sun size={20} /> : <Moon size={20} />}
-          </IconButton>
+          </IconButton> */}
 
           <IconButton sx={{ bgcolor: "#F3F4F6", borderRadius: "12px", p: 1 }}>
             <Badge variant="dot" color="error">
@@ -101,7 +101,7 @@ const TopNav = () => {
                 {user?.name}
               </Typography>
               <Typography variant="caption" color="textSecondary">
-                مالك المطعم
+               {user?.role === "restaurant_owner" ? "مالك مطعم" : "زبون"}
               </Typography>
             </Box>
             <Avatar

@@ -52,7 +52,7 @@ export function SignupForm() {
           // Redirect بعد ثانيتين
           setTimeout(() => {
             if (res.user.role === "customer") {
-              router.push("/restaurants");
+              router.push("/dashboard");
             } else {
               router.push("/dashboard");
             }

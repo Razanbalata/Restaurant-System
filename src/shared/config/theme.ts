@@ -5,7 +5,6 @@ export const getTheme = (mode: "light" | "dark") =>
   createTheme({
     palette: {
       mode,
-
       primary: {
         main: mode === "light" ? "#10B981" : "#34D399",
         contrastText: "#FFFFFF",

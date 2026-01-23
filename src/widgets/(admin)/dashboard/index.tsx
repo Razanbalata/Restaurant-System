@@ -83,32 +83,16 @@
 
 "use client";
 import React, { useState } from "react";
-import {
-  Box,
-  CssBaseline,
-  Drawer,
-  AppBar,
-  Toolbar,
-  Typography,
-  Container,
-  Grid,
-  Button,
-} from "@mui/material";
-import { Sidebar } from "./Sidebar";
+import { Box, CssBaseline, Typography, Container } from "@mui/material";
 import { RestaurantPicker } from "../restaurants/RestaurantPicker";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
-import MenuPage from "../menu/MenuManagment";
-import RestaurantDetailPage from "@/widgets/(admin)/restaurants/RestaurantDetails";
-
-import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import RestaurantForm from "../restaurants/RestaurantForm"; // تأكدي من المسار الصحيح
 import MutationButton from "@/features/(admin)/restaurant/mutations-restaurant/ui/MutationButton";
+import { useMe } from "@/features/user/api/use-me";
 
 export default function AdminDashboard() {
+  const { data: user } = useMe();
+  const role = user?.role;
   const { selectedRestaurant } = useRestaurant();
-  
-  // حالة التحكم في فتح وإغلاق الفورم
-  const [isFormOpen, setIsFormOpen] = useState(false);
 
   return (
     <Box sx={{ display: "flex", bgcolor: "#F8F9FB", minHeight: "100vh" }}>
@@ -126,58 +110,36 @@ export default function AdminDashboard() {
         <Box
           sx={{
             mb: 4,
-            px: 2,
+            p: 3,
+            borderRadius: 3,
+            background: "linear-gradient(135deg, #111, #333)",
+            color: "white",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
           }}
         >
           <Box>
-            <Typography variant="h5" fontWeight="800" color="text.primary">
-              {!selectedRestaurant
-                ? "مرحباً بك، اختر مطعماً"
-                : `إدارة: ${selectedRestaurant.name}`}
+            <Typography variant="h5" fontWeight={800}>
+              {!selectedRestaurant ? "Welcome 👋" : selectedRestaurant.name}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-               إدارة المطاعم والعمليات الخاصة بك
+
+            <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              {role === "restaurant_owner"
+                ? "Manage your restaurant and menu"
+                : "Explore the menu and available items"}
             </Typography>
           </Box>
 
-          {/* زر الإضافة */}
-          {/* <Button
-            variant="contained"
-            disableElevation
-            startIcon={<AddRoundedIcon />}
-            onClick={() => setIsFormOpen(true)}
-            sx={{
-              bgcolor: "#000",
-              color: "#fff",
-              borderRadius: "12px",
-              px: 3,
-              py: 1,
-              textTransform: "none",
-              fontWeight: 600,
-              "&:hover": { bgcolor: "#333" },
-            }}
-          >
-            إضافة مطعم
-          </Button> */}
-          <MutationButton mode="add" restaurant={""} open={true}/>
+          {role === "restaurant_owner" && (
+            <MutationButton mode="add" restaurant="" />
+          )}
         </Box>
 
         {/* محتوى الصفحة الرئيسي */}
         <Container maxWidth="xl">
           <RestaurantPicker />
         </Container>
-
-        {/* عرض الفورم عند الضغط على الزر */}
-        {/* {isFormOpen && (
-          <RestaurantForm 
-            restaurant={""}
-            onClose={() => setIsFormOpen(false)} 
-            // لاحظي أننا لا نمرر 'restaurant' هنا لأنه إضافة جديد
-          />
-        )} */}
       </Box>
     </Box>
   );

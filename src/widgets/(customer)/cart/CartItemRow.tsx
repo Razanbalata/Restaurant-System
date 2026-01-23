@@ -1,19 +1,16 @@
 // entities/cart/ui/CartItemRow.tsx
 "use client";
 
+import { CartItemControls } from "@/features/(customer)/cart/ui/CartItemControls";
 import { Box, Typography, Button, Stack } from "@mui/material";
 
 export function CartItemRow({
   item,
-  onIncrease,
-  onDecrease,
-  onDelete,
 }: {
   item: any;
-  onIncrease: () => void;
-  onDecrease: () => void;
-  onDelete: () => void;
 }) {
+
+  console.log("item in row", item);
   return (
     <Stack
       direction={{ xs: "column", sm: "row" }}
@@ -24,29 +21,20 @@ export function CartItemRow({
       <Box display="flex" alignItems="center" gap={2}>
         <Box
           component="img"
-          src={item.menu_items?.image}
-          alt={item.menu_items?.name}
+          src={item.image}
+          alt={item.name}
           sx={{ width: 80, height: 80, borderRadius: 1, objectFit: "cover" }}
         />
         <Box>
-          <Typography fontWeight="medium">{item.menu_items?.name}</Typography>
+          <Typography fontWeight="medium">{item.name}</Typography>
           <Typography fontSize={14} color="text.secondary">
-            {item.price_at_time} ₪
+            {item.price} ₪
           </Typography>
         </Box>
       </Box>
 
       <Stack direction="row" spacing={1} alignItems="center">
-        <Button variant="outlined" size="small" onClick={onDecrease} disabled={item.quantity <= 1}>
-          −
-        </Button>
-        <Typography>{item.quantity}</Typography>
-        <Button variant="outlined" size="small" onClick={onIncrease}>
-          +
-        </Button>
-        <Button color="error" onClick={onDelete}>
-          Remove
-        </Button>
+        <CartItemControls itemId={item.menuItemId} />
       </Stack>
     </Stack>
   );

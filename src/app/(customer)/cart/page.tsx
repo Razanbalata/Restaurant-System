@@ -1,7 +1,7 @@
 // app/cart/page.tsx
 "use client";
 
-import { CartWidget } from "@/widgets/(customer)/cart/ui/CartWidget";
+import { CartWidget } from "@/widgets/(customer)/cart/CartWidget"; 
 
 export default function CartPage() {
   return <CartWidget />;

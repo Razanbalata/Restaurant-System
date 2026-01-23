@@ -18,8 +18,7 @@ export const adminMenu = [
 
 
 export const customerMenu = [
-  { label: 'استكشف المطاعم', icon: RestaurantMenuRounded, path: '/explore' },
+  { label: 'استكشف المطاعم', icon: RestaurantMenuRounded, path: '/dashboard' },
   { label: 'طلباتي الحالية', icon: ShoppingBagRounded, path: '/order' },
-  { label: 'المفضلة', icon: FavoriteRounded, path: '/favorites' },
   { label: 'سجل الطلبات', icon: HistoryRounded, path: '/cart' },
 ];

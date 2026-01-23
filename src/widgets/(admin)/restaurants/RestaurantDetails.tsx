@@ -413,49 +413,49 @@ import {
   Paper,
   Button,
 } from "@mui/material";
-import { AutoAwesomeMosaicOutlined } from "@mui/icons-material";
-import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 
 // الاستيرادات المحلية للكومبوننتس الجديدة
-import { RestaurantHeader } from "./RestaurantHeader";
 import { RestaurantInfoCard } from "./RestaurantCard";
-// import { MealCard } from ;
 
 // Hooks
 import { useRestaurantById } from "@/features/(admin)/restaurant/get-restaurants/api/useRestaurantById";
 import { useMenu } from "@/features/(customer)/menu/get-menu/useMenu";
-import { useGenerateAndSaveMenu } from "@/features/(admin)/menu/getMenu/api/useGenerateMenu";
 import { useMe } from "@/features/user/api/use-me";
-import { useCartStore } from "@/features/(customer)/cart/model/useCartStore";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
+import { useParams } from "next/navigation";
 
 export default function RestaurantDetailPage() {
-  const { selectedRestaurant } = useRestaurant();
-  const [forceShow, setForceShow] = useState(false);
+  const params = useParams();
+  const restaurantId = params.id as string;
+ console.log("resid",restaurantId)
   const { data: user } = useMe();
-  const { addItem } = useCartStore();
 
   const { data: restaurant, isLoading: isRestaurantLoading } =
-    useRestaurantById(selectedRestaurant.id);
-  console.log("ddd", restaurant);
-  const { data: menuData, isLoading: isMenuFetching } = useMenu(
-    selectedRestaurant.id,
-  );
-  // const { mutate, isPending: isGenerating } = useGenerateAndSaveMenu(
-  //   selectedRestaurant.id,
-  // );
+    useRestaurantById(restaurantId);
+    console.log("restaurant in RestaurantDetails",restaurant);
 
-  const isOwner = user && restaurant?.owner_id === user.id;
-  // const shouldDisplayMenu = (menuData && menuData.length > 0) || forceShow;
+  const { data: menuData = [], isLoading: isMenuLoading } =
+    useMenu(restaurantId);
 
-  if (isRestaurantLoading)
+  const isOwner =
+    user?.role === "restaurant_owner" && restaurant?.owner_id === user.id;
+console.log("isOwner in RestaurantDetails",isOwner,user?.role);
+  const { selectedRestaurant } = useRestaurant();
+
+
+
+  if (isRestaurantLoading) {
     return (
       <Box sx={{ py: 10, textAlign: "center" }}>
         <CircularProgress />
-        <Typography>جاري التحميل...</Typography>
+        <Typography>جاري تحميل بيانات المطعم...</Typography>
       </Box>
     );
-  if (!restaurant) return <Typography>المطعم غير موجود</Typography>;
+  }
+
+  if (!restaurant) {
+    return <Typography>المطعم غير موجود</Typography>;
+  }
 
   return (
     <Box sx={{ bgcolor: "#f8f9fa", minHeight: "100vh" }}>
@@ -465,7 +465,7 @@ export default function RestaurantDetailPage() {
       /> */}
 
       <Container maxWidth="lg" sx={{ mt: -8, position: "relative", zIndex: 2 }}>
-        <RestaurantInfoCard restaurant={selectedRestaurant}  />
+        <RestaurantInfoCard restaurant={selectedRestaurant} isOwner={isOwner} />
 
         {/* <Box sx={{ mt: 6, pb: 10 }}>
           <Typography variant="h4" fontWeight="900" mb={4}>

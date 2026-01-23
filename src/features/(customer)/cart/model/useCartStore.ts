@@ -1,31 +1,6 @@
-// // features/cart/model/use-cart-logic.ts
-// import { useCart } from "@/features/cart/api/useCart";
-// import { useUpdateCart } from "@/features/cart/api/useUpdateCart";
-// import { useDeleteCartItem } from "@/features/cart/api/useDeleteCartItem";
-
-// export const useCartLogic = (userId: string) => {
-//   const cartQuery = useCart(userId);
-//   const update = useUpdateCart();
-//   const remove = useDeleteCartItem();
-
-//   const total =
-//     cartQuery.data?.reduce(
-//       (sum, item) =>
-//         sum + Number(item.quantity) * Number(item.price_at_time),
-//       0
-//     ) ?? 0;
-
-//   return {
-//     cart: cartQuery.data ?? [],
-//     isLoading: cartQuery.isLoading,
-//     update,
-//     remove,
-//     total,
-//   };
-// };
-
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { toast } from "sonner"; // تأكد من تثبيتها عبر npm install sonner
 
 type CartItem = {
   menuItemId: string;
@@ -42,77 +17,87 @@ type CartStore = {
   removeItem: (menuItemId: string) => void;
   updateQty: (menuItemId: string, quantity: number) => void;
   clearCart: () => void;
-
   totalPrice: () => number;
 };
 
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
-        restaurantId: null,
-  items: [],
+      restaurantId: null,
+      items: [],
 
-  addItem: (item, restaurantId) => {
-    const state = get();
+      // 1️⃣ إضافة صنف للسلة
+      addItem: (item, restaurantId) => {
+        const state = get();
 
-    // 🧠 مطعم مختلف؟ نفرغ الكارت
-    if (
-      state.restaurantId &&
-      state.restaurantId !== restaurantId
-    ) {
-      set({ items: [], restaurantId });
-    }
+        // 🧠 إذا حاول الزبون يطلب من مطعم ثاني، بننبهه وبنصفر السلة
+        if (state.restaurantId && state.restaurantId !== restaurantId) {
+          set({ items: [], restaurantId });
+          toast.warning("تم مسح السلة القديمة وبدء طلب من مطعم جديد");
+        }
 
-    const existing = state.items.find(
-      (i) => i.menuItemId === item.menuItemId
-    );
+        const existing = state.items.find(
+          (i) => i.menuItemId === item.menuItemId,
+        );
 
-    if (existing) {
-      set({
-        items: state.items.map((i) =>
-          i.menuItemId === item.menuItemId
-            ? { ...i, quantity: i.quantity + 1 }
-            : i
-        ),
-      });
-    } else {
-      set({
-        items: [...state.items, { ...item, quantity: 1 }],
-        restaurantId,
-      });
-    }
-  },
+        if (existing) {
+          set({
+            items: state.items.map((i) =>
+              i.menuItemId === item.menuItemId
+                ? { ...i, quantity: i.quantity + 1 }
+                : i,
+            ),
+          });
+          toast.info(`تم زيادة كمية ${item.name}`);
+        } else {
+          set({
+            items: [...state.items, { ...item, quantity: 1 }],
+            restaurantId,
+          });
+          toast.success(`تم إضافة ${item.name} للسلة`);
+        }
+      },
 
-  removeItem: (menuItemId) =>
-    set({
-      items: get().items.filter(
-        (i) => i.menuItemId !== menuItemId
-      ),
+      // 2️⃣ حذف صنف واحد
+      removeItem: (menuItemId) => {
+        const itemToDelete = get().items.find(i => i.menuItemId === menuItemId);
+        set({
+          items: get().items.filter((i) => i.menuItemId !== menuItemId),
+        });
+        
+        if (itemToDelete) {
+          toast.error(`تم حذف ${itemToDelete.name}`);
+        }
+      },
+
+      // 3️⃣ تحديث الكمية (سواء زيادة أو نقصان)
+      updateQty: (menuItemId, quantity) => {
+        if (quantity <= 0) {
+          get().removeItem(menuItemId);
+          return;
+        }
+
+        set({
+          items: get().items.map((i) =>
+            i.menuItemId === menuItemId ? { ...i, quantity } : i,
+          ),
+        });
+      },
+
+      // 4️⃣ تفريغ السلة بالكامل
+      clearCart: () => {
+        if (get().items.length === 0) return;
+        
+        set({ items: [], restaurantId: null });
+        toast.success("تم إفراغ السلة");
+      },
+
+      // 5️⃣ حساب المجموع النهائي
+      totalPrice: () =>
+        get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
     }),
-
-  updateQty: (menuItemId, quantity) =>
-    set({
-      items: get().items.map((i) =>
-        i.menuItemId === menuItemId
-          ? { ...i, quantity }
-          : i
-      ),
-    }),
-
-  clearCart: () =>
-    set({ items: [], restaurantId: null }),
-
-  totalPrice: () =>
-    get().items.reduce(
-      (sum, i) => sum + i.price * i.quantity,
-      0
-    ),
-    }),
-    { name: "cart-storage" } // اسم المفتاح في localStorage
-  )
+    { 
+      name: "cart-storage", // التخزين في الـ LocalStorage
+    },
+  ),
 );
-
-// export const useCartStore = create<CartStore>((set, get) => ({
-
-// }));
-

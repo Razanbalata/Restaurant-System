@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "../../../shared/keys/query-keys";
 import { LoginPayload } from "../model/type";
-
+import {toast} from "sonner"
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
@@ -24,6 +24,10 @@ export const useLogin = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(queryKeys.user.me(), data.user);
       queryClient.invalidateQueries({ queryKey: queryKeys.user.all });
+      toast.success("تم تسجيل الدخول بنجاح!")
+    },
+    onError(error) {
+      toast.error("حدث خطأ أثناء تسجيل الدخول",error)
     },
   });
 };

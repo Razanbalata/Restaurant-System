@@ -2,6 +2,7 @@
 import { supabase } from "@/shared/api/supabaseRealTime"; 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
+import {toast} from "sonner"
 
 export const useOrders = (restaurantId?: string) => {
   const queryClient = useQueryClient();
@@ -31,9 +32,15 @@ export const useOrders = (restaurantId?: string) => {
     },
     onSuccess: () => {
       if (restaurantId)
+        toast.success("تم تعديل الطلب بنجاح!")
         queryClient.invalidateQueries({ queryKey: ["orders", restaurantId] });
     },
+    onError: (error) =>{
+       toast.error("حدث خطأ أثناء تعديل الطلب",error)
+    }
   });
+
+// ======= Real Time Feature 
 
   useEffect(() => {
     if (!restaurantId) return;

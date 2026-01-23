@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "../../../shared/keys/query-keys";
+import { toast } from "sonner";
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
@@ -17,6 +18,10 @@ export const useLogout = () => {
     onSuccess: () => {
       queryClient.setQueryData(queryKeys.user.me(), null); // إزالة اليوزر من React Query cache
       queryClient.invalidateQueries({ queryKey: queryKeys.user.all }); // إعادة تحميل أي بيانات متعلقة
+     toast.success("تم تسجيل الخروج بنجاح!")
     },
+    onError:(error)=>{
+      toast.error("حدث خطأ أثناء تسجيل الخروج",error)
+    }
   });
 };

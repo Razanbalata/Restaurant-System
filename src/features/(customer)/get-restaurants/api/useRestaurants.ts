@@ -7,7 +7,7 @@ const fetchRestaurants = async (): Promise<Restaurant[]> => {
   const res = await fetch(`/api/customer/restaurants`);
   if (!res.ok) throw new Error("فشل جلب المطاعم");
   const data = await res.json();
-  return  data.restaurants ?? [];
+  return  data ?? [];
 };
 
 

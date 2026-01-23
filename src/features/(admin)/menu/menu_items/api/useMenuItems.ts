@@ -1,9 +1,8 @@
 // features/(admin)/menu/api/useMenuItems.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
+import { toast } from "sonner"
 export const useMenuItems = (categoryId: string) => {
   const queryClient = useQueryClient();
-
   // 1️⃣ جلب الأصناف
   const useAdminMenuItems = useQuery({
     queryKey: ["menu_items", categoryId],
@@ -27,7 +26,13 @@ export const useMenuItems = (categoryId: string) => {
         if (!res.ok) throw new Error("فشل إضافة الصنف");
         return res.json();
       },
-      onSuccess: () => queryClient.invalidateQueries({queryKey:["menu_items", categoryId]}),
+      onSuccess: () =>{
+         toast.success("تم اضافة الصنف بنجاح!")
+         queryClient.invalidateQueries({queryKey:["menu_items", categoryId]})
+        },
+      onError(error) {
+        toast.error(`حدث خطأ أثناء إنشاء الصنف`,error)
+      }
     });
 
   // 3️⃣ تعديل صنف
@@ -42,7 +47,14 @@ export const useMenuItems = (categoryId: string) => {
         if (!res.ok) throw new Error("فشل تعديل الصنف");
         return res.json();
       },
-      onSuccess: () => queryClient.invalidateQueries({queryKey:["menu_items", categoryId]}),
+      onSuccess: () =>{
+        toast.success("تم تعديل الصنف بنجاح!")
+         queryClient.invalidateQueries({queryKey:["menu_items", categoryId]})
+      },
+      onError(error) {
+        toast.error(`حدث خطأ أثناء تعديل الصنف`,error)
+      }
+      
     });
 
   // 4️⃣ حذف صنف (Soft Delete)
@@ -53,7 +65,14 @@ export const useMenuItems = (categoryId: string) => {
         if (!res.ok) throw new Error("فشل حذف الصنف");
         return res.json();
       },
-      onSuccess: () => queryClient.invalidateQueries({queryKey:["menu_items", categoryId]}),
+      onSuccess: () =>{
+        toast.success("تم حذف الصنف بنجاح!")
+         queryClient.invalidateQueries({queryKey:["menu_items", categoryId]})
+      }, 
+      onError(error) {
+        toast.error(`حدث خطأ أثناء حذف الصنف`,error)
+      }
+      
     });
 
   return { useAdminMenuItems, useAddMenuItem, useUpdateMenuItem, useDeleteMenuItem };

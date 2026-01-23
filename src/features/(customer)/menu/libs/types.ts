@@ -1,19 +1,20 @@
-export type MenuSource = "AI" | "MANUAL";
-export type MenuStatus = "DRAFT" | "PUBLISHED";
+// export type MenuSource = "AI" | "MANUAL";
+// export type MenuStatus = "DRAFT" | "PUBLISHED";
 
-export interface Menu {
-  id: string;
-  restaurantId: string;
-  source: MenuSource;
-  status: MenuStatus;
-  items: MenuItem[];
-}
+// export interface Menu {
+//   id: string;
+//   restaurantId: string;
+//   source: MenuSource;
+//   status: MenuStatus;
+//   items: MenuItem[];
+// }
 
-export interface MenuItem {
+export type MenuItem = {
   id: string;
   name: string;
-  description?: string;
+  description: string;
   price: number;
-  category: string;
-  aiGenerated: boolean;
-}
+  image?: string;
+  restaurant_id: string;
+};
+

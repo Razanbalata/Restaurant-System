@@ -16,8 +16,8 @@ export function useSearchData() {
   const { selectedRestaurant } = useRestaurant(); // المطعم المحدد حالياً للأونر
   console.log("selectedRestaurant in useSearchData:", selectedRestaurant);
   // ===================== Owner =====================
-  const { data: adminRestaurants } = useRestaurantById(selectedRestaurant?.id || '');
-  
+  const {  useAdminRestaurants } = useRestaurants();
+  const { data: adminRestaurants } = useAdminRestaurants;
   const { useAdminCategories } = useCategories(selectedRestaurant?.id || '');
   const { data: adminCategories } = useAdminCategories;
   console.log("adminCategories in useSearchData:", adminCategories);
@@ -33,6 +33,7 @@ export function useSearchData() {
   const { data: menuItems } = useMenu(selectedRestaurant?.id || '');
   const { data: customerOrders } = useGetOrders();
   const { items: cartItems } = useCartStore();
+  console.log("cartItems in useSearchData:", adminRestaurants);
 
   return {
     user,

@@ -13,123 +13,156 @@ import {
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
+import RestaurantMenuRoundedIcon from "@mui/icons-material/RestaurantMenuRounded";
+
 import MutationButton from "@/features/(admin)/restaurant/mutations-restaurant/ui/MutationButton";
 import DeleteRestaurantBtn from "@/features/(admin)/restaurant/delete-restaurant/ui/DeleteRestaurantBtn";
+import { useRouter } from "next/navigation";
 
-export const RestaurantInfoCard = ({ restaurant }) => {
+export const RestaurantInfoCard = ({ restaurant, isOwner }) => {
+  const router = useRouter();
+
   return (
     <Box sx={{ width: "100%", position: "relative" }}>
-      {/* 1. الـ Banner العلوي - يعطي طابع الفخامة */}
+      {/* ===== Banner ===== */}
       <Box
         sx={{
-          height: 220,
-          borderRadius: "32px 32px 0 0",
-          background: "linear-gradient(45deg, #FF5B22 30%, #FF9130 90%)", // أو صورة المطعم
+          height: 260,
+          borderRadius: "32px",
+          background: `
+            linear-gradient(
+              to bottom,
+              rgba(0,0,0,0.15),
+              rgba(0,0,0,0.65)
+            ),
+            url("/restaurant-cover.jpg")
+          `,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
           position: "relative",
-          mb: "-60px", // لسحب الكارد للأعلى
         }}
       />
 
-      {/* 2. كارد المعلومات الأساسي */}
+      {/* ===== Card ===== */}
       <Paper
         elevation={0}
         sx={{
-          p: { xs: 3, md: 5 },
+          mt: "-120px",
           mx: { xs: 2, md: 4 },
+          p: { xs: 3, md: 5 },
           borderRadius: "32px",
-          bgcolor: "background.paper",
-          boxShadow: "0 25px 50px rgba(0,0,0,0.06)",
+          boxShadow: "0 30px 60px rgba(0,0,0,0.08)",
           position: "relative",
-          zIndex: 2,
         }}
       >
-        {/* أزرار الإدارة في زاوية علوية مستقلة */}
-        <Box sx={{ position: "absolute", top: 24, right: 24 }}>
-          <CardActions sx={{ gap: 1.5, p: 0 }}>
-            <Box sx={{width:"100px"}}><MutationButton mode="edit" restaurant={restaurant} /></Box>
+        {/* Owner Actions */}
+        {isOwner && (
+          <CardActions sx={{ position: "absolute", top: 24, right: 24, gap: 1 }}>
+            <MutationButton mode="edit" restaurant={restaurant} />
             <DeleteRestaurantBtn r={restaurant} />
           </CardActions>
-        </Box>
+        )}
+        {/* CTA Menu */}
+            {!isOwner &&<Button
+              size="large"
+              variant="contained"
+              startIcon={<RestaurantMenuRoundedIcon />}
+              sx={{
+                px: 4,
+                borderRadius: "14px",
+                fontWeight: 800,
+                alignSelf: { xs: "stretch", sm: "center" },
+              }}
+              onClick={() => router.push(`/menu`)}
+            >
+              View Menu
+            </Button>}
 
         <Stack spacing={4}>
-          <Box>
-            {/* اللوغو أو الحرف الأول من المطعم */}
-            <Avatar 
-              sx={{ 
-                width: 90, height: 90, mt: -10, border: "6px solid white", 
-                boxShadow: "0 10px 20px rgba(0,0,0,0.1)", bgcolor: "#1A1C1E",
-                fontSize: "2rem", fontWeight: "bold"
+          {/* ===== Header ===== */}
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
+            <Avatar
+              sx={{
+                width: 96,
+                height: 96,
+                fontSize: "2.5rem",
+                fontWeight: 900,
+                bgcolor: "#111",
+                border: "6px solid white",
               }}
             >
               {restaurant.name?.charAt(0)}
             </Avatar>
 
-            <Stack direction="row" alignItems="center" spacing={1} sx={{ mt: 3 }}>
-              <Typography
-                variant="h3"
-                fontWeight="950"
-                sx={{ fontSize: { xs: "2rem", md: "2.8rem" }, letterSpacing: "-1px" }}
-              >
-                {restaurant.name}
-              </Typography>
-              <VerifiedRoundedIcon color="primary" sx={{ fontSize: 28 }} />
-            </Stack>
+            <Box flex={1}>
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Typography
+                  variant="h3"
+                  fontWeight={900}
+                  sx={{ letterSpacing: "-1px" }}
+                >
+                  {restaurant.name}
+                </Typography>
+                <VerifiedRoundedIcon color="primary" />
+              </Stack>
 
-            {/* تفاصيل سريعة تحت الاسم مباشرة */}
-            <Stack direction="row" spacing={2} sx={{ mt: 1, alignItems: "center" }}>
-              <Chip label={restaurant.category} size="small" sx={{ fontWeight: 700, bgcolor: "#f0f0f0" }} />
-              <Box display="flex" alignItems="center" gap={0.5}>
-                <Rating value={4.8} readOnly size="small" precision={0.5} />
-                <Typography variant="body2" fontWeight="800">4.8</Typography>
-              </Box>
-            </Stack>
-          </Box>
+              <Stack direction="row" spacing={2} mt={1} alignItems="center">
+                <Chip label={restaurant.category} size="small" />
+                <Rating value={4.8} readOnly size="small" />
+                <Typography fontWeight={700}>4.8</Typography>
+              </Stack>
+            </Box>
+
+            
+          </Stack>
 
           <Divider />
 
-          {/* شبكة المعلومات (Info Grid) */}
-          <Box 
-            display="grid" 
-            gridTemplateColumns={{ xs: "1fr", sm: "1fr 1fr 1fr" }} 
-            gap={4}
+          {/* ===== Info Grid ===== */}
+          <Box
+            display="grid"
+            gridTemplateColumns={{ xs: "1fr", md: "1fr 1fr 1fr" }}
+            gap={3}
           >
-            <Box>
-              <Typography color="text.secondary" variant="caption" fontWeight="bold" sx={{ textTransform: "uppercase" }}>
-                الموقع الحالي
-              </Typography>
-              <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                <LocationOnRoundedIcon color="primary" />
-                <Typography variant="body1" fontWeight="600">{restaurant.city}, {restaurant.country}</Typography>
-              </Stack>
-            </Box>
+            <InfoItem
+              icon={<LocationOnRoundedIcon color="primary" />}
+              label="Location"
+              value={`${restaurant.city}, ${restaurant.country}`}
+            />
 
-            <Box>
-              <Typography color="text.secondary" variant="caption" fontWeight="bold" sx={{ textTransform: "uppercase" }}>
-                وقت التجهيز المتوقع
-              </Typography>
-              <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                <AccessTimeRoundedIcon color="primary" />
-                <Typography variant="body1" fontWeight="600">30-45 دقيقة</Typography>
-              </Stack>
-            </Box>
+            <InfoItem
+              icon={<AccessTimeRoundedIcon color="primary" />}
+              label="Preparation Time"
+              value="30 – 45 minutes"
+            />
 
-            <Box>
-              <Typography color="text.secondary" variant="caption" fontWeight="bold" sx={{ textTransform: "uppercase" }}>
-                حالة المتجر
-              </Typography>
-              <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
-                <Box sx={{ width: 12, height: 12, borderRadius: "50%", bgcolor: "#4CAF50", mt: 0.8 }} />
-                <Typography variant="body1" fontWeight="600">نشط الآن</Typography>
-              </Stack>
-            </Box>
+            <InfoItem
+              icon={<Box sx={{
+                width: 12,
+                height: 12,
+                borderRadius: "50%",
+                bgcolor: "#4CAF50",
+                mt: 0.6,
+              }} />}
+              label="Status"
+              value="Open Now"
+            />
           </Box>
 
-          <Box sx={{ bgcolor: "#F8F9FB", p: 3, borderRadius: "20px" }}>
-            <Typography variant="subtitle2" fontWeight="800" gutterBottom>
-              وصف المنشأة
+          {/* ===== Description ===== */}
+          <Box
+            sx={{
+              bgcolor: "#F7F8FA",
+              p: 3,
+              borderRadius: "20px",
+            }}
+          >
+            <Typography fontWeight={800} gutterBottom>
+              About Restaurant
             </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.7 }}>
-              {restaurant.description || "هذا المطعم يقدم أفضل الوجبات السريعة بجودة عالية وأسعار منافسة."}
+            <Typography color="text.secondary" lineHeight={1.8}>
+              {restaurant.description ||
+                "This restaurant offers high quality meals prepared with fresh ingredients and professional standards."}
             </Typography>
           </Box>
         </Stack>
@@ -137,3 +170,22 @@ export const RestaurantInfoCard = ({ restaurant }) => {
     </Box>
   );
 };
+
+/* ===== Small Helper Component ===== */
+const InfoItem = ({ icon, label, value }) => (
+  <Box>
+    <Typography
+      variant="caption"
+      color="text.secondary"
+      fontWeight={700}
+      sx={{ textTransform: "uppercase" }}
+    >
+      {label}
+    </Typography>
+
+    <Stack direction="row" spacing={1} mt={1} alignItems="center">
+      {icon}
+      <Typography fontWeight={600}>{value}</Typography>
+    </Stack>
+  </Box>
+);

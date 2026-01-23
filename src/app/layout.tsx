@@ -8,6 +8,7 @@ import { queryKeys } from "@/shared/keys/query-keys";
 import { AppThemeProvider } from "./providers/ThemeProvider";
 import { RestaurantProvider } from "./providers/RestaurantContext";
 import { Sidebar } from "@/widgets/(admin)/dashboard/Sidebar";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -44,7 +45,10 @@ export default async function RootLayout({
       {/* نستخدم h-screen لمنع السكرول في الجسم الرئيسي، و flex لتوزيع العناصر */}
       <body className=" h-screen overflow-hidden bg-gray-100">
         <ReactQueryProvider dehydratedState={dehydratedState}>
-          <AppThemeProvider>{children}</AppThemeProvider>
+          <AppThemeProvider>
+            <Toaster richColors position="top-center" />
+            {children}
+          </AppThemeProvider>
         </ReactQueryProvider>
       </body>
     </html>

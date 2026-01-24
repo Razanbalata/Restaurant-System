@@ -74,7 +74,7 @@ const restaurantsQuery =
       </Typography>
 
       <Grid container spacing={3}>
-        {restaurantsQuery .data.map((res: any) => (
+        {restaurantsQuery.data.map((res: any) => (
           <Grid item xs={12} sm={6} md={4} key={res.id} mt={3}>
             <Card
               onClick={() => handleSelect(res)}

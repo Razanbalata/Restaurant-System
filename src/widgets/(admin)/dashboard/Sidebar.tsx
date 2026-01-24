@@ -124,6 +124,8 @@ import { useRestaurant } from "@/app/providers/RestaurantContext";
 import { adminMenu, customerMenu } from "@/shared/config/sidebar.config";
 import { Tooltip } from "@mui/material";
 import { useColorMode } from "@/app/providers/ThemeProvider";
+import { LogOutIcon } from "lucide-react";
+import { useLogout } from "@/features/user/api/use-logout";
 
 export const Sidebar = ({
   open,
@@ -138,9 +140,14 @@ export const Sidebar = ({
   const { selectedRestaurant } = useRestaurant();
   const theme = useTheme();
   const { toggleColorMode } = useColorMode();
+  const {mutate} = useLogout()
 
   const isAdmin = user?.role === "restaurant_owner";
   const menuItems = isAdmin ? adminMenu : customerMenu;
+
+  function handleClick (){
+    mutate();
+  }
 
   return (
     <Box
@@ -269,11 +276,11 @@ export const Sidebar = ({
 
       {/* Settings */}
       <Box sx={{ p: 1 }}>
-        <ListItemButton sx={{ borderRadius: 2 }}>
+        <ListItemButton sx={{ borderRadius: 2 }} onClick={handleClick}>
           <ListItemIcon>
-            <SettingsRounded />
+            <LogOutIcon />
           </ListItemIcon>
-          {open && <ListItemText primary="الإعدادات" />}
+          {open && <ListItemText primary="تسجيل الخروج" />}
         </ListItemButton>
       </Box>
     </Box>

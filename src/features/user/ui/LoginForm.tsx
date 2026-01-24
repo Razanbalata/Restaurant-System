@@ -24,7 +24,7 @@ export function LoginForm() {
       onSuccess: (res) => {
         setSuccessMessage(`تم تسجيل الدخول! دورك: ${res.user.role}`);
         setTimeout(() => {
-          if (res.user.role === "customer") router.push("/restaurants");
+          if (res.user.role === "customer") router.push("/dashboard");
           else router.push("/dashboard");
         }, 2000);
       },

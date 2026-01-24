@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/shared/api/supabaseClient";
 import { getCurrentUser, withAuth } from "@/shared/libs/auth/auth-file";
+import { verifyRestaurantOwner } from "@/shared/libs/auth/verifyRestaurantOwner";
 
 export async function GET(req: NextRequest) {
   return withAuth(req, async (req, user) => {
@@ -10,9 +11,12 @@ export async function GET(req: NextRequest) {
         { error: "restaurantId required" },
         { status: 400 },
       );
+console.log("user================", user);
+    // if (!user || user.role !== "restaurant_owner")
+    //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    if (!user || user.role !== "restaurant_owner")
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+   const ownership = await verifyRestaurantOwner(restaurantId, user.userId);
+      if (!ownership.ok) return ownership.response;
 
     const { data, error } = await supabase
       .from("orders")

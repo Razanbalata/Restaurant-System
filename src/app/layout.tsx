@@ -43,7 +43,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       {/* نستخدم h-screen لمنع السكرول في الجسم الرئيسي، و flex لتوزيع العناصر */}
-      <body className=" h-screen overflow-hidden bg-gray-100">
+      <body className=" h-screen bg-gray-100">
         <ReactQueryProvider dehydratedState={dehydratedState}>
           <AppThemeProvider>
             <Toaster richColors position="top-center" />

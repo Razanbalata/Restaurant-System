@@ -1,8 +1,8 @@
 // hooks/useOrders.ts
-import { supabase } from "@/shared/api/supabaseRealTime"; 
+import { supabase } from "@/shared/api/supabaseRealTime";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
-import {toast} from "sonner"
+import { toast } from "sonner";
 
 export const useOrders = (restaurantId?: string) => {
   const queryClient = useQueryClient();
@@ -31,16 +31,15 @@ export const useOrders = (restaurantId?: string) => {
       return res.json();
     },
     onSuccess: () => {
-      if (restaurantId)
-        toast.success("تم تعديل الطلب بنجاح!")
-        queryClient.invalidateQueries({ queryKey: ["orders", restaurantId] });
+      if (restaurantId) toast.success("تم تعديل الطلب بنجاح!");
+      queryClient.invalidateQueries({ queryKey: ["orders", restaurantId] });
     },
-    onError: (error) =>{
-       toast.error("حدث خطأ أثناء تعديل الطلب",error)
-    }
+    onError: (error) => {
+      toast.error("حدث خطأ أثناء تعديل الطلب", error);
+    },
   });
 
-// ======= Real Time Feature 
+  // ======= Real Time Feature
 
   useEffect(() => {
     if (!restaurantId) return;
@@ -60,9 +59,16 @@ export const useOrders = (restaurantId?: string) => {
           console.log("تغيير جديد في الطلبات:", payload);
           // تحديث البيانات فوراً في المتصفح
           queryClient.invalidateQueries({ queryKey: ["orders", restaurantId] });
-        }
+        },
       )
-      .subscribe();
+      .subscribe((status, err) => {
+        if (status === "SUBSCRIBED") {
+          console.log("متصل بنجاح بالبث المباشر! ✅");
+        }
+        if (status === "CHANNEL_ERROR") {
+          console.error("فشل الاتصال بالقناة: ❌", err);
+        }
+      });
 
     return () => {
       supabase.removeChannel(channel);

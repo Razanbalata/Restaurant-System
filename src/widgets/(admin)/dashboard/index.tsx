@@ -88,14 +88,15 @@ import { RestaurantPicker } from "../restaurants/RestaurantPicker";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
 import MutationButton from "@/features/(admin)/restaurant/mutations-restaurant/ui/MutationButton";
 import { useMe } from "@/features/user/api/use-me";
+import { RestaurantPickerSkeleton } from "@/shared/ui/Skeletons/RestaurantPickerSkeleton";
 
 export default function AdminDashboard() {
-  const { data: user } = useMe();
+  const { data: user, isLoading } = useMe();
   const role = user?.role;
   const { selectedRestaurant } = useRestaurant();
 
   return (
-    <Box sx={{ display: "flex", bgcolor: "#F8F9FB", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex", bgcolor: "#000", minHeight: "100vh" }}>
       <CssBaseline />
 
       <Box
@@ -111,7 +112,7 @@ export default function AdminDashboard() {
           sx={{
             mb: 4,
             p: 3,
-            borderRadius: 3,
+            borderRadius: 1,
             background: "linear-gradient(135deg, #111, #333)",
             color: "white",
             display: "flex",

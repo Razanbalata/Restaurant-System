@@ -17,6 +17,7 @@ import FoodCard from "./DishesGrid";
 import { MenuHeader } from "./MenuHeader";
 import { CategoryTabs } from "./CategoryTabs";
 import { MenuItemMutationButton } from "@/features/(admin)/menu/ui/MenuItemMutationButton";
+import { MenuManagementSkeleton } from "@/shared/ui/Skeletons/MenuManagementSkeleton";
 
 export default function MenuManagementPage() {
   const { selectedRestaurant, isReady } = useRestaurant();
@@ -46,12 +47,9 @@ export default function MenuManagementPage() {
     return allMeals.filter(meal => meal.category_id === selectedCategoryId);
   }, [activeTab, allMeals, selectedCategoryId]);
 
-  if (!isReady || catLoading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-        <CircularProgress />
-      </Box>
-    );
+// حالة التحميل الشاملة
+  if (!isReady || catLoading || mealsLoading) {
+    return <MenuManagementSkeleton />;
   }
 
   return (

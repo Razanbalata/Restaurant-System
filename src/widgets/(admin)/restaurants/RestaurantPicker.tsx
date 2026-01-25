@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { ArrowForwardRounded, StarRounded } from "@mui/icons-material";
 import { useMe } from "@/features/user/api/use-me";
 import { useRestaurantsForCustomer } from "@/features/(customer)/get-restaurants/api/useRestaurants";
+import { RestaurantPickerSkeleton } from "@/shared/ui/Skeletons/RestaurantPickerSkeleton";
 
 export const RestaurantPicker = () => {
 
@@ -44,21 +45,10 @@ const restaurantsQuery =
   };
 
 
-  if (userLoading) {
-  return (
-    <Box sx={{ display: "flex", justifyContent: "center", minHeight: "80vh" }}>
-      <CircularProgress />
-    </Box>
-  );
-}
-
-  if (restaurantsQuery.isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", minHeight: "80vh" }}>
-        <CircularProgress />
-      </Box>
-    );
+ if (userLoading || restaurantsQuery.isLoading) {
+    return <RestaurantPickerSkeleton />;
   }
+
 
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
@@ -73,19 +63,20 @@ const restaurantsQuery =
           : "اختر مطعماً لتصفح القائمة والعناصر المتاحة."}
       </Typography>
 
-      <Grid container spacing={3}>
+      <Grid container spacing={3} flexWrap={"nowrap"}>
         {restaurantsQuery.data.map((res: any) => (
-          <Grid item xs={12} sm={6} md={4} key={res.id} mt={3}>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={res.id} mt={3} width={{sm:"60%",md:"50%"}} flexWrap={"nowrap"}>
             <Card
               onClick={() => handleSelect(res)}
               sx={{
-                borderRadius: 4,
+                borderRadius: 1,
                 border: `1px solid ${theme.palette.divider}`,
                 bgcolor: "background.paper",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
                 transition: "all 0.3s ease-in-out",
                 cursor: "pointer",
                 position: "relative",
+                width:"100%",
                 "&:hover": {
                   transform: "translateY(-8px)",
                   boxShadow: `0 12px 24px ${theme.palette.mode === "light" ? "rgba(16,185,129,0.12)" : "rgba(0,0,0,0.4)"}`,

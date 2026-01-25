@@ -1,39 +1,3 @@
-// // widgets/cart/ui/CartPageLayout.tsx
-// "use client";
-
-// import { Box, Grid, Typography, Paper, Stack } from "@mui/material";
-// import { useMe } from "@/features/user/api/use-me";
-// import { CartItemsList } from "./CartItemList";
-// import { CartSummary } from "./CartSummary";
-
-// export function CartWidget() {
-//   const { data: user, isLoading } = useMe();
-
-//   if (isLoading) return <Typography>Loading...</Typography>;
-//   if (!user) return <Typography>Please login</Typography>;
-
-//   return (
-//     <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 1200, mx: "auto" }}>
-//       <Typography variant="h4" mb={4} fontWeight="bold">
-//         🛒 Your Cart
-//       </Typography>
-
-//       <Grid container spacing={4}>
-//         {/* Products List */}
-//         <Grid item xs={12} md={8}>
-//           <Stack spacing={2}>
-//             <CartItemsList userId={user.id} />
-//           </Stack>
-//         </Grid>
-
-//         {/* Summary */}
-//         <Grid item xs={12} md={4}>
-//           <CartSummary userId={user.id} />
-//         </Grid>
-//       </Grid>
-//     </Box>
-//   );
-// }
 
 // widgets/cart/ui/CartWidget.tsx
 "use client";
@@ -56,7 +20,7 @@ export function CartWidget() {
   } = useCart();
   console.log("cart", cart, "total", total);
 
-  if (userLoading) return <CartSkeleton />;
+  if (userLoading || !user) return <CartSkeleton />;
   if (!user)
     return (
       <Typography sx={{ textAlign: "center", mt: 10 }}>

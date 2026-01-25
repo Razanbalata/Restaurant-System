@@ -1,90 +1,79 @@
-// shared/ui/Skeletons/CartSkeleton.tsx
-import { Box, Skeleton, Stack } from "@mui/material";
+import { Box, Container, Typography, Stack, Skeleton, Divider } from "@mui/material";
 import { AppCard } from "@/shared/ui/Card/AppCard";
 
-export const CartSkeleton = () => (
-  <Box 
-    sx={{ 
-      p: { xs: 2, md: 4 }, 
-      maxWidth: 1200, 
-      mx: "auto",
-      width: "100%"
-    }}
-  >
-    {/* عنوان الصفحة السكلتون */}
-    <Skeleton 
-      variant="text" 
-      width={250} 
-      height={60} 
-      sx={{ mb: 6, mx: 'auto', borderRadius: 2 }} 
-    />
+export function CartSkeleton() {
+  return (
+    <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 1200, mx: "auto" }}>
+      {/* عنوان الصفحة */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 6 }}>
+        <Skeleton variant="text" width="200px" height={60} />
+      </Box>
 
-    <Box 
-      sx={{ 
-        display: "flex", 
-        flexDirection: { xs: "column", md: "row" }, 
-        gap: 4, 
-        justifyContent: "center",
-        alignItems: "flex-start"
-      }}
-    >
-      {/* قائمة المنتجات السكلتون */}
-      <Box sx={{ flex: 2, width: "100%" }}>
-        <Stack spacing={2}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          gap: 4,
+          alignItems: "flex-start",
+          width: "100%",
+        }}
+      >
+        {/* الجزء الخاص بالمنتجات - Products List Skeleton */}
+        <Box sx={{ flex: 2, width: "100%", display: "flex", flexDirection: "column", gap: 2 }}>
           {[1, 2, 3].map((i) => (
-            <AppCard key={i}>
-              <Stack direction="row" spacing={2} alignItems="center">
-                {/* صورة المنتج */}
-                <Skeleton 
-                  variant="rectangular" 
-                  width={80} 
-                  height={80} 
-                  sx={{ borderRadius: 3 }} 
-                />
-                
-                {/* نصوص المنتج */}
-                <Box sx={{ flex: 1 }}>
-                  <Skeleton width="50%" height={25} sx={{ mb: 1 }} />
-                  <Skeleton width="30%" height={20} />
+            <AppCard key={i} sx={{ width: "100%" }}>
+              <Stack
+                direction={{ xs: "column", sm: "row" }}
+                alignItems="center"
+                justifyContent="space-between"
+                spacing={2}
+              >
+                <Box display="flex" alignItems="center" gap={2} sx={{ width: '100%' }}>
+                  {/* صورة المنتج */}
+                  <Skeleton variant="rectangular" width={80} height={80} sx={{ borderRadius: 1 }} />
+                  
+                  {/* نصوص المنتج */}
+                  <Box sx={{ flex: 1 }}>
+                    <Skeleton variant="text" width="60%" height={25} />
+                    <Skeleton variant="text" width="30%" height={20} />
+                  </Box>
                 </Box>
 
-                {/* أزرار التحكم */}
-                <Stack alignItems="flex-end" spacing={1}>
-                   <Skeleton variant="rectangular" width={100} height={35} sx={{ borderRadius: 2 }} />
-                   <Skeleton variant="circular" width={30} height={30} />
-                </Stack>
+                {/* أزرار التحكم (الزيادة والنقصان) */}
+                <Skeleton variant="rounded" width={120} height={40} sx={{ borderRadius: 8 }} />
               </Stack>
             </AppCard>
           ))}
-        </Stack>
-      </Box>
+        </Box>
 
-      {/* ملخص الطلب السكلتون */}
-      <Box sx={{ flex: 1, width: "100%" }}>
-        <AppCard>
-          <Skeleton variant="text" width="60%" height={35} sx={{ mb: 3 }} />
-          <Stack spacing={2}>
-            <Box display="flex" justifyContent="space-between">
-              <Skeleton width="40%" />
-              <Skeleton width="20%" />
-            </Box>
-            <Box display="flex" justifyContent="space-between">
-              <Skeleton width="40%" />
-              <Skeleton width="20%" />
-            </Box>
-            <Skeleton variant="rectangular" height={1} sx={{ my: 1 }} />
-            <Box display="flex" justifyContent="space-between">
-              <Skeleton width="30%" height={30} />
-              <Skeleton width="30%" height={30} />
-            </Box>
-            <Skeleton 
-              variant="rectangular" 
-              height={50} 
-              sx={{ mt: 2, borderRadius: 3 }} 
-            />
-          </Stack>
-        </AppCard>
+        {/* الجزء الخاص بالملخص - Summary Skeleton */}
+        <Box sx={{ flex: 1, width: "100%" }}>
+          <AppCard>
+            <Skeleton variant="text" width="50%" height={30} sx={{ mb: 3 }} />
+            
+            <Stack spacing={2}>
+              <Box display="flex" justifyContent="space-between">
+                <Skeleton variant="text" width="40%" />
+                <Skeleton variant="text" width="20%" />
+              </Box>
+              <Box display="flex" justifyContent="space-between">
+                <Skeleton variant="text" width="30%" />
+                <Skeleton variant="text" width="20%" />
+              </Box>
+              
+              <Divider sx={{ my: 1 }} />
+              
+              <Box display="flex" justifyContent="space-between">
+                <Skeleton variant="text" width="40%" height={40} />
+                <Skeleton variant="text" width="30%" height={40} />
+              </Box>
+
+              {/* زر تأكيد الطلب */}
+              <Skeleton variant="rectangular" width="100%" height={48} sx={{ borderRadius: 1, mt: 2 }} />
+            </Stack>
+          </AppCard>
+        </Box>
       </Box>
     </Box>
-  </Box>
-);
+  );
+}

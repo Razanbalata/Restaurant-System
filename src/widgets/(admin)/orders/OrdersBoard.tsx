@@ -4,19 +4,27 @@ import { Box, Stack, Container, Typography } from "@mui/material";
 import { useOrders } from "@/features/(admin)/order/getOrder/api/useOrders";  
 import OrderColumn from "./OrderColumn";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
+import { useOrdersRealtime } from "@/features/(admin)/order/realTime/useOrdersRealtime"; 
+import { OrdersAdminSkeleton } from "@/shared/ui/Skeletons/OrdersAdminSkeleton";
+
 
 export default function OrdersAdminPage() {
   const {selectedRestaurant} = useRestaurant();
-  const { useOrdersQuery } = useOrders(selectedRestaurant?.id || '');
-  const { data: orders=[] } = useOrdersQuery;
+  const { useOrdersQuery  } = useOrders(selectedRestaurant?.id || '');
+  const { data: orders=[] ,isLoading} = useOrdersQuery;
    console.log("Fetched orders:", orders);
   // تفعيل التحديث التلقائي (Real-time)
   // useRealtimeOrders(); 
 
+  useOrdersRealtime(selectedRestaurant?.id || '');
   const handleStatusUpdate = (orderId: string, newStatus: string) => {
     // هنا نستدعي mutation لتحديث الحالة في سوبابيز
     console.log(`تغيير حالة الطلب ${orderId} إلى ${newStatus}`);
   };
+
+if (isLoading) {
+    return <OrdersAdminSkeleton />;
+  }
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>

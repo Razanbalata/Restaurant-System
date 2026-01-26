@@ -18,10 +18,13 @@ import { MenuHeader } from "./MenuHeader";
 import { CategoryTabs } from "./CategoryTabs";
 import { MenuItemMutationButton } from "@/features/(admin)/menu/ui/MenuItemMutationButton";
 import { MenuManagementSkeleton } from "@/shared/ui/Skeletons/MenuManagementSkeleton";
+import { useTheme } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 export default function MenuManagementPage() {
   const { selectedRestaurant, isReady } = useRestaurant();
   const [activeTab, setActiveTab] = useState(0);
+  const theme = useTheme();
 
   // 1. جلب التصنيفات
   const { useAdminCategories } = useCategories(selectedRestaurant?.id);
@@ -52,17 +55,25 @@ export default function MenuManagementPage() {
     return <MenuManagementSkeleton />;
   }
 
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      {/* 1. الهيدر (مع تمرير الـ ID لعمليات الإضافة) */}
       <MenuHeader
         restaurantId={selectedRestaurant.id}
         categoryId={selectedCategoryId}
         restaurantName={selectedRestaurant.name}
       />
 
-      {/* 2. التبويبات (تأكد أن المكون يستخدم scrollable في MUI) */}
-      <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 4, position: 'sticky', top: 0, bgcolor: 'background.paper', zIndex: 10 }}>
+      {/* Tabs Container - Sticky with blur effect */}
+      <Box sx={{ 
+        position: 'sticky', 
+        top: 0, 
+        bgcolor: alpha(theme.palette.background.default, 0.8), 
+        backdropFilter: 'blur(10px)',
+        zIndex: 10,
+        pt: 2,
+        mb: 4 
+      }}>
         <CategoryTabs 
           categories={categories} 
           activeTab={activeTab} 
@@ -71,26 +82,21 @@ export default function MenuManagementPage() {
         />
       </Box>
 
-      {/* 3. شبكة الوجبات */}
       <Grid container spacing={3}>
-        {mealsLoading ? (
-          // عرض Skeleton أو Loading أثناء الجلب الأول فقط
-          [1, 2, 3, 4, 5, 6].map((i) => (
-            <Grid item xs={12} sm={6} md={4} key={i}>
-               <Box sx={{ height: 200, bgcolor: '#f0f0f0', borderRadius: 2, animate: 'pulse' }} />
-            </Grid>
-          ))
-        ) : displayedMeals.length > 0 ? (
+        {displayedMeals.length > 0 ? (
           displayedMeals.map((meal) => (
             <Grid item xs={12} sm={6} md={4} key={meal.id}>
               <FoodCard item={meal} />
             </Grid>
           ))
         ) : (
-          // حالة عدم وجود وجبات (Empty State) - مهمة جداً للأونر
           <Grid item xs={12}>
-            <Stack alignItems="center" spacing={2} sx={{ py: 8 }}>
-              <Typography variant="h6" color="text.secondary">
+            <Stack alignItems="center" spacing={2} sx={{ py: 10 }}>
+              {/* Empty state styling */}
+              <Box sx={{ p: 3, bgcolor: theme.palette.action.hover, borderRadius: '50%' }}>
+                 {/* يمكنك إضافة أيقونة هنا */}
+              </Box>
+              <Typography variant="h6" fontWeight={700} color="text.secondary">
                 لا توجد أطباق في هذا القسم بعد
               </Typography>
               {activeTab !== 0 && (

@@ -1,42 +1,17 @@
-// import { Paper, TextField, InputAdornment, Button } from '@mui/material';
-// import { Search, Filter } from 'lucide-react';
-
-// export const MenuSearch = ({ onSearch }) => (
-//   <Paper elevation={0} sx={{ p: 2, mb: 3, borderRadius: '16px', border: '1px solid #f0f0f0', display: 'flex', gap: 2 }}>
-//     <TextField 
-//       fullWidth 
-//       variant="outlined" 
-//       placeholder="ابحث عن اسم الوجبة أو السعر..."
-//       size="small"
-//       onChange={(e) => onSearch(e.target.value)}
-//       InputProps={{
-//         startAdornment: (<InputAdornment position="start"><Search size={18} color="#9e9e9e" /></InputAdornment>),
-//         sx: { borderRadius: '10px' }
-//       }}
-//     />
-//     <Button variant="outlined" startIcon={<Filter size={18} />} sx={{ borderRadius: '10px', color: '#637381', borderColor: '#e0e0e0', minWidth: '100px' }}>
-//       فلترة
-//     </Button>
-//   </Paper>
-// );
-
-
 "use client";
-import { useState } from "react";
-import { Menu, MenuItem, IconButton, Typography, Stack, Divider } from "@mui/material";
+import { Menu, MenuItem, IconButton, Typography, Stack, Divider, useTheme, alpha } from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { CategoryMutationButton } from "@/features/(admin)/menu/categories/ui/CategoryMutationBtn"; 
 import DeleteCategoryBtn from "@/features/(admin)/menu/categories/ui/DeleteCategoryBtn"; 
+import { useState } from "react";
 
 export const ManageCategoriesMenu = ({ categories, restaurantId }) => {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
   return (
@@ -44,7 +19,11 @@ export const ManageCategoriesMenu = ({ categories, restaurantId }) => {
       <IconButton 
         onClick={handleClick} 
         size="small" 
-        sx={{ bgcolor: "#f5f5f5", "&:hover": { bgcolor: "#eee" } }}
+        sx={{ 
+          bgcolor: theme.palette.action.hover, 
+          borderRadius: 2,
+          border: `1px solid ${theme.palette.divider}` 
+        }}
       >
         <SettingsIcon fontSize="small" color="action" />
       </IconButton>
@@ -54,12 +33,19 @@ export const ManageCategoriesMenu = ({ categories, restaurantId }) => {
         open={open}
         onClose={handleClose}
         PaperProps={{ 
-          sx: { width: 280, borderRadius: "16px", p: 1, mt: 1.5 } 
+          elevation: 4,
+          sx: { 
+            width: 280, 
+            borderRadius: 4, 
+            p: 1, mt: 1.5,
+            bgcolor: theme.palette.background.paper,
+            border: `1px solid ${theme.palette.divider}`
+          } 
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem sx={{ py: 1.5 }}>
+        <MenuItem sx={{ borderRadius: 2, mb: 1 }}>
           <Stack direction="row" alignItems="center" spacing={1} width="100%">
             <AddCircleOutlineIcon fontSize="small" color="primary" />
             <Typography variant="body2" fontWeight={700} sx={{ flexGrow: 1 }}>
@@ -71,13 +57,13 @@ export const ManageCategoriesMenu = ({ categories, restaurantId }) => {
 
         <Divider />
 
-        <Typography variant="caption" sx={{ px: 2, py: 1.5, display: 'block', color: 'text.secondary', fontWeight: 700 }}>
+        <Typography variant="caption" sx={{ px: 2, py: 1.5, display: 'block', color: 'text.secondary', fontWeight: 800 }}>
           الأقسام الحالية ({categories?.length || 0})
         </Typography>
 
         {categories?.map((cat) => (
-          <MenuItem key={cat.id} disableRipple sx={{ cursor: 'default', justifyContent: 'space-between' }}>
-            <Typography variant="body2">{cat.name}</Typography>
+          <MenuItem key={cat.id} disableRipple sx={{ borderRadius: 2, justifyContent: 'space-between', mb: 0.5 }}>
+            <Typography variant="body2" fontWeight={500}>{cat.name}</Typography>
             <Stack direction="row" spacing={0.5}>
               <CategoryMutationButton mode="edit" category={cat} restaurantId={restaurantId} />
               <DeleteCategoryBtn categoryId={cat.id} restaurantId={restaurantId} />

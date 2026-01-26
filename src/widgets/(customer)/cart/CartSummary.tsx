@@ -1,48 +1,69 @@
-// widgets/cart/ui/CartSummary.tsx
-import { Stack, Box, Typography, Button, Divider } from "@mui/material";
+"use client";
+import { Stack, Box, Typography, Button, Divider, useTheme, alpha } from "@mui/material";
 import { AppCard } from "@/shared/ui/Card/AppCard";
-import { PlaceOrderButton } from "@/features/(customer)/order/postOrder/ui/PlaceOrderButton";
 import { useRouter } from "next/navigation";
 
 export function CartSummary({ total, subtotal, isEmpty }) {
+  const theme = useTheme();
   const router = useRouter();
-  const { isPending } = { isPending: false }; // Placeholder for loading state
+  const isPending = false; 
+
   return (
-    <AppCard sx={{ position: "sticky", top: 20 }}>
-      <Typography variant="h6" fontWeight="800" mb={3}>
-        ملخص الحساب
+    <AppCard sx={{ 
+      p: 4, 
+      borderRadius: '28px', 
+      border: `1px solid ${theme.palette.divider}`,
+      boxShadow: theme.shadows[4],
+      bgcolor: theme.palette.background.default
+    }}>
+      <Typography variant="h5" fontWeight="900" mb={4} textAlign="center">
+        ملخص الطلب
       </Typography>
-      <Stack spacing={2}>
+
+      <Stack spacing={2.5}>
         <Box display="flex" justifyContent="space-between">
-          <Typography color="text.secondary">المجموع الفرعي</Typography>
-          <Typography fontWeight="600">{subtotal} ₪</Typography>
+          <Typography color="text.secondary" fontWeight={600}>المجموع الفرعي</Typography>
+          <Typography fontWeight="800">{subtotal} ₪</Typography>
         </Box>
-        <Box display="flex" justifyContent="space-between">
-          <Typography color="text.secondary">التوصيل</Typography>
-          <Typography fontWeight="600" color="success.main">
-            مجاني
-          </Typography>
+
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Stack direction="row" spacing={1} alignItems="center">
+            {/* <LocalTruckOutlinedIcon fontSize="small" color="success" /> */}
+            <Typography color="text.secondary" fontWeight={600}>رسوم التوصيل</Typography>
+          </Stack>
+          <Typography fontWeight="800" color="success.main">مجاني</Typography>
         </Box>
-        <Divider />
-        <Box display="flex" justifyContent="space-between">
-          <Typography variant="h6" fontWeight="800">
-            الإجمالي
-          </Typography>
-          <Typography variant="h6" fontWeight="800" color="primary">
+
+        <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h5" fontWeight="900">الإجمالي</Typography>
+          <Typography variant="h4" fontWeight="900" color="primary">
             {total} ₪
           </Typography>
         </Box>
 
-        {/* استخدمنا المكون الخاص بك مع ستايل الصورة */}
         <Button
           fullWidth
           size="large"
           variant="contained"
-          disabled={isPending}
+          disabled={isEmpty || isPending}
           onClick={() => router.push("/checkout")}
+          sx={{ 
+            py: 2, 
+            borderRadius: "16px", 
+            fontWeight: 900, 
+            fontSize: "1.1rem",
+            boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+            mt: 2
+          }}
         >
-          {isPending ? "جاري معالجة الطلب..." : "تأكيد الطلب الآن"}
+          {isPending ? "جاري المعالجة..." : "إتمام الشراء ✨"}
         </Button>
+        
+        <Typography variant="caption" color="text.secondary" textAlign="center" sx={{ mt: 2 }}>
+          الأسعار شاملة للضرائب المطبقة
+        </Typography>
       </Stack>
     </AppCard>
   );

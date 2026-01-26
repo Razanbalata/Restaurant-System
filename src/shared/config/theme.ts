@@ -1,4 +1,3 @@
-// src/theme/theme.ts
 import { createTheme } from "@mui/material/styles";
 
 export const getTheme = (mode: "light" | "dark") =>
@@ -6,98 +5,74 @@ export const getTheme = (mode: "light" | "dark") =>
     palette: {
       mode,
       primary: {
-        main: mode === "light" ? "#10B981" : "#34D399",
+        // البرتقالي المحروق (فاتح للشهية)
+        main: mode === "light" ? "#F59E0B" : "#FBBF24", 
         contrastText: "#FFFFFF",
       },
       secondary: {
-        main: mode === "light" ? "#3B82F6" : "#60A5FA",
+        // الأخضر (للأكل الصحي والطازج)
+        main: mode === "light" ? "#10B981" : "#34D399",
         contrastText: "#FFFFFF",
       },
-
-      // 🌟 خلفيات حديثة وهادئة
+      error: {
+        main: "#EF4444",
+      },
       background: {
-        default: mode === "light" ? "#F1F3F5" : "#0B1120", // رمادي فاتح / كحلي داكن
-        paper: mode === "light" ? "#F9FAFB" : "#111827",   // أخف من الخلفية لكن متناسق
+        // خلفيات كريمية دافئة للـ Light Mode
+        default: mode === "light" ? "#FDFCFB" : "#0F172A",
+        paper: mode === "light" ? "#FFFFFF" : "#1E293B",
       },
-
       text: {
-        primary: mode === "light" ? "#1E293B" : "#F1F5F9",
-        secondary: mode === "light" ? "#475569" : "#94A3B8",
+        primary: mode === "light" ? "#1E293B" : "#F8FAFC",
+        secondary: mode === "light" ? "#64748B" : "#94A3B8",
       },
-
-      divider: mode === "light" ? "#E2E8F0" : "#1F2937",
-
-      action: {
-        hover: mode === "light" ? "rgba(16,185,129,0.08)" : "rgba(52,211,153,0.1)",
-        selected: mode === "light" ? "rgba(16,185,129,0.12)" : "rgba(52,211,153,0.15)",
-      },
+      divider: mode === "light" ? "#F1F5F9" : "#334155",
     },
 
     typography: {
       fontFamily: "'Cairo', sans-serif",
-      h1: { fontWeight: 700 },
-      h2: { fontWeight: 700 },
-      h3: { fontWeight: 700 },
-      body1: { fontWeight: 500 },
-      body2: { fontWeight: 400 },
+      h1: { fontWeight: 800, color: mode === "light" ? "#1E293B" : "#FFFFFF" },
+      h6: { fontWeight: 600 },
+      button: { textTransform: "none", fontWeight: 700 },
     },
 
     shape: {
-      borderRadius: 12,
+      borderRadius: 16, // زوايا منحنية أكثر تعطي طابع "ودود" للمطاعم
     },
 
     components: {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: 10,
-            textTransform: "none",
-            fontWeight: 700,
-            boxShadow: "none",
-            "&:hover": {
-              boxShadow: "0 4px 12px rgba(16,185,129,0.2)",
-            },
-          },
-        },
-      },
-
-      MuiListItemButton: {
-        styleOverrides: {
-          root: {
             borderRadius: 12,
-            margin: "4px 8px",
-            "&.Mui-selected": {
-              backgroundColor: mode === "light" ? "rgba(16,185,129,0.12)" : "rgba(52,211,153,0.15)",
-              color: mode === "light" ? "#10B981" : "#34D399",
-              "& .MuiListItemIcon-root": {
-                color: mode === "light" ? "#10B981" : "#34D399",
-              },
-            },
+            padding: "8px 20px",
+            transition: "all 0.3s ease",
             "&:hover": {
-              backgroundColor: mode === "light" ? "rgba(16,185,129,0.08)" : "rgba(52,211,153,0.1)",
+              transform: "translateY(-2px)",
+              boxShadow: "0 8px 16px rgba(245, 158, 11, 0.3)",
             },
           },
         },
       },
-
-      MuiPaper: {
+      MuiCard: {
         styleOverrides: {
           root: {
-            backgroundImage: "none",
-            boxShadow: mode === "light"
-              ? "0 1px 3px rgba(0,0,0,0.1)"
-              : "0 4px 12px rgba(0,0,0,0.25)",
+            borderRadius: 20,
+            boxShadow: mode === "light" 
+              ? "0 4px 20px rgba(0,0,0,0.05)" 
+              : "0 4px 20px rgba(0,0,0,0.4)",
+            border: `1px solid ${mode === "light" ? "#F1F5F9" : "#334155"}`,
           },
         },
       },
-
       MuiAppBar: {
         styleOverrides: {
           root: {
-            backgroundColor: mode === "light" ? "#F9FAFB" : "#111827",
-            color: mode === "light" ? "#1E293B" : "#F1F5F9",
+            backgroundColor: mode === "light" ? "rgba(255,255,255,0.8)" : "rgba(15,23,42,0.8)",
+            backdropFilter: "blur(10px)", // تأثير الزجاج المضبب (Modern look)
+            color: mode === "light" ? "#1E293B" : "#F8FAFC",
             boxShadow: "none",
-            borderBottom: `1px solid ${mode === "light" ? "#E2E8F0" : "#1F2937"}`,
+            borderBottom: `1px solid ${mode === "light" ? "#F1F5F9" : "#334155"}`,
           },
         },
       },

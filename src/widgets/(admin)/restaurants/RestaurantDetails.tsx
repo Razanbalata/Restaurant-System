@@ -1,118 +1,107 @@
-
 "use client";
-import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  Typography,
-  CircularProgress,
-} from "@mui/material";
+import React from "react";
+import { Box, Container, Typography, Grid, Paper, Button, useTheme, alpha } from "@mui/material";
+import { useParams } from "next/navigation";
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenuRounded";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
-// الاستيرادات المحلية للكومبوننتس الجديدة
+// المكونات التي قمنا بتطويرها
 import { RestaurantInfoCard } from "./RestaurantCard";
+import { RestaurantDetailSkeleton } from "@/shared/ui/Skeletons/RestaurantDetailSkeleton";
 
 // Hooks
 import { useRestaurantById } from "@/features/(admin)/restaurant/get-restaurants/api/useRestaurantById";
 import { useMenu } from "@/features/(customer)/menu/get-menu/useMenu";
 import { useMe } from "@/features/user/api/use-me";
-import { useRestaurant } from "@/app/providers/RestaurantContext";
-import { useParams } from "next/navigation";
-import { RestaurantDetailSkeleton } from "@/shared/ui/Skeletons/RestaurantDetailSkeleton";
 
 export default function RestaurantDetailPage() {
   const params = useParams();
+  const theme = useTheme();
   const restaurantId = params.id as string;
- console.log("resid",restaurantId)
+
+  // 1. جلب بيانات المستخدم الحالي وصلاحياته
   const { data: user } = useMe();
 
-  const { data: restaurant, isLoading: isRestaurantLoading } =
-    useRestaurantById(restaurantId);
-    console.log("restaurant in RestaurantDetails",restaurant);
+  // 2. جلب بيانات المطعم (Source of Truth)
+  const { data: restaurant, isLoading: isRestaurantLoading } = useRestaurantById(restaurantId);
 
-  const { data: menuData = [], isLoading: isMenuLoading } =
-    useMenu(restaurantId);
+  // 3. جلب المنيو
+  const { data: menuData = [], isLoading: isMenuLoading } = useMenu(restaurantId);
 
-  const isOwner =
-    user?.role === "restaurant_owner" && restaurant?.owner_id === user.id;
-console.log("isOwner in RestaurantDetails",isOwner,user?.role);
-  const { selectedRestaurant } = useRestaurant();
+  // 4. التحقق من الملكية
+  const isOwner = user?.role === "restaurant_owner" && restaurant?.owner_id === user.id;
 
-
-
-// في ملف RestaurantDetailPage.js
-if (isRestaurantLoading || isMenuLoading || !restaurant) {
-  return <RestaurantDetailSkeleton />;
-}
-
- 
+  if (isRestaurantLoading || isMenuLoading || !restaurant) {
+    return <RestaurantDetailSkeleton />;
+  }
 
   return (
-    <Box sx={{ bgcolor: "#f8f9fa", minHeight: "100vh" }}>
-      {/* <RestaurantHeader
-        imageUrl={`https://picsum.photos/seed/${selectedRestaurant.id}/800/600`}
-        name={restaurant.name}
-      /> */}
+    <Box sx={{ bgcolor: theme.palette.mode === 'light' ? "#f8f9fa" : theme.palette.background.default, minHeight: "100vh" }}>
+      
+      {/* عرض بيانات المطعم الأساسية (الهيدر والبطاقة العائمة) */}
+      <RestaurantInfoCard restaurant={restaurant} isOwner={isOwner} />
 
-      <Container maxWidth="lg" sx={{ mt: -8, position: "relative", zIndex: 2 }}>
-        <RestaurantInfoCard restaurant={selectedRestaurant} isOwner={isOwner} />
+      <Container maxWidth="lg" sx={{ mt: 6, pb: 10 }}>
+        <Stack spacing={4}>
+          
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Typography variant="h4" fontWeight={900} color="text.primary">
+              قائمة الطعام
+            </Typography>
+            {isOwner && (
+               <Button 
+                variant="outlined" 
+                startIcon={<AutoAwesomeIcon />}
+                sx={{ borderRadius: '12px', fontWeight: 700 }}
+               >
+                 تحديث بواسطة AI
+               </Button>
+            )}
+          </Stack>
 
-        {/* <Box sx={{ mt: 6, pb: 10 }}>
-          <Typography variant="h4" fontWeight="900" mb={4}>
-            قائمة الطعام
-          </Typography>
-
-          {isGenerating ? (
-            <Box sx={{ textAlign: "center", py: 8 }}>
-              <CircularProgress size={60} sx={{ mb: 3 }} />
-              <Typography variant="h5" fontWeight="bold" color="primary">
-                جاري ابتكار المنيو بواسطة AI... ✨
-              </Typography>
-            </Box>
-          ) : !shouldDisplayMenu ? (
+          {menuData.length === 0 ? (
+            // حالة عدم وجود منيو
             <Paper
               sx={{
-                p: 6,
+                p: 8,
                 textAlign: "center",
-                borderRadius: "24px",
-                border: "1px dashed #2196f3",
+                borderRadius: "32px",
+                border: `2px dashed ${theme.palette.divider}`,
+                bgcolor: alpha(theme.palette.background.paper, 0.5),
               }}
             >
-              <RestaurantMenuIcon
-                sx={{ fontSize: 60, color: "#2196f3", mb: 2, opacity: 0.5 }}
-              />
-              <Typography variant="h6" fontWeight="700">
-                قائمة الطعام غير متوفرة بعد
+              <RestaurantMenuIcon sx={{ fontSize: 80, color: theme.palette.primary.main, mb: 2, opacity: 0.3 }} />
+              <Typography variant="h5" fontWeight={800} gutterBottom>
+                قائمة الطعام قيد التحضير 👨‍🍳
               </Typography>
-              <Button
-                variant="contained"
-                onClick={() =>
-                  mutate(
-                    { name: restaurant.name, category: restaurant.category },
-                    { onSuccess: () => setForceShow(true) },
-                  )
-                }
-                startIcon={<AutoAwesomeMosaicOutlined />}
-                sx={{ mt: 3, borderRadius: "12px" }}
-              >
-                توليد المنيو الآن
-              </Button>
+              <Typography color="text.secondary" mb={3}>
+                لم يقم المطعم بإضافة أصناف بعد، انتظرنا قريباً!
+              </Typography>
+              {isOwner && (
+                <Button variant="contained" size="large" sx={{ borderRadius: '14px', px: 4 }}>
+                  إضافة أول صنف الآن
+                </Button>
+              )}
             </Paper>
           ) : (
+            // عرض المنيو في حال وجود بيانات
             <Grid container spacing={3}>
-              {menuData?.map((item: any, index: number) => (
+              {menuData.map((item: any, index: number) => (
                 <Grid item xs={12} md={6} key={item.id || index}>
-                  {/* <MealCard 
-                    item={item} 
-                    isOwner={isOwner} 
-                    isPopular={index < 2} 
-                    onAdd={(i: any) => user ? addItem(i, restaurantId) : alert("يرجى تسجيل الدخول")} 
-                  /> 
+                  {/* هنا يتم استدعاء MealCard الذي قمت بتصميمه مسبقاً */}
+                  <Paper sx={{ p: 2, borderRadius: '20px' }}>
+                     <Typography fontWeight={700}>{item.name}</Typography>
+                     {/* ... باقي تفاصيل الوجبة */}
+                  </Paper>
                 </Grid>
               ))}
             </Grid>
           )}
-        </Box> */}
+        </Stack>
       </Container>
     </Box>
   );
 }
+
+// مكون Stack صغير للتنظيم إذا لم يكن مستورداً
+import { Stack } from "@mui/material";

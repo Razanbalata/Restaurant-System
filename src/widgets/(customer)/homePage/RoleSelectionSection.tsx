@@ -1,16 +1,10 @@
 "use client";
-
-import {
-  Box,
-  Button,
-  Grid,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Paper, Typography, useTheme, alpha } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function RoleSelectionSection() {
   const router = useRouter();
+  const theme = useTheme();
 
   const handleSelect = (role: "customer" | "restaurant_owner") => {
     localStorage.setItem("user_intent", role);
@@ -18,76 +12,61 @@ export default function RoleSelectionSection() {
   };
 
   return (
-    <Box sx={{ py: 10 }}>
-      <Typography
-        variant="h4"
-        fontWeight={800}
-        textAlign="center"
-        mb={6}
-      >
+    <Box sx={{ py: 10, bgcolor: "background.default" }}>
+      <Typography variant="h4" fontWeight={800} textAlign="center" mb={6} color="text.primary">
         اختر دورك
       </Typography>
 
-      <Grid container spacing={4}>
-        {/* Customer */}
-        <Grid item xs={12} md={6}>
-          <Paper
-            sx={{
-              p: 5,
-              height: "100%",
-              borderRadius: 4,
-              transition: "0.3s",
-              "&:hover": {
-                transform: "translateY(-6px)",
-                boxShadow: 6,
-              },
-            }}
-          >
-            <Typography variant="h5" fontWeight={700} mb={2}>
-              👤 زبون
-            </Typography>
-            <Typography color="text.secondary" mb={4}>
-              تصفح المطاعم، اطلب بسهولة، وتابع طلباتك لحظة بلحظة
-            </Typography>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => handleSelect("customer")}
+      <Grid container spacing={4} justifyContent="center">
+        {[
+          { 
+            role: "customer", 
+            title: "👤 زبون", 
+            desc: "تصفح المطاعم، اطلب بسهولة، وتابع طلباتك لحظة بلحظة", 
+            variant: "contained" 
+          },
+          { 
+            role: "restaurant_owner", 
+            title: "🧑‍🍳 صاحب مطعم", 
+            desc: "أنشئ مطعمك، أدر المنيو، واستقبل الطلبات مباشرة", 
+            variant: "outlined" 
+          }
+        ].map((item) => (
+          <Grid item xs={12} md={5} key={item.role}>
+            <Paper
+              elevation={0}
+              sx={{
+                p: 5,
+                height: "100%",
+                borderRadius: 4,
+                border: `1px solid ${theme.palette.divider}`,
+                bgcolor: "background.paper",
+                transition: theme.transitions.create(['transform', 'box-shadow', 'border-color']),
+                "&:hover": {
+                  transform: "translateY(-8px)",
+                  borderColor: theme.palette.primary.main,
+                  boxShadow: `0 20px 40px ${alpha(theme.palette.common.black, 0.1)}`,
+                },
+              }}
             >
-              المتابعة كزبون
-            </Button>
-          </Paper>
-        </Grid>
-
-        {/* Owner */}
-        <Grid item xs={12} md={6}>
-          <Paper
-            sx={{
-              p: 5,
-              height: "100%",
-              borderRadius: 4,
-              transition: "0.3s",
-              "&:hover": {
-                transform: "translateY(-6px)",
-                boxShadow: 6,
-              },
-            }}
-          >
-            <Typography variant="h5" fontWeight={700} mb={2}>
-              🧑‍🍳 صاحب مطعم
-            </Typography>
-            <Typography color="text.secondary" mb={4}>
-              أنشئ مطعمك، أدر المنيو، واستقبل الطلبات مباشرة
-            </Typography>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => handleSelect("restaurant_owner")}
-            >
-              المتابعة كصاحب مطعم
-            </Button>
-          </Paper>
-        </Grid>
+              <Typography variant="h5" fontWeight={700} mb={2} color="text.primary">
+                {item.title}
+              </Typography>
+              <Typography color="text.secondary" mb={4} sx={{ minHeight: '3em' }}>
+                {item.desc}
+              </Typography>
+              <Button
+                fullWidth
+                size="large"
+                variant={item.variant as any}
+                sx={{ fontWeight: 700, borderRadius: 2 }}
+                onClick={() => handleSelect(item.role as any)}
+              >
+                {item.role === "customer" ? "المتابعة كزبون" : "المتابعة كصاحب مطعم"}
+              </Button>
+            </Paper>
+          </Grid>
+        ))}
       </Grid>
     </Box>
   );

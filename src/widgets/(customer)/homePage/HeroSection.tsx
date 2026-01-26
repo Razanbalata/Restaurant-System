@@ -1,6 +1,9 @@
-import { Box, Button, Container, Typography } from "@mui/material";
+"use client";
+import { Box, Button, Container, Typography, useTheme, alpha } from "@mui/material";
 
 export default function HeroSection() {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -8,7 +11,7 @@ export default function HeroSection() {
         display: "flex",
         alignItems: "center",
         backgroundImage: `
-          linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+          linear-gradient(${alpha(theme.palette.common.black, 0.6)}, ${alpha(theme.palette.common.black, 0.6)}),
           url('/images/hero-food.jpg')
         `,
         backgroundSize: "cover",
@@ -19,16 +22,16 @@ export default function HeroSection() {
         <Typography
           variant="h2"
           fontWeight={900}
-          color="white"
+          color="common.white"
           gutterBottom
+          sx={{ fontSize: { xs: "2.5rem", md: "3.75rem" } }}
         >
           إدارة مطعمك أو اطلب طعامك بسهولة 🍔
         </Typography>
 
         <Typography
           variant="h6"
-          color="rgba(255,255,255,0.85)"
-          mb={4}
+          sx={{ color: alpha(theme.palette.common.white, 0.85), mb: 4 }}
         >
           منصة ذكية تجمع أصحاب المطاعم والزبائن في تجربة واحدة
         </Typography>
@@ -36,12 +39,13 @@ export default function HeroSection() {
         <Button
           size="large"
           variant="contained"
+          color="primary"
           sx={{
             px: 5,
             py: 1.8,
             fontSize: "1.1rem",
             fontWeight: 700,
-            borderRadius: 3,
+            borderRadius: `${theme.shape.borderRadius * 1.5}px`, // ربط الحواف بالثيم
           }}
         >
           ابدأ الآن

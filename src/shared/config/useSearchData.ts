@@ -14,13 +14,11 @@ export function useSearchData() {
   const { data: user } = useMe(); // بيانات المستخدم
 
   const { selectedRestaurant } = useRestaurant(); // المطعم المحدد حالياً للأونر
-  console.log("selectedRestaurant in useSearchData:", selectedRestaurant);
   // ===================== Owner =====================
   const {  useAdminRestaurants } = useRestaurants();
   const { data: adminRestaurants } = useAdminRestaurants;
   const { useAdminCategories } = useCategories(selectedRestaurant?.id || '');
   const { data: adminCategories } = useAdminCategories;
-  console.log("adminCategories in useSearchData:", adminCategories);
    
   const { useAdminMenuItems } = useMenuItems(adminCategories?.id || '');
   const { data: adminMenuItems } = useAdminMenuItems;
@@ -33,7 +31,6 @@ export function useSearchData() {
   const { data: menuItems } = useMenu(selectedRestaurant?.id || '');
   const { data: customerOrders } = useGetOrders();
   const { items: cartItems } = useCartStore();
-  console.log("cartItems in useSearchData:", adminRestaurants);
 
   return {
     user,

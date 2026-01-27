@@ -37,8 +37,6 @@ export default async function RootLayout({
   }
 
   const dehydratedState = await getUser();
-  const user = dehydratedState?.queries[0].state.data;
-  console.log("user lay", dehydratedState?.queries[0].state.data);
 
   return (
     <html lang="en">

@@ -19,7 +19,7 @@ export const useOrders = (restaurantId?: string) => {
   // ✅ 3. PATCH تحديث حالة الطلب
   const updateOrderStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      const res = await fetch(`/api/orders/${id}`, {
+      const res = await fetch(`/api/admin/orders/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),
@@ -41,39 +41,39 @@ export const useOrders = (restaurantId?: string) => {
 
   // ======= Real Time Feature
 
-  useEffect(() => {
-    if (!restaurantId) return;
+  // useEffect(() => {
+  //   if (!restaurantId) return;
 
-    // الاشتراك في القناة
-    const channel = supabase
-      .channel(`orders-room-${restaurantId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*", // استمع للإضافة، التعديل، والحذف
-          schema: "public",
-          table: "orders",
-          filter: `restaurant_id=eq.${restaurantId}`, // راقب مطعمك فقط!
-        },
-        (payload) => {
-          console.log("تغيير جديد في الطلبات:", payload);
-          // تحديث البيانات فوراً في المتصفح
-          queryClient.invalidateQueries({ queryKey: ["orders", restaurantId] });
-        },
-      )
-      .subscribe((status, err) => {
-        if (status === "SUBSCRIBED") {
-          console.log("متصل بنجاح بالبث المباشر! ✅");
-        }
-        if (status === "CHANNEL_ERROR") {
-          console.error("فشل الاتصال بالقناة: ❌", err);
-        }
-      });
+  //   // الاشتراك في القناة
+  //   const channel = supabase
+  //     .channel(`orders-room-${restaurantId}`)
+  //     .on(
+  //       "postgres_changes",
+  //       {
+  //         event: "*", // استمع للإضافة، التعديل، والحذف
+  //         schema: "public",
+  //         table: "orders",
+  //         filter: `restaurant_id=eq.${restaurantId}`, // راقب مطعمك فقط!
+  //       },
+  //       (payload) => {
+  //         console.log("تغيير جديد في الطلبات:", payload);
+  //         // تحديث البيانات فوراً في المتصفح
+  //         queryClient.invalidateQueries({ queryKey: ["orders", restaurantId] });
+  //       },
+  //     )
+  //     .subscribe((status, err) => {
+  //       if (status === "SUBSCRIBED") {
+  //         console.log("متصل بنجاح بالبث المباشر! ✅");
+  //       }
+  //       if (status === "CHANNEL_ERROR") {
+  //         console.error("فشل الاتصال بالقناة: ❌", err);
+  //       }
+  //     });
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [restaurantId, queryClient]);
+  //   return () => {
+  //     supabase.removeChannel(channel);
+  //   };
+  // }, [restaurantId, queryClient]);
 
   return { useOrdersQuery, updateOrderStatus };
 };

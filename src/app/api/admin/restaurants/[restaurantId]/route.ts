@@ -61,7 +61,6 @@ export async function PATCH(
       .select()
       .single();
 
-    console.log("data", data);
     if (error)
       return NextResponse.json({ error: error.message }, { status: 400 });
 

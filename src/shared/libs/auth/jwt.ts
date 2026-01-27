@@ -32,7 +32,6 @@ export async function createToken(payload: any) {
 export async function verifyToken(token: string):Promise<JWTPayload | null> {
   try {
     const { payload } = await jwtVerify(token, SECRET);
-    console.log("pa",payload)
     return payload as unknown as JWTPayload;
   } catch (error: any) {
     if (error instanceof errors.JWTExpired) {

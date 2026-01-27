@@ -10,7 +10,6 @@ export async function GET(req: NextRequest) {
       .select("*")
       .eq("is_active", true); // فقط المطاعم المفعلّة
 
-    console.log("Fetched restaurants:", data, error);
 
     if (error)
       return NextResponse.json({ error: error.message }, { status: 500 });

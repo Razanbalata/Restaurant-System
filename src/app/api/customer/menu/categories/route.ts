@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   return withAuth(req, async (req, user) => {
     const restaurantId = req.nextUrl.searchParams.get("restaurantId");
-    console.log("restaurantId-----------------------------", restaurantId);
     if (!restaurantId)
       return NextResponse.json(
         { error: "restaurantId required" },
@@ -25,7 +24,6 @@ export async function GET(req: NextRequest) {
       .eq("restaurant_id", restaurantId)
       .eq("is_active", true)
       .order("created_at", { ascending: true });
-    console.log("dddd", data);
     if (error)
       return NextResponse.json({ error: error.message }, { status: 500 });
 

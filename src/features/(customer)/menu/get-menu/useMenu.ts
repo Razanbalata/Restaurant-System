@@ -9,7 +9,6 @@ export function useMenu(restaurantId: string) {
       const res = await fetch(`/api/customer/menu/categories?restaurantId=${restaurantId}`);
       if (!res.ok) throw new Error("فشل جلب المنيو");
       const categories = await res.json();
-      console.log("useMenu fetched data:------------------", categories);
       return categories.flatMap((category: any) =>
         category.items.map((item: any) => ({
           ...item,

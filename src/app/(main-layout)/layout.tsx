@@ -1,15 +1,15 @@
 import { Header } from '@/widgets/header/Header';
 import React from 'react';
 
-function layout({children}) {
+function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-        <body>
+   
+        <>
             <Header />
             {children}
-        </body>
-    </html>
+        </>
+   
   );
 }
 
-export default layout;
+export default Layout;

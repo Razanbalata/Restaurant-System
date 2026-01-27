@@ -27,7 +27,6 @@ export const getUserServer = async () => {
             .select("id, email, name, created_at,role")
             .eq("id", payload.userId)
             .single();
- console.log("userr",user)
         if (dbError || !user) {
             console.error("❌ Failed to fetch user from DB:", dbError);
             return null;

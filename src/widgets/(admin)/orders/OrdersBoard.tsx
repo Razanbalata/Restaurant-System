@@ -9,13 +9,15 @@ import { OrdersAdminSkeleton } from "@/shared/ui/Skeletons/OrdersAdminSkeleton";
 export default function OrdersAdminPage() {
   const theme = useTheme();
   const { selectedRestaurant } = useRestaurant();
-  const { useOrdersQuery } = useOrders(selectedRestaurant?.id || '');
+  const { useOrdersQuery , updateOrderStatus } = useOrders(selectedRestaurant?.id || '');
   const { data: orders = [], isLoading } = useOrdersQuery;
+  const updateStatus = updateOrderStatus;
 
   useOrdersRealtime(selectedRestaurant?.id || '');
 
   const handleStatusUpdate = (orderId: string, newStatus: string) => {
-    console.log(`تغيير حالة الطلب ${orderId} إلى ${newStatus}`);
+    updateStatus.mutate({ id:orderId, status: newStatus });
+
   };
 
   if (isLoading) return <OrdersAdminSkeleton />;
@@ -42,7 +44,7 @@ export default function OrdersAdminPage() {
           <OrderColumn 
             title="قيد التحضير" 
             color={theme.palette.warning.main}
-            orders={orders.filter((o: any) => o.status === 'PREPARING')} 
+            orders={orders.filter((o: any) => o.status === 'preparing')} 
             onStatusChange={handleStatusUpdate}
           />
           <OrderColumn 

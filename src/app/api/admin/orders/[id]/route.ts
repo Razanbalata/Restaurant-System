@@ -9,8 +9,6 @@ export async function PATCH(
   return withAuth(req, async (req, user) => {
     const { id } = await params;
 
-    if (!user || user.role !== "restaurant_owner")
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     const { status } = await req.json();
     if (!status)

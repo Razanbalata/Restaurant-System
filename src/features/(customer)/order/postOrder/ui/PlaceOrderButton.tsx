@@ -19,7 +19,6 @@ export function PlaceOrderButton({ formData }: Props) {
   const router = useRouter();
   const { items, restaurantId, clearCart } = useCart();
   const { mutate, isPending } = usePlaceOrder();
-  console.log("placing order with items:", items);
   const handlePlaceOrder = () => {
   if (!address || !phone) {
     alert("يرجى إدخال العنوان ورقم الهاتف");
@@ -34,12 +33,10 @@ export function PlaceOrderButton({ formData }: Props) {
     items,
   };
 
-  console.log("📦 Order Payload:", payload);
 
   try {
     mutate(payload, {
       onSuccess: (data) => {
-        console.log("✅ Order success:", data);
         clearCart();
         router.push("/order"); // هذا يجب أن يعمل إذا وصلت هنا
       },

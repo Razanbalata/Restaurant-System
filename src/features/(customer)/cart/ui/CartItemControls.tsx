@@ -12,7 +12,6 @@ interface Props {
 
 export function CartItemControls({ itemId }: Props) {
   const { items, updateQty, removeItem } = useCart();
- console.log("items in controls", items);
 const item = items.find((i) => i.menuItemId === itemId);
   if (!item) return null;
 

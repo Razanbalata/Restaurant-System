@@ -45,7 +45,6 @@ export function SignupForm() {
       { ...data, role },
       {
         onSuccess: (res) => {
-          console.log(res)
           // عرض Alert النجاح
           setSuccessMessage(`تم إنشاء الحساب! دورك: ${res.user.role}`);
 

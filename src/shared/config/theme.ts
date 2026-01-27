@@ -1,80 +1,86 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, alpha } from "@mui/material/styles";
 
-export const getTheme = (mode: "light" | "dark") =>
-  createTheme({
+export const getTheme = (mode: "light" | "dark") => {
+  const isLight = mode === "light";
+
+  return createTheme({
     palette: {
       mode,
       primary: {
-        // البرتقالي المحروق (فاتح للشهية)
-        main: mode === "light" ? "#F59E0B" : "#FBBF24", 
-        contrastText: "#FFFFFF",
+        // البني الخشبي الدافئ (Coffee Bean)
+        main: isLight ? "#4E342E" : "#D7CCC8", 
+        contrastText: isLight ? "#FFFFFF" : "#3E2723",
       },
       secondary: {
-        // الأخضر (للأكل الصحي والطازج)
-        main: mode === "light" ? "#10B981" : "#34D399",
-        contrastText: "#FFFFFF",
-      },
-      error: {
-        main: "#EF4444",
+        // لون البيج الناعم (Sand / Cream)
+        main: isLight ? "#A1887F" : "#8D6E63",
       },
       background: {
-        // خلفيات كريمية دافئة للـ Light Mode
-        default: mode === "light" ? "#FDFCFB" : "#0F172A",
-        paper: mode === "light" ? "#FFFFFF" : "#1E293B",
+        // خلفية ورقية دافئة في الفاتح، وأسود بني في الغامق
+        default: isLight ? "#FDFBF7" : "#1A1614", 
+        paper: isLight ? "#FFFFFF" : "#251F1C",
       },
       text: {
-        primary: mode === "light" ? "#1E293B" : "#F8FAFC",
-        secondary: mode === "light" ? "#64748B" : "#94A3B8",
+        // نصوص بلمحة بنية بدلاً من الأسود الصريح لراحة العين
+        primary: isLight ? "#3E2723" : "#F5F5F5",
+        secondary: isLight ? "#795548" : "#BCAAA4",
       },
-      divider: mode === "light" ? "#F1F5F9" : "#334155",
+      divider: isLight ? "#EFEBE9" : "#3E2723",
     },
 
     typography: {
       fontFamily: "'Cairo', sans-serif",
-      h1: { fontWeight: 800, color: mode === "light" ? "#1E293B" : "#FFFFFF" },
+      h1: { fontWeight: 800, color: isLight ? "#3E2723" : "#D7CCC8" },
       h6: { fontWeight: 600 },
-      button: { textTransform: "none", fontWeight: 700 },
+      button: { textTransform: "none", fontWeight: 700, letterSpacing: "0.5px" },
     },
 
     shape: {
-      borderRadius: 16, // زوايا منحنية أكثر تعطي طابع "ودود" للمطاعم
+      borderRadius: 12, // زوايا ناعمة تعكس هدوء التصميم
     },
 
     components: {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: 12,
-            padding: "8px 20px",
-            transition: "all 0.3s ease",
+            borderRadius: 50, // أزرار بيضاوية (Pill-shaped) لتعزيز الطابع الهادئ
+            padding: "10px 28px",
+            boxShadow: "none",
             "&:hover": {
-              transform: "translateY(-2px)",
-              boxShadow: "0 8px 16px rgba(245, 158, 11, 0.3)",
+              transform: "scale(1.02)",
+              boxShadow: "none",
+              backgroundColor: isLight ? "#3E2723" : "#EFEBE9",
             },
+          },
+          contained: {
+            backgroundColor: isLight ? "#4E342E" : "#D7CCC8",
           },
         },
       },
       MuiCard: {
         styleOverrides: {
           root: {
-            borderRadius: 20,
-            boxShadow: mode === "light" 
-              ? "0 4px 20px rgba(0,0,0,0.05)" 
-              : "0 4px 20px rgba(0,0,0,0.4)",
-            border: `1px solid ${mode === "light" ? "#F1F5F9" : "#334155"}`,
+            borderRadius: 24,
+            backgroundImage: "none",
+            backgroundColor: isLight ? "#FFFFFF" : "#251F1C",
+            border: `1px solid ${isLight ? "#F1EDE9" : "#3E2723"}`,
+            boxShadow: isLight 
+              ? "0 4px 20px rgba(78, 52, 46, 0.05)" 
+              : "0 4px 25px rgba(0, 0, 0, 0.4)",
           },
         },
       },
       MuiAppBar: {
         styleOverrides: {
           root: {
-            backgroundColor: mode === "light" ? "rgba(255,255,255,0.8)" : "rgba(15,23,42,0.8)",
-            backdropFilter: "blur(10px)", // تأثير الزجاج المضبب (Modern look)
-            color: mode === "light" ? "#1E293B" : "#F8FAFC",
+            backgroundColor: alpha(isLight ? "#FDFBF7" : "#1A1614", 0.85),
+            backdropFilter: "blur(8px)",
+            color: isLight ? "#3E2723" : "#D7CCC8",
             boxShadow: "none",
-            borderBottom: `1px solid ${mode === "light" ? "#F1F5F9" : "#334155"}`,
+            borderBottom: `1px solid ${isLight ? "#EFEBE9" : "#3E2723"}`,
           },
         },
       },
     },
   });
+};

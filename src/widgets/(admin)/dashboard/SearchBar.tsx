@@ -32,12 +32,6 @@ export const SearchBar = () => {
     const orders = Array.isArray(data?.orders) ? data.orders : [];
     const categories = Array.isArray(data?.categories) ? data.categories : [];
 
-    console.log("Searching in data:", {
-      restaurants,
-      menuItems,
-      orders,
-      categories,
-    });
 
     const allItems = [
       ...restaurants.map((r) => ({ type: "مطعم", name: r.name, id: r.id })),

@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
         { error: "restaurantId required" },
         { status: 400 },
       );
-console.log("user================", user);
     // if (!user || user.role !== "restaurant_owner")
     //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 

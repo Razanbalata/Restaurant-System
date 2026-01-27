@@ -31,7 +31,6 @@ export async function GET(req: NextRequest) {
       )
       .eq("user_id", user.userId)
       .order("created_at", { ascending: false });
-    console.log("dataOrder", data);
 
     if (error)
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -47,7 +46,6 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
   const { restaurantId, items } = body;
-  console.log("body", body);
 
   if (!restaurantId || !items || items.length === 0)
     return NextResponse.json(
@@ -57,7 +55,6 @@ export async function POST(req: NextRequest) {
 
   // حساب total
   const total = items.reduce((acc, i) => acc + i.price * i.quantity, 0);
-  console.log("total", total);
   // إنشاء order
   const { data: order, error: orderError } = await supabase
     .from("orders")
@@ -71,7 +68,6 @@ export async function POST(req: NextRequest) {
     })
     .select("*")
     .single();
-  console.log("ddddddddddddddddddddddddd", order);
   if (orderError)
     return NextResponse.json({ error: orderError.message }, { status: 500 });
 

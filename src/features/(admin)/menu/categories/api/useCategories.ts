@@ -3,7 +3,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 export const useCategories = (restaurantId: string) => {
   const queryClient = useQueryClient();
-  console.log("idres", restaurantId);
 
   // 1️⃣ جلب كل التصنيفات مع الأصناف
   const useAdminCategories = useQuery({
@@ -48,7 +47,6 @@ export const useCategories = (restaurantId: string) => {
   const useUpdateCategory = () =>
     useMutation({
       mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
-        console.log("update", updates);
         const res = await fetch(`/api/admin/menu/categories/${id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },

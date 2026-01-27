@@ -11,7 +11,7 @@ export default function OrderColumn({ title, orders, onStatusChange, color }: an
       width: "100%",
       bgcolor: theme.palette.mode === 'light' ? '#F4F6F8' : alpha(theme.palette.background.paper, 0.4), 
       p: 2, 
-      borderRadius: 4, 
+      borderRadius: 2, 
       minHeight: '75vh',
       border: `1px solid ${theme.palette.divider}`
     }}>

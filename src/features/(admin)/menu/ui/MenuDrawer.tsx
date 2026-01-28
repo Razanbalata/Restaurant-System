@@ -20,14 +20,31 @@ import { useCategories } from "../categories/api/useCategories";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
 
 // أضفنا initialData لمعرفة إذا كان هناك تعديل
-const MealModal = ({ open, onClose, initialData = null }) => {
+
+interface MealItem {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  category_id: string;
+  image_url?: string;
+}
+
+// 2. تعريف الـ Props للمكون
+interface MealModalProps {
+  open: boolean;
+  onClose: () => void;
+  initialData?: MealItem | null;
+}
+
+const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
   const { selectedRestaurant } = useRestaurant();
   const isEdit = !!initialData; // إذا وجد بيانات أولية، إذن نحن في وضع التعديل
 
   // 1. حالات الفورم
   const [formData, setFormData] = useState({
     name: "",
-    price: "",
+    price: 0,
     description: "",
     category_id: "", // نستخدم الـ ID بدلاً من الاسم
     image: null as File | null,
@@ -38,7 +55,9 @@ const MealModal = ({ open, onClose, initialData = null }) => {
   const { data: categoriesData } = useAdminCategories;
 
   // 3. هوكس الإضافة والتعديل
-  const { useAddMenuItem, useUpdateMenuItem } = useMenuItems(formData.category_id);
+  const { useAddMenuItem, useUpdateMenuItem } = useMenuItems(
+    formData.category_id,
+  );
   const addMenuItem = useAddMenuItem();
   const updateMenuItem = useUpdateMenuItem();
 
@@ -49,13 +68,19 @@ const MealModal = ({ open, onClose, initialData = null }) => {
     if (isEdit && initialData) {
       setFormData({
         name: initialData.name || "",
-        price: initialData.price || "",
+        price: initialData.price || 0,
         description: initialData.description || "",
         category_id: initialData.category_id || "",
         image: null,
       });
     } else {
-      setFormData({ name: "", price: "", description: "", category_id: "", image: null });
+      setFormData({
+        name: "",
+        price: 0,
+        description: "",
+        category_id: "",
+        image: null,
+      });
     }
   }, [initialData, open, isEdit]);
 
@@ -64,14 +89,25 @@ const MealModal = ({ open, onClose, initialData = null }) => {
 
     if (isEdit) {
       // منطق التعديل
-      updateMenuItem.mutate({ id: initialData.id, updates: payload }, {
-        onSuccess: () => {
-          onClose();
+      updateMenuItem.mutate(
+        { id: initialData.id, updates: payload },
+        {
+          onSuccess: () => {
+            onClose();
+          },
         },
-      });
+      );
     } else {
-      // منطق الإضافة
-      addMenuItem.mutate({ newItem: payload }, {
+      // 1. تنظيف البيانات وتحويل الأنواع قبل الإرسال
+      const formattedPayload = {
+        name: formData.name,
+        price: Number(formData.price), // تحويل السعر لرقم
+        description: formData.description || undefined,
+        image: null, // نرسل null حالياً لأن الـ Type لا يدعم File
+      };
+
+      // 2. تمرير الكائن المنظف مباشرة (بدون newItem)
+      addMenuItem.mutate(formattedPayload, {
         onSuccess: () => {
           onClose();
         },
@@ -87,7 +123,13 @@ const MealModal = ({ open, onClose, initialData = null }) => {
       maxWidth="sm"
       PaperProps={{ sx: { borderRadius: "24px", p: 1 } }}
     >
-      <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <DialogTitle
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Typography variant="h6" fontWeight="800">
           {isEdit ? "تعديل الوجبة" : "إضافة وجبة جديدة"}
         </Typography>
@@ -129,10 +171,12 @@ const MealModal = ({ open, onClose, initialData = null }) => {
               select
               label="التصنيف"
               value={formData.category_id}
-              onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, category_id: e.target.value })
+              }
               sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
             >
-              {categoriesData?.map((cat) => (
+              {categoriesData?.map((cat: { id: string; name: string }) => (
                 <MenuItem key={cat.id} value={cat.id}>
                   {cat.name}
                 </MenuItem>
@@ -144,7 +188,9 @@ const MealModal = ({ open, onClose, initialData = null }) => {
               label="السعر ($)"
               type="number"
               value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, price: Number(e.target.value) })
+              }
               sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
             />
           </Stack>
@@ -155,7 +201,9 @@ const MealModal = ({ open, onClose, initialData = null }) => {
             rows={3}
             label="وصف الوجبة"
             value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
             sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
           />
         </Stack>
@@ -177,7 +225,13 @@ const MealModal = ({ open, onClose, initialData = null }) => {
             "&:hover": { bgcolor: "#e54a1a" },
           }}
         >
-          {isLoading ? <CircularProgress size={24} color="inherit" /> : isEdit ? "حفظ التعديلات" : "إضافة الوجبة"}
+          {isLoading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : isEdit ? (
+            "حفظ التعديلات"
+          ) : (
+            "إضافة الوجبة"
+          )}
         </Button>
       </DialogActions>
     </Dialog>

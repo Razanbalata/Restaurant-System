@@ -38,7 +38,7 @@ export default function AdminLayout({
             transition: "margin-left 0.3s ease",
           }}
         >
-          <TopNav onMenuClick={() => setSidebarOpen((prev) => !prev)} />
+          <TopNav />
 
           <Box
             component="main"

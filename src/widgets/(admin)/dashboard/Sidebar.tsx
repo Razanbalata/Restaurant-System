@@ -65,7 +65,7 @@ export const Sidebar = ({ open, onToggle }: { open: boolean; onToggle: () => voi
 
       {/* Menu Items */}
       <List sx={{ flexGrow: 1, px: 1.5, py: 2 }}>
-        {menuItems.map(({ label, icon: Icon, path }) => {
+        {menuItems.map(({ label, icon: Icon, path }:any) => {
           const fullPath = path.includes("restaurantDetails") 
             ? `${path}/${selectedRestaurant?.id}` 
             : path;

@@ -21,7 +21,10 @@ export const useLogout = () => {
      toast.success("تم تسجيل الخروج بنجاح!")
     },
     onError:(error)=>{
-      toast.error("حدث خطأ أثناء تسجيل الخروج",error)
+      toast.error("حدث خطأ أثناء تسجيل الخروج", {
+        description: error.message, // عرض التفاصيل تحت العنوان
+      }
+      )
     }
   });
 };

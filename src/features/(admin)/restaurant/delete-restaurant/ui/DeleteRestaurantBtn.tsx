@@ -3,7 +3,16 @@ import { DeleteIcon } from "lucide-react";
 import React from "react";
 import { useRestaurants } from "../../get-restaurants/api/useRestaurants";
 
-function DeleteRestaurantBtn({r}) {
+interface Restaurant {
+  id: string;
+  name?: string;
+}
+
+interface DeleteRestaurantBtnProps {
+  r: Restaurant;
+}
+
+function DeleteRestaurantBtn({r}:DeleteRestaurantBtnProps) {
 
  const {useDeleteRestaurant} = useRestaurants()
 

@@ -93,7 +93,7 @@ export const RestaurantDetailSkeleton = () => {
            
            <Grid container spacing={3}>
               {[1, 2, 3, 4].map((item) => (
-                <Grid item xs={12} md={6} key={item}>
+                <Grid size={{ xs: 12, md: 6 }} key={item}>
                    <Skeleton 
                     variant="rectangular" 
                     height={140} 

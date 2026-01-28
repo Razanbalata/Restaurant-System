@@ -3,7 +3,13 @@ import { DeleteIcon } from 'lucide-react';
 import React from 'react';
 import { useMenuItems } from '../menu_items/api/useMenuItems';
 
-function DeleteMenuItem({r}) {
+interface MenuItem {
+  id: string;
+  category_id: string;
+  name?: string; // أضفتها تحسباً لو احتجت عرض الاسم في رسالة تأكيد
+}
+
+function DeleteMenuItem({r} : {r: MenuItem}) {
 
   const {useDeleteMenuItem} = useMenuItems(r.category_id)
   const deleteMenuItem = useDeleteMenuItem()

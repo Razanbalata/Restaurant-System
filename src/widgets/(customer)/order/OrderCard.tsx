@@ -1,15 +1,16 @@
 "use client";
 import React from 'react';
 import { Box, Card, CardContent, Divider, Stack, Typography, useTheme, alpha } from '@mui/material';
+import { OrderStatusTracker } from './OrderStatusTracker';
 
-function OrderCard({ order }: { order: any }) {
+export function OrderCard({ order }: { order: any }) {
   const theme = useTheme();
 
   return (
     <Card 
       elevation={0} 
       sx={{ 
-        borderRadius: `${theme.shape.borderRadius * 3}px`, // استخدام قيم الثيم للحواف
+        borderRadius: `${Number(theme.shape.borderRadius) * 3}px`, // استخدام قيم الثيم للحواف
         border: `1px solid ${theme.palette.divider}`,
         bgcolor: theme.palette.background.paper,
         transition: theme.transitions.create(['all'], { duration: 300 }),
@@ -32,7 +33,7 @@ function OrderCard({ order }: { order: any }) {
             </Typography>
           </Box>
           {/* هنا نمرر الـ Status لمكون مخصص يستخدم ألوان الثيم */}
-          <OrderStatusChip status={order.status} />
+          <OrderStatusTracker status={order.status} />
         </Stack>
 
         <Divider sx={{ borderStyle: "dashed", my: 2, opacity: 0.6 }} />

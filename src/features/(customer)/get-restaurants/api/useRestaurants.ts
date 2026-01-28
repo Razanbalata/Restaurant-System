@@ -1,5 +1,5 @@
 import { queryKeys } from "@/shared/keys/query-keys";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery ,keepPreviousData} from "@tanstack/react-query";
 import { Restaurant } from "../libs/types";
 
 
@@ -15,7 +15,8 @@ export const useRestaurantsForCustomer = () => {
   return useQuery({
     queryKey: ["restaurants"],
     queryFn: () => fetchRestaurants(),
-    keepPreviousData: true,
+    // 2. التعديل هنا: بدلاً من true، نمرر الدالة المستوردة
+    placeholderData: keepPreviousData, 
     staleTime: 1000 * 60 * 5,
   });
 };

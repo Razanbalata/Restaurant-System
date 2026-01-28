@@ -3,7 +3,21 @@ import { Stack, Tab, Tabs, Box, useTheme } from "@mui/material";
 import { ManageCategoriesMenu } from "./ManageCategoriesMenu";
 import { useMe } from "@/features/user/api/use-me";
 
-export const CategoryTabs = ({ categories, activeTab, onTabChange, restaurantId }) => {
+// 1. تعريف شكل التصنيف
+interface Category {
+  id: string;
+  name: string;
+}
+
+// 2. تعريف واجهة الـ Props
+interface CategoryTabsProps {
+  categories: Category[];
+  activeTab: number;
+  onTabChange: (index: number) => void;
+  restaurantId: string;
+}
+
+export const CategoryTabs = ({ categories, activeTab, onTabChange, restaurantId }: CategoryTabsProps) => {
   const { data: user } = useMe();
   const theme = useTheme();
   const isOwner = user?.role === "restaurant_owner";

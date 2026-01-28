@@ -38,8 +38,10 @@ export const useCategories = (restaurantId: string) => {
           queryKey: ["categories", restaurantId],
         });
       },
-      onError(error) {
-        toast.error(`حدث خطأ أثناء اضافة التصنيف`, error);
+      onError(error: Error) {
+        toast.error("حدث خطأ أثناء تعديل التصنيف", {
+          description: error.message, // عرض التفاصيل تحت العنوان
+        });
       },
     });
 
@@ -62,8 +64,10 @@ export const useCategories = (restaurantId: string) => {
           queryKey: ["categories", restaurantId],
         });
       },
-      onError(error) {
-        toast.error(`حدث خطأ أثناء تعديل التصنيف`, error);
+      onError(error: Error) {
+        toast.error("حدث خطأ أثناء تعديل التصنيف", {
+          description: error.message, // عرض التفاصيل تحت العنوان
+        });
       },
     });
 
@@ -77,16 +81,17 @@ export const useCategories = (restaurantId: string) => {
         if (!res.ok) throw new Error("فشل حذف التصنيف");
         return res.json();
       },
-      onSuccess: () =>{
+      onSuccess: () => {
         toast.success("تم حذف التصنيف بنجاح!");
         queryClient.invalidateQueries({
           queryKey: ["categories", restaurantId],
-        })
+        });
       },
-      onError(error){
-        toast.error(`حدث خطأ أثناء تعديل التصنيف`, error);
-      }
-    
+      onError(error: Error) {
+        toast.error("حدث خطأ أثناء تعديل التصنيف", {
+          description: error.message, // عرض التفاصيل تحت العنوان
+        });
+      },
     });
 
   return {

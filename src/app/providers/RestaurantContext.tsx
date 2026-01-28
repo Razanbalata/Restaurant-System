@@ -1,24 +1,34 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, Dispatch, SetStateAction } from "react";
 
-const RestaurantContext = createContext(null);
+// 1. تعريف شكل البيانات (Interface)
+interface RestaurantContextType {
+  selectedRestaurant: any; // يفضل استبدال any بنوع المطعم لديك (مثلاً Restaurant | null)
+  setSelectedRestaurant: Dispatch<SetStateAction<any>>;
+  isReady: boolean;
+}
 
-export const RestaurantProvider = ({ children }) => {
-  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
-  const [isReady, setIsReady] = useState(false); // حالة جديدة للتأكد من القراءة من localStorage
+// 2. إعطاء الـ Context النوع الصحيح (إما النوع أو undefined كقيمة ابتدائية)
+const RestaurantContext = createContext<RestaurantContextType | undefined>(undefined);
 
-  // ✅ عند التحميل: نقرأ من localStorage ونضبط الـ Ready
+export const RestaurantProvider = ({ children }: { children: React.ReactNode }) => {
+  const [selectedRestaurant, setSelectedRestaurant] = useState<any>(null);
+  const [isReady, setIsReady] = useState(false);
+
   useEffect(() => {
     const saved = localStorage.getItem("selectedRestaurant");
     if (saved) {
-      setSelectedRestaurant(JSON.parse(saved));
+      try {
+        setSelectedRestaurant(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse restaurant", e);
+      }
     }
-    setIsReady(true); // الآن نحن جاهزون
+    setIsReady(true);
   }, []);
 
-  // ✅ الحفظ عند التغيير
   useEffect(() => {
-    if (isReady) { // لا تحفظ إلا إذا كنا جاهزين لكي لا تمسحي البيانات بالخطأ عند أول ريفريش
+    if (isReady) {
       if (selectedRestaurant) {
         localStorage.setItem("selectedRestaurant", JSON.stringify(selectedRestaurant));
       } else {
@@ -28,6 +38,7 @@ export const RestaurantProvider = ({ children }) => {
   }, [selectedRestaurant, isReady]);
 
   return (
+    // الآن TypeScript سيفهم أن الـ value مطابقة للـ Interface
     <RestaurantContext.Provider
       value={{ selectedRestaurant, setSelectedRestaurant, isReady }}
     >
@@ -38,6 +49,8 @@ export const RestaurantProvider = ({ children }) => {
 
 export const useRestaurant = () => {
   const context = useContext(RestaurantContext);
-  if (!context) throw new Error("useRestaurant must be used inside RestaurantProvider");
+  if (!context) {
+    throw new Error("useRestaurant must be used inside RestaurantProvider");
+  }
   return context;
 };

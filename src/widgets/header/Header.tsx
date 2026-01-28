@@ -26,7 +26,7 @@ import { useColorMode } from "@/app/providers/ThemeProvider";
 export const Header = () => {
   const { data: userData } = useMe();
   const { mutate: logout } = useLogout();
-  const { data: cart = [] } = useCart(String(userData?.id));
+  const { items:cart } = useCart();
   const theme = useTheme();
   const { toggleColorMode } = useColorMode();
   const isDark = theme.palette.mode === "dark";

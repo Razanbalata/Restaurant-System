@@ -58,10 +58,7 @@ export default function HowItWorksSection() {
        >
           {HOW_IT_WORKS_STEPS.map((step, index) => (
             <Grid 
-              item 
-              xs={12}    // عمودي (عرض كامل) في الجوال
-              sm={6}     // عنصرين بجانب بعض في التابلت
-              md={4}     // 3 عناصر بجانب بعض في الشاشات الكبيرة
+              size={{xs:12,sm:6,md:4}} 
               key={index}
               width={{sx:"100%",sm:"33%"}}
               

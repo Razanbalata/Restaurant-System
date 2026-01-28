@@ -45,9 +45,11 @@ export const useRestaurants = () => {
           queryKey: ["admin-restaurants"],
         });
       },
-      onError(error) {
-        toast.error(`حدث خطأ أثناء أنشاء المطعم`,error)
-      }
+      onError(error: Error) {
+        toast.error("حدث خطأ أثناء اضافة المطعم", {
+          description: error.message, // عرض التفاصيل تحت العنوان
+        });
+      },
     });
   };
 
@@ -73,15 +75,17 @@ export const useRestaurants = () => {
         const data = await res.json();
         return data.restaurant;
       },
-      onSuccess: (restaurant, { updates }) => {
+      onSuccess: () => {
         toast.success("تم تعديل المطعم بنجاح!")
         queryClient.invalidateQueries({
           queryKey: ["admin-restaurants"],
         });
       },
-      onError(error) {
-        toast.error(`حدث خطأ أثناء أنشاء المطعم`,error)
-      }
+     onError(error: Error) {
+        toast.error("حدث خطأ أثناء تعديل المطعم", {
+          description: error.message, // عرض التفاصيل تحت العنوان
+        });
+      },
     });
   };
 
@@ -105,9 +109,11 @@ export const useRestaurants = () => {
           queryKey: ["admin-restaurants"],
         });
       },
-      onError(error) {
-        toast.error(`حدث خطأ أثناء أنشاء المطعم`,error)
-      }
+      onError(error: Error) {
+        toast.error("حدث خطأ أثناء حذف المطعم", {
+          description: error.message, // عرض التفاصيل تحت العنوان
+        });
+      },
     });
   };
 

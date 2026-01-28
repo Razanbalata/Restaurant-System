@@ -1,23 +1,30 @@
 // features/(admin)/menu/api/useMenuItems.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner"
+import { toast } from "sonner";
 export const useMenuItems = (categoryId: string) => {
   const queryClient = useQueryClient();
   // 1️⃣ جلب الأصناف
   const useAdminMenuItems = useQuery({
     queryKey: ["menu_items", categoryId],
     queryFn: async () => {
-      const res = await fetch(`/api/admin/menu/menu_items?categoryId=${categoryId}`);
+      const res = await fetch(
+        `/api/admin/menu/menu_items?categoryId=${categoryId}`,
+      );
       if (!res.ok) throw new Error("فشل جلب الأصناف");
       return res.json();
     },
-    enabled: !!categoryId
+    enabled: !!categoryId,
   });
 
   // 2️⃣ إضافة صنف
   const useAddMenuItem = () =>
     useMutation({
-      mutationFn: async (newItem: { name: string; price: number; description?: string,image?:null }) => {
+      mutationFn: async (newItem: {
+        name: string;
+        price: number;
+        description?: string;
+        image?: null;
+      }) => {
         const res = await fetch("/api/admin/menu/menu_items", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -26,13 +33,15 @@ export const useMenuItems = (categoryId: string) => {
         if (!res.ok) throw new Error("فشل إضافة الصنف");
         return res.json();
       },
-      onSuccess: () =>{
-         toast.success("تم اضافة الصنف بنجاح!")
-         queryClient.invalidateQueries({queryKey:["menu_items", categoryId]})
-        },
-      onError(error) {
-        toast.error(`حدث خطأ أثناء إنشاء الصنف`,error)
-      }
+      onSuccess: () => {
+        toast.success("تم اضافة الصنف بنجاح!");
+        queryClient.invalidateQueries({ queryKey: ["menu_items", categoryId] });
+      },
+      onError(error: Error) {
+        toast.error("حدث خطأ أثناء اضافة الصنف", {
+          description: error.message, // عرض التفاصيل تحت العنوان
+        });
+      },
     });
 
   // 3️⃣ تعديل صنف
@@ -47,33 +56,42 @@ export const useMenuItems = (categoryId: string) => {
         if (!res.ok) throw new Error("فشل تعديل الصنف");
         return res.json();
       },
-      onSuccess: () =>{
-        toast.success("تم تعديل الصنف بنجاح!")
-         queryClient.invalidateQueries({queryKey:["menu_items", categoryId]})
+      onSuccess: () => {
+        toast.success("تم تعديل الصنف بنجاح!");
+        queryClient.invalidateQueries({ queryKey: ["menu_items", categoryId] });
       },
-      onError(error) {
-        toast.error(`حدث خطأ أثناء تعديل الصنف`,error)
-      }
-      
+     onError(error: Error) {
+  toast.error("حدث خطأ أثناء تعديل التصنيف", {
+    description: error.message, // عرض التفاصيل تحت العنوان
+  });
+}
     });
 
   // 4️⃣ حذف صنف (Soft Delete)
   const useDeleteMenuItem = () =>
     useMutation({
       mutationFn: async (id: string) => {
-        const res = await fetch(`/api/admin/menu/menu_items/${id}`, { method: "DELETE" });
+        const res = await fetch(`/api/admin/menu/menu_items/${id}`, {
+          method: "DELETE",
+        });
         if (!res.ok) throw new Error("فشل حذف الصنف");
         return res.json();
       },
-      onSuccess: () =>{
-        toast.success("تم حذف الصنف بنجاح!")
-         queryClient.invalidateQueries({queryKey:["menu_items", categoryId]})
-      }, 
-      onError(error) {
-        toast.error(`حدث خطأ أثناء حذف الصنف`,error)
-      }
-      
+      onSuccess: () => {
+        toast.success("تم حذف الصنف بنجاح!");
+        queryClient.invalidateQueries({ queryKey: ["menu_items", categoryId] });
+      },
+     onError(error: Error) {
+  toast.error("حدث خطأ أثناء حذف التصنيف", {
+    description: error.message, // عرض التفاصيل تحت العنوان
+  });
+}
     });
 
-  return { useAdminMenuItems, useAddMenuItem, useUpdateMenuItem, useDeleteMenuItem };
+  return {
+    useAdminMenuItems,
+    useAddMenuItem,
+    useUpdateMenuItem,
+    useDeleteMenuItem,
+  };
 };

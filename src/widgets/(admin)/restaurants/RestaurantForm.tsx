@@ -4,8 +4,14 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useState } from "react";
 import { useRestaurants } from "@/features/(admin)/restaurant/get-restaurants/api/useRestaurants";
 import { useMe } from "@/features/user/api/use-me";
+import { Restaurant } from "@/features/(customer)/get-restaurants/libs/types";
 
-export default function RestaurantForm({ restaurant, onClose }) {
+interface RestaurantFormProps {
+  restaurant?: Restaurant; // علامة الاستفهام تعني أنه اختياري (لحالة الإضافة)
+  onClose: () => void;      // دالة لا تعيد شيئاً
+}
+
+export default function RestaurantForm({ restaurant, onClose }:RestaurantFormProps) {
   const theme = useTheme();
   const { data: owner } = useMe();
   const [formData, setFormData] = useState({
@@ -15,7 +21,7 @@ export default function RestaurantForm({ restaurant, onClose }) {
     description: restaurant?.description || "",
   });
 
-  const { useAddRestaurant, useUpdateRestaurant } = useRestaurants(owner?.id ?? "");
+  const { useAddRestaurant, useUpdateRestaurant } = useRestaurants();
   const createMutation = useAddRestaurant();
   const updateMutation = useUpdateRestaurant();
 

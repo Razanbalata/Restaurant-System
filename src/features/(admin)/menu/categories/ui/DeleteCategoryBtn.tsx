@@ -3,7 +3,12 @@ import React from "react";
 import { useCategories } from "../api/useCategories";
 import { DeleteIcon } from "lucide-react";
 
-function DeleteCategoryBtn({restaurantId,categoryId}) {
+interface DeleteCategoryBtnProps {
+  restaurantId: string; // أو number حسب قاعدة البيانات عندك
+  categoryId: string;
+}
+
+function DeleteCategoryBtn({restaurantId,categoryId}: DeleteCategoryBtnProps) {
 
  const {useDeleteCategory}= useCategories(restaurantId)
  const deleteCategory = useDeleteCategory()

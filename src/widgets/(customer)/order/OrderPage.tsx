@@ -73,7 +73,7 @@ export default function OrdersList() {
               <Card
                 elevation={0}
                 sx={{
-                  borderRadius: `${theme.shape.borderRadius * 2}px`,
+                  borderRadius: `${Number(theme.shape.borderRadius) * 2}px`,
                   border: `1px solid ${theme.palette.divider}`,
                   bgcolor: theme.palette.background.paper,
                   overflow: "visible",

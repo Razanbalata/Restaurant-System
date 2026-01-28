@@ -10,17 +10,15 @@ export async function PATCH(
 ) {
   return withAuth(req, async (req, user) => {
     const { id } = await params; 
-
     const userId = user?.userId;
 
     if (!userId)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const name = await req.json();
-    if (!name)
-      return NextResponse.json({ error: "Name is required" }, { status: 400 });
+    const body = await req.json(); // غيرت الاسم لـ body لأنه يحتوي على البيانات
+    if (!body)
+      return NextResponse.json({ error: "Data is required" }, { status: 400 });
 
-    // 1️⃣ جلب الـ category للتحقق من restaurant_id
     const { data: category, error: catError } = await supabase
       .from("categories")
       .select("restaurant_id")
@@ -28,25 +26,19 @@ export async function PATCH(
       .single();
 
     if (catError || !category)
-      return NextResponse.json(
-        { error: "Category not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Category not found" }, { status: 404 });
 
-    // 2️⃣ التحقق من ملكية المطعم
-    const ownership = await verifyRestaurantOwner(
-      category.restaurant_id,
-      userId,
-    );
-    if (!ownership.ok) return ownership.response;
+    const ownership = await verifyRestaurantOwner(category.restaurant_id, userId);
+    
+    // تأكد أنك تعيد الـ response دائماً
+    if (!ownership.ok) return ownership.response!; 
 
-    // 3️⃣ تحديث الاسم
     const { data, error } = await supabase
       .from("categories")
-      .update(name)
+      .update(body) // تأكد أن body عبارة عن object
       .eq("id", id)
       .select("*")
-      .single(); // ← مهم جداً عشان ترجع object وليس array فاضية
+      .single();
 
     if (error)
       return NextResponse.json({ error: error.message }, { status: 500 });
@@ -55,6 +47,7 @@ export async function PATCH(
   });
 }
 
+// DELETE بنفس الطريقة
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -70,19 +63,12 @@ export async function DELETE(
       .single();
 
     if (!category) {
-      return NextResponse.json(
-        { error: "Category not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Category not found" }, { status: 404 });
     }
 
-    const ownership = await verifyRestaurantOwner(
-      category.restaurant_id,
-      userId,
-    );
-    if (!ownership.ok) return ownership.response;
+    const ownership = await verifyRestaurantOwner(category.restaurant_id, userId);
+    if (!ownership.ok) return ownership.response!; // علامة ! للتأكيد أنه ليس undefined
 
-    // Soft delete
     const { data, error } = await supabase
       .from("categories")
       .update({ is_active: false })
@@ -93,6 +79,6 @@ export async function DELETE(
     if (error)
       return NextResponse.json({ error: error.message }, { status: 500 });
 
-    return NextResponse.json(data);
+    return NextResponse.json(data ?? { success: true }); // تأمين الـ return الأخير
   });
 }

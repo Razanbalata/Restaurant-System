@@ -21,7 +21,7 @@ export const LandingPageSkeleton = () => {
         
         <Grid container spacing={4}>
           {[1, 2, 3].map((i) => (
-            <Grid item xs={12} md={4} key={i}>
+            <Grid size={{ xs: 12, md: 4 }} key={i}>
               <Stack alignItems="center" spacing={2}>
                 <Skeleton variant="circular" width={80} height={80} />
                 <Skeleton variant="text" width="60%" height={30} />
@@ -40,7 +40,7 @@ export const LandingPageSkeleton = () => {
           </Box>
           <Grid container spacing={4}>
             {[1, 2].map((i) => (
-              <Grid item xs={12} md={6} key={i}>
+              <Grid size={{ xs: 12, md: 6 }} key={i}>
                 <Box sx={{ p: 5, border: '1px solid #eee', borderRadius: 4, bgcolor: 'white' }}>
                   <Skeleton variant="text" width="40%" height={40} sx={{ mb: 2 }} />
                   <Skeleton variant="text" width="90%" height={60} sx={{ mb: 4 }} />

@@ -4,10 +4,10 @@ import { verifyRestaurantOwner } from "@/shared/libs/auth/verifyRestaurantOwner"
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: Promise<{ restaurantId: string }> }, // تأكدي من تسمية المتغير id أو restaurantId حسب المجلد
 ) {
-  return withAuth(request, async (request, user) => {
+  return withAuth(request,async(request, user) => {
     try {
       const { restaurantId } = await params;
 
@@ -50,7 +50,7 @@ export async function PATCH(
 
     // تحقق ملكية
     const ownership = await verifyRestaurantOwner(restaurantId, userId);
-    if (!ownership.ok) return ownership.response;
+    if (!ownership.ok) return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
 
     const updates = await req.json();
 
@@ -79,7 +79,7 @@ export async function DELETE(
     const userId = user?.userId;
 
     const ownership = await verifyRestaurantOwner(restaurantId, userId);
-    if (!ownership.ok) return ownership.response;
+    if (!ownership.ok) return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
 
     const { data, error } = await supabase
       .from("restaurants")

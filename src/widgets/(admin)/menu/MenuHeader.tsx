@@ -3,7 +3,14 @@ import { useMe } from '@/features/user/api/use-me';
 import { Box, Typography, Button, Stack } from '@mui/material';
 import { Plus } from 'lucide-react';
 
-export const MenuHeader = ({ restaurantName, restaurantId, categoryId }) => {
+// 1. تعريف الأنواع المتوقعة
+interface MenuHeaderProps {
+  restaurantName: string;
+  restaurantId: string;
+  categoryId?: string; // أضفت علامة الاستفهام لأنه قد لا يتوفر دائماً
+}
+
+export const MenuHeader = ({ restaurantName, restaurantId, categoryId }:MenuHeaderProps) => {
       const {data:user} = useMe();
       const role = user?.role;
       const isOwner = role === "restaurant_owner"; 

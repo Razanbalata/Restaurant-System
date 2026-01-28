@@ -8,7 +8,24 @@ import MutationButton from "@/features/(admin)/restaurant/mutations-restaurant/u
 import DeleteRestaurantBtn from "@/features/(admin)/restaurant/delete-restaurant/ui/DeleteRestaurantBtn";
 import { useRouter } from "next/navigation";
 
-export const RestaurantInfoCard = ({ restaurant, isOwner }) => {
+// 1. تعريف شكل بيانات المطعم
+interface Restaurant {
+  id: string;
+  name: string;
+  category?: string;
+  city: string;
+  country: string;
+  description?: string;
+  // أضف أي حقول أخرى تأتي من الـ API وتستخدمها هنا
+}
+
+// 2. تعريف واجهة الـ Props للمكون الرئيسي والـ InfoItem
+interface RestaurantInfoCardProps {
+  restaurant: Restaurant;
+  isOwner: boolean;
+}
+
+export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardProps) => {
   const router = useRouter();
   const theme = useTheme();
 
@@ -130,7 +147,13 @@ export const RestaurantInfoCard = ({ restaurant, isOwner }) => {
   );
 };
 
-const InfoItem = ({ icon, label, value }) => (
+interface InfoItemProps {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}
+
+const InfoItem = ({ icon, label, value }: InfoItemProps) => (
   <Box>
     <Typography variant="caption" color="text.secondary" fontWeight={800} sx={{ textTransform: "uppercase", display: "block", mb: 0.5 }}>
       {label}

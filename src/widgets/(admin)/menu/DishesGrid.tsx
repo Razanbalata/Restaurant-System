@@ -1,5 +1,5 @@
 "use client";
-import { Box, Typography, Paper, useTheme, alpha } from '@mui/material';
+import { Box, Typography, Paper, useTheme, alpha, Stack } from '@mui/material';
 import { MenuItemMutationButton } from '@/features/(admin)/menu/ui/MenuItemMutationButton';
 import DeleteMenuItem from '@/features/(admin)/menu/ui/DeleteMenuItemBtn';
 import AddToCartBtn from '@/features/(customer)/cart/ui/AddToCartBtn';

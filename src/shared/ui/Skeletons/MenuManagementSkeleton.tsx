@@ -36,7 +36,7 @@ export const MenuManagementSkeleton = () => {
       {/* 3. Dishes Grid Skeleton */}
       <Grid container spacing={3}>
         {[1, 2, 3, 4, 5, 6].map((i) => (
-          <Grid item xs={12} sm={6} md={4} key={i} sx={{ display: 'flex', justifyContent: { xs: 'center', md: 'flex-start' } }}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={i} sx={{ display: 'flex', justifyContent: { xs: 'center', md: 'flex-start' } }}>
             <Paper 
               elevation={0}
               sx={{ 

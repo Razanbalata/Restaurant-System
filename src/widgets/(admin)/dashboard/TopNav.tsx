@@ -55,7 +55,7 @@ const TopNav = () => {
               </Typography>
             </Box>
             <Avatar
-              src={user?.avatar_url}
+              src={(user as any)?.avatar_url}
               sx={{
                 width: 42, height: 42,
                 borderRadius: 3,

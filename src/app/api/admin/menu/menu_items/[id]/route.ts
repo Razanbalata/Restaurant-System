@@ -38,7 +38,7 @@ export async function PATCH(
       category.restaurant_id,
       user.userId,
     );
-    if (!ownership.ok) return ownership.response;
+    if (!ownership.ok) return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
 
     const { data, error } = await supabase
       .from("menu_items")
@@ -50,7 +50,7 @@ export async function PATCH(
     if (error)
       return NextResponse.json({ error: error.message }, { status: 500 });
 
-    return NextResponse.json(data);
+    return NextResponse.json(data ?? []);
   });
 }
 
@@ -89,7 +89,7 @@ export async function DELETE(
       category.restaurant_id,
       user.userId,
     );
-    if (!ownership.ok) return ownership.response;
+    if (!ownership.ok) return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
 
     const { data, error } = await supabase
       .from("menu_items")

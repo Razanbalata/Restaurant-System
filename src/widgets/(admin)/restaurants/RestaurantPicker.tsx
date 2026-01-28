@@ -35,7 +35,7 @@ export const RestaurantPicker = () => {
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Grid container spacing={4}>
           {[1, 2, 3].map((i) => (
-            <Grid item xs={12} sm={6} md={4} key={i}>
+            <Grid size={{xs:12,sm:6,md:4}} key={i}>
               <Skeleton variant="rectangular" height={300} sx={{ borderRadius: "24px" }} />
             </Grid>
           ))}
@@ -58,7 +58,7 @@ export const RestaurantPicker = () => {
 
       <Grid container spacing={4}>
         {restaurantsQuery.data?.map((res: any) => (
-          <Grid item xs={12} sm={6} md={4} key={res.id}>
+          <Grid size={{xs:12,sm:6,md:4}} key={res.id}>
             <Card
               onClick={() => handleSelect(res)}
               sx={{

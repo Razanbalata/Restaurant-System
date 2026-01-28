@@ -21,19 +21,23 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import { useMenuItems } from "../menu_items/api/useMenuItems";
 import MealModal from "./MenuDrawer";
+import { useTheme } from "next-themes";
+import { th } from "zod/v4/locales";
 
 interface Props {
   mode?: "add" | "edit";
   restaurantId: string;
   categoryId?: string;
   item?: any; // البيانات في حالة التعديل
+  useAi?: boolean;
 }
 
-export const MenuItemMutationButton = ({ mode = "add", restaurantId, categoryId, item }: Props) => {
+export const MenuItemMutationButton = ({ mode = "add",item ,useAi}: Props) => {
   const [open, setOpen] = useState(false);
   const handleClose = ()=>setOpen(false)
+  const theme = useTheme();
 
-
+console.log(theme)
   return (
     <>
       {/* 1. الزر المشغل للمودال */}
@@ -51,10 +55,10 @@ export const MenuItemMutationButton = ({ mode = "add", restaurantId, categoryId,
           startIcon={<AddIcon />} 
           onClick={() => setOpen(true)}
           sx={{ 
-            bgcolor: "#000", 
+            bgcolor: theme.theme, 
             borderRadius: "12px", 
             px: 3,
-            "&:hover": { bgcolor: "#222" } 
+            "&:hover": { bgcolor:theme.theme } 
           }}
         >
           إضافة وجبة

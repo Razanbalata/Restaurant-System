@@ -20,25 +20,25 @@ export const SearchBar = () => {
   const { user, admin, customer } = useSearchData();
 
   const data = user?.role === "restaurant_owner" ? admin : customer;
-
+  console.log(data);
  const results = useMemo(() => {
     if (!query || !data) return []; // تأكد أن data موجودة أولاً
 
     const q = query.toLowerCase();
 
-    // نستخدم Array.isArray للتأكد 100% أننا نتعامل مع مصفوفة
-    const restaurants = Array.isArray(data?.restaurants) ? data.restaurants : [];
-    const menuItems = Array.isArray(data?.menuItems) ? data.menuItems : [];
-    const orders = Array.isArray(data?.orders) ? data.orders : [];
-    const categories = Array.isArray(data?.categories) ? data.categories : [];
+// نستخدم (data as any) لإخبار المحرك أننا نعرف ما نفعله وأن الحقول قد تكون موجودة أو لا
+const restaurants = Array.isArray((data as any)?.restaurants) ? (data as any).restaurants : [];
+const menuItems = Array.isArray((data as any)?.menuItems) ? (data as any).menuItems : [];
+const orders = Array.isArray((data as any)?.orders) ? (data as any).orders : [];
+const categories = Array.isArray((data as any)?.categories) ? (data as any).categories : [];
 
 
-    const allItems = [
-      ...restaurants.map((r) => ({ type: "مطعم", name: r.name, id: r.id })),
-      ...menuItems.map((m) => ({ type: "وجبة", name: m.name, id: m.id })),
-      ...orders.map((o) => ({ type: "طلب", name: `طلب #${o.id}`, id: o.id })),
-      ...categories.map((c) => ({ type: "تصنيف", name: c.name, id: c.id })),
-    ];
+   const allItems = [
+  ...restaurants.map((r: any) => ({ type: "مطعم", name: r.name, id: r.id })),
+  ...menuItems.map((m: any) => ({ type: "وجبة", name: m.name, id: m.id })),
+  ...orders.map((o: any) => ({ type: "طلب", name: `طلب #${o.id}`, id: o.id })),
+  ...categories.map((c: any) => ({ type: "تصنيف", name: c.name, id: c.id })),
+];
 
     return allItems.filter((item) => item.name?.toLowerCase().includes(q));
   }, [query, data]);

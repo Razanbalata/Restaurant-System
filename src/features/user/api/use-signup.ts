@@ -28,7 +28,10 @@ export const useSignup = () => {
       toast.success("تم انشاء الحساب بنجاح!")
     },
     onError(error) {
-      toast.error("حدث خطأ أثناء انشاء الحساب",error)
+      toast.error("حدث خطأ أثناء انشاء الحساب", {
+        description: error.message, // عرض التفاصيل تحت العنوان   
+      }
+      )
     },
   });
 };

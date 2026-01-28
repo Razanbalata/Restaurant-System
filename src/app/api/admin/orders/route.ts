@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
    const ownership = await verifyRestaurantOwner(restaurantId, user.userId);
-      if (!ownership.ok) return ownership.response;
+      if (!ownership.ok) return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
 
     const { data, error } = await supabase
       .from("orders")

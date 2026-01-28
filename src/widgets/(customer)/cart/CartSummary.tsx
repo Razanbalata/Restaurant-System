@@ -3,7 +3,13 @@ import { Stack, Box, Typography, Button, Divider, useTheme, alpha } from "@mui/m
 import { AppCard } from "@/shared/ui/Card/AppCard";
 import { useRouter } from "next/navigation";
 
-export function CartSummary({ total, subtotal, isEmpty }) {
+interface CartSummaryProps {
+  total: number;
+  subtotal: number;
+  isEmpty: boolean;
+}
+
+export function CartSummary({ total, subtotal, isEmpty }: CartSummaryProps) {
   const theme = useTheme();
   const router = useRouter();
   const isPending = false; 

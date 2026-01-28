@@ -45,7 +45,7 @@ export default function HeroSection() {
             py: 1.8,
             fontSize: "1.1rem",
             fontWeight: 700,
-            borderRadius: `${theme.shape.borderRadius * 1.5}px`, // ربط الحواف بالثيم
+            borderRadius: `${Number(theme.shape.borderRadius) * 1.5}px`, // ربط الحواف بالثيم
           }}
         >
           ابدأ الآن

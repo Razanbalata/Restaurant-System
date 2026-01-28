@@ -32,7 +32,7 @@ export default function RoleSelectionSection() {
             variant: "outlined" 
           }
         ].map((item) => (
-          <Grid item xs={12} md={5} key={item.role}>
+          <Grid size={{xs:12,md:5}} key={item.role}>
             <Paper
               elevation={0}
               sx={{

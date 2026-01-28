@@ -83,7 +83,7 @@ export function CartSkeleton() {
                   width={120} 
                   height={40} 
                   sx={{ 
-                    borderRadius: `${theme.shape.borderRadius * 2}px`,
+                    borderRadius: `${Number(theme.shape.borderRadius) * 2}px`,
                     bgcolor: alpha(theme.palette.primary.main, 0.05) // تلميح خفيف بلون البراند
                   }} 
                 />

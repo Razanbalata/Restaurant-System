@@ -27,7 +27,10 @@ export const useLogin = () => {
       toast.success("تم تسجيل الدخول بنجاح!")
     },
     onError(error) {
-      toast.error("حدث خطأ أثناء تسجيل الدخول",error)
+      toast.error("حدث خطأ أثناء تسجيل الدخول", {
+        description: error.message, // عرض التفاصيل تحت العنوان
+      }
+      )
     },
   });
 };

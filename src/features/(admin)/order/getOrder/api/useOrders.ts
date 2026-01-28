@@ -34,9 +34,11 @@ export const useOrders = (restaurantId?: string) => {
       if (restaurantId) toast.success("تم تعديل الطلب بنجاح!");
       queryClient.invalidateQueries({ queryKey: ["orders", restaurantId] });
     },
-    onError: (error) => {
-      toast.error("حدث خطأ أثناء تعديل الطلب", error);
-    },
+    onError(error: Error) {
+        toast.error("حدث خطأ أثناء تعديل الطلب", {
+          description: error.message, // عرض التفاصيل تحت العنوان
+        });
+      },
   });
 
   // ======= Real Time Feature

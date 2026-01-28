@@ -24,8 +24,10 @@ export const usePlaceOrder = () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
       toast.success("تم إرسال الطلب وتفريغ السلة بنجاح!")
     },
-    onError:(error)=>{
-        toast.error("حدث خطأ أثناء ارسال الطلب",error)
-    }
+    onError: (error: Error) => {
+  // الخيار الأفضل: دمج الرسالة داخل النص
+  toast.error(`حدث خطأ أثناء إرسال الطلب: ${error.message}`);
+  
+}
   });
 };

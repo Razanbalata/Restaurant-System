@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
       category.restaurant_id,
       user.userId,
     );
-    if (!ownership.ok) return ownership.response;
+    if (!ownership.ok) return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
 
     const { data, error } = await supabase
       .from("menu_items")
@@ -73,7 +73,7 @@ return withAuth(req,async(req,user)=>{
     return NextResponse.json({ error: "Category not found" }, { status: 404 });
 
   const ownership = await verifyRestaurantOwner(restaurant_id, user.userId);
-  if (!ownership.ok) return ownership.response;
+  if (!ownership.ok) return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
 
   const { data, error } = await supabase
     .from("menu_items")

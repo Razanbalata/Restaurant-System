@@ -49,13 +49,14 @@ export default function RestaurantDetailPage() {
               قائمة الطعام
             </Typography>
             {isOwner && (
-               <Button 
-                variant="outlined" 
-                startIcon={<AutoAwesomeIcon />}
-                sx={{ borderRadius: '12px', fontWeight: 700 }}
-               >
-                 تحديث بواسطة AI
-               </Button>
+              //  <Button 
+              //   variant="outlined" 
+              //   startIcon={<AutoAwesomeIcon />}
+              //   sx={{ borderRadius: '12px', fontWeight: 700 }}
+              //  >
+              //    تحديث بواسطة AI
+              //  </Button>
+              <MenuItemMutationButton mode="add" useAi={true} restaurantId={restaurantId}/>
             )}
           </Stack>
 
@@ -78,16 +79,17 @@ export default function RestaurantDetailPage() {
                 لم يقم المطعم بإضافة أصناف بعد، انتظرنا قريباً!
               </Typography>
               {isOwner && (
-                <Button variant="contained" size="large" sx={{ borderRadius: '14px', px: 4 }}>
-                  إضافة أول صنف الآن
-                </Button>
+                // <Button variant="contained" size="large" sx={{ borderRadius: '14px', px: 4 }}>
+                //   إضافة أول صنف الآن
+                // </Button>
+                <MenuItemMutationButton mode="add" restaurantId={restaurantId} />
               )}
             </Paper>
           ) : (
             // عرض المنيو في حال وجود بيانات
             <Grid container spacing={3}>
               {menuData.map((item: any, index: number) => (
-                <Grid item xs={12} md={6} key={item.id || index}>
+                <Grid size={{xs:12,md:6}} key={item.id || index}>
                   {/* هنا يتم استدعاء MealCard الذي قمت بتصميمه مسبقاً */}
                   <Paper sx={{ p: 2, borderRadius: '20px' }}>
                      <Typography fontWeight={700}>{item.name}</Typography>
@@ -105,3 +107,4 @@ export default function RestaurantDetailPage() {
 
 // مكون Stack صغير للتنظيم إذا لم يكن مستورداً
 import { Stack } from "@mui/material";
+import { MenuItemMutationButton } from "@/features/(admin)/menu/ui/MenuItemMutationButton";

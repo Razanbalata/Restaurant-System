@@ -6,7 +6,19 @@ import { CategoryMutationButton } from "@/features/(admin)/menu/categories/ui/Ca
 import DeleteCategoryBtn from "@/features/(admin)/menu/categories/ui/DeleteCategoryBtn"; 
 import { useState } from "react";
 
-export const ManageCategoriesMenu = ({ categories, restaurantId }) => {
+// 1. تعريف شكل القسم (Category)
+interface Category {
+  id: string;
+  name: string;
+}
+
+// 2. تعريف واجهة الـ Props لهذا المكون
+interface ManageCategoriesMenuProps {
+  categories: Category[];
+  restaurantId: string;
+}
+
+export const ManageCategoriesMenu = ({ categories, restaurantId }: ManageCategoriesMenuProps) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

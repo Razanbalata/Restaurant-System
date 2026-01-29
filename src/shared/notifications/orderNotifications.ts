@@ -4,14 +4,14 @@ export const notifyOrderEvent = (payload: any) => {
   const event = payload.eventType;
 
   if (event === "INSERT") {
-    toast.success("🆕 طلب جديد وصل!");
+    toast.success("🆕 New order arrived!");
   }
 
   if (event === "UPDATE") {
-    toast.info("✏️ تم تحديث حالة الطلب");
+    toast.info("✏️ Order status updated");
   }
 
   if (event === "DELETE") {
-    toast.warning("🗑️ تم حذف طلب");
+    toast.warning("🗑️ Order deleted");
   }
 };

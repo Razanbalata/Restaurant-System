@@ -26,7 +26,7 @@ export function OrderCard({ order }: { order: any }) {
         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
           <Box>
             <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 0.5, fontWeight: 700 }}>
-              رقم الطلب
+              Order Number
             </Typography>
             <Typography fontWeight="900" variant="body2" color="text.primary">
               #{order.id?.toString().slice(0, 8).toUpperCase()}
@@ -46,7 +46,7 @@ export function OrderCard({ order }: { order: any }) {
                 <Box component="span" sx={{ color: theme.palette.warning.main, fontWeight: 900, mr: 1 }}>
                   {item.quantity} ×
                 </Box>
-                {item.menu_items?.name || "صنف مجهول"}
+                {item.menu_items?.name || "Unknown Item"}
               </Typography>
               <Typography variant="body2" fontWeight="800" color="text.primary">
                 {(Number(item.price || 0) * item.quantity).toFixed(2)} ₪
@@ -60,7 +60,7 @@ export function OrderCard({ order }: { order: any }) {
         {/* Footer: Date & Total */}
         <Stack direction="row" justifyContent="space-between" alignItems="flex-end">
           <Box>
-            <Typography variant="caption" color="text.secondary" sx={{ display: "block", fontWeight: 600 }}>التاريخ</Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", fontWeight: 600 }}>Date</Typography>
             <Typography variant="body2" fontWeight="700">
               {new Date(order.created_at).toLocaleDateString('ar-EG', { 
                 day: 'numeric', 
@@ -71,7 +71,7 @@ export function OrderCard({ order }: { order: any }) {
             </Typography>
           </Box>
           <Box textAlign="right">
-            <Typography variant="caption" color="text.secondary" sx={{ display: "block", fontWeight: 600 }}>المجموع الإجمالي</Typography>
+            <Typography variant="caption" color="text.secondary" sx={{ display: "block", fontWeight: 600 }}>Total</Typography>
             <Typography variant="h6" fontWeight="900" color="primary.main">
               {Number(order.total_price).toFixed(2)} ₪
             </Typography>

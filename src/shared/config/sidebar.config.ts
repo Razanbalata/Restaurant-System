@@ -10,15 +10,15 @@ import {
 } from '@mui/icons-material';
 
 export const adminMenu = [
-  { label: "مطاعمي", icon: BarChartRounded, path: "/dashboard" },
-  { label: "لوحة التحكم", icon: DashboardRounded, path: "/restaurantDetails", requiresRestaurant: true },
-  { label: "الطلبات الحية", icon: ShoppingCartRounded, path: "/orders", requiresRestaurant: true },
-  { label: "إدارة المنيو", icon: RestaurantMenuRounded, path: "/menu", requiresRestaurant: true },
+  { label: "My Restaurants", icon: BarChartRounded, path: "/dashboard" },
+  { label: "Dashboard", icon: DashboardRounded, path: "/restaurantDetails", requiresRestaurant: true },
+  { label: "Live Orders", icon: ShoppingCartRounded, path: "/orders", requiresRestaurant: true },
+  { label: "Menu Management", icon: RestaurantMenuRounded, path: "/menu", requiresRestaurant: true },
 ];
 
 
 export const customerMenu = [
-  { label: 'استكشف المطاعم', icon: RestaurantMenuRounded, path: '/dashboard' },
-  { label: 'طلباتي الحالية', icon: ShoppingBagRounded, path: '/order' },
-  { label: 'سجل الطلبات', icon: HistoryRounded, path: '/cart' },
+  { label: 'Explore Restaurants', icon: RestaurantMenuRounded, path: '/dashboard' },
+  { label: 'My Current Orders', icon: ShoppingBagRounded, path: '/order' },
+  { label: 'Order History', icon: HistoryRounded, path: '/cart' },
 ];

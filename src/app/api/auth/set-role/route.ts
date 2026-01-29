@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
     const { userId, role } = await req.json();
 
     if (!userId || !role) {
-      return NextResponse.json({ error: "مطلوب userId و role" }, { status: 400 });
+      return NextResponse.json({ error: "userId and role are required" }, { status: 400 });
     }
 
     const { error } = await supabase
@@ -15,12 +15,12 @@ export async function POST(req: NextRequest) {
       .eq("id", userId);
 
     if (error) {
-      return NextResponse.json({ error: "فشل تحديث الدور" }, { status: 500 });
+      return NextResponse.json({ error: "Failed to update role" }, { status: 500 });
     }
 
-    return NextResponse.json({ message: "تم تحديث الدور بنجاح" }, { status: 200 });
+    return NextResponse.json({ message: "Role updated successfully" }, { status: 200 });
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: "حدث خطأ أثناء تحديث الدور" }, { status: 500 });
+    return NextResponse.json({ error: "An error occurred while updating role" }, { status: 500 });
   }
 }

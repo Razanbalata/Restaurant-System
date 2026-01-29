@@ -31,7 +31,7 @@
 //   category,
 // }: Props) {
 //   const [prompt, setPrompt] = useState(
-//     `قم بتوليد قائمة طعام لمطعم فلسطيني اسمه "${restaurantName}" وتخصصه "${category || "عام"}". أريد 8 وجبات بأسعار واقعية بالشيكل (ILS) مع روابط صور عشوائية.`
+//     `Generate a menu for a Palestinian restaurant named "${restaurantName}" specializing in "${category || "General"}". I want 8 meals at realistic prices in Shekel (ILS) with random image links.`
 //   );
 //   const [menuItems, setMenuItems] = useState<any[]>([]);
 //   const [loading, setLoading] = useState(false);
@@ -93,7 +93,7 @@
 //                 onClick={handleGenerate}
 //                 disabled={loading}
 //               >
-//                 {loading ? "جارٍ توليد المنيو..." : "Generate Menu"}
+//                 {loading ? "Generating menu..." : "Generate Menu"}
 //               </Button>
 //             </>
 //           )}
@@ -101,18 +101,18 @@
 //           {/* 🌟 عرض الرد من الـ AI */}
 //           {menuItems.length > 0 && (
 //             <Stack spacing={2}>
-//               <Typography fontWeight="bold">المنيو المولد:</Typography>
+//               <Typography fontWeight="bold">Generated Menu:</Typography>
 //               {menuItems.map((item, idx) => (
 //                 <Stack key={idx} spacing={1}>
 //                   <TextField
-//                     label="اسم الوجبة"
+//                     label="Meal Name"
 //                     value={item.name}
 //                     onChange={(e) =>
 //                       handleChange(idx, "name", e.target.value)
 //                     }
 //                   />
 //                   <TextField
-//                     label="السعر (₪)"
+//                     label="Price (₪)"
 //                     type="number"
 //                     value={item.price}
 //                     onChange={(e) =>
@@ -120,7 +120,7 @@
 //                     }
 //                   />
 //                   <TextField
-//                     label="الوصف"
+//                     label="Description"
 //                     multiline
 //                     rows={2}
 //                     value={item.description}
@@ -129,7 +129,7 @@
 //                     }
 //                   />
 //                   <TextField
-//                     label="رابط الصورة"
+//                     label="Image URL"
 //                     value={item.image_url || ""}
 //                     onChange={(e) =>
 //                       handleChange(idx, "image_url", e.target.value)
@@ -143,14 +143,14 @@
 //           {loading && (
 //             <Box textAlign="center" mt={2}>
 //               <CircularProgress />
-//               <Typography>جاري توليد المنيو...</Typography>
+//               <Typography>Generating menu...</Typography>
 //             </Box>
 //           )}
 //         </Stack>
 //       </DialogContent>
 
 //       <DialogActions>
-//         <Button onClick={onClose}>إلغاء</Button>
+//         <Button onClick={onClose}>Cancel</Button>
 //         {menuItems.length > 0 && (
 //           <Button variant="contained" onClick={handleSave}>
 //             حفظ المنيو

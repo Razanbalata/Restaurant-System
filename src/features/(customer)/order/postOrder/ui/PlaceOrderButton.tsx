@@ -21,7 +21,7 @@ export function PlaceOrderButton({ formData }: Props) {
   const { mutate, isPending } = usePlaceOrder();
   const handlePlaceOrder = () => {
   if (!address || !phone) {
-    alert("يرجى إدخال العنوان ورقم الهاتف");
+    alert("Please enter address and phone number");
     return;
   }
 
@@ -42,7 +42,7 @@ export function PlaceOrderButton({ formData }: Props) {
       },
       onError: (err: any) => {
         console.error("❌ Order failed:", err);
-        alert(err.message || "فشل في تقديم الطلب");
+        alert(err.message || "Failed to submit order");
       },
     });
   } catch (err) {
@@ -59,7 +59,7 @@ export function PlaceOrderButton({ formData }: Props) {
       disabled={isPending}
       onClick={handlePlaceOrder}
     >
-      {isPending ? "جاري معالجة الطلب..." : "تأكيد الطلب الآن"}
+      {isPending ? "Processing order..." : "Confirm Order Now"}
     </Button>
   );
 }

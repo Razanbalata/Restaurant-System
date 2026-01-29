@@ -35,7 +35,7 @@ function AddToCartBtn({
       }}
       onClick={handleAdd}
     >
-      أضف للسلة
+      Add to Cart
     </Button>
   );
 }

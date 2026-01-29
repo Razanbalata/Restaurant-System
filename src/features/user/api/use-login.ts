@@ -15,7 +15,7 @@ export const useLogin = () => {
       });
 
       if (!res.ok) {
-        throw new Error("فشل تسجيل الدخول");
+        throw new Error("Login failed");
       }
 
       return res.json();
@@ -24,10 +24,10 @@ export const useLogin = () => {
     onSuccess: (data) => {
       queryClient.setQueryData(queryKeys.user.me(), data.user);
       queryClient.invalidateQueries({ queryKey: queryKeys.user.all });
-      toast.success("تم تسجيل الدخول بنجاح!")
+      toast.success("Login successful!")
     },
     onError(error) {
-      toast.error("حدث خطأ أثناء تسجيل الدخول", {
+      toast.error("An error occurred during login", {
         description: error.message, // عرض التفاصيل تحت العنوان
       }
       )

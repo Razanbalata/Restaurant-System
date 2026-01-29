@@ -6,7 +6,7 @@ export const useGetOrders = () => {
     queryKey: queryKeys.orders.all,
     queryFn: async () => {
       const res = await fetch("/api/customer/orders");
-      if (!res.ok) throw new Error("فشل جلب الطلبات");
+      if (!res.ok) throw new Error("Failed to fetch orders");
       return res.json();
     },
   });

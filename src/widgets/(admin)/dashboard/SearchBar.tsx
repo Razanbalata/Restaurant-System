@@ -34,10 +34,10 @@ const categories = Array.isArray((data as any)?.categories) ? (data as any).cate
 
 
    const allItems = [
-  ...restaurants.map((r: any) => ({ type: "مطعم", name: r.name, id: r.id })),
-  ...menuItems.map((m: any) => ({ type: "وجبة", name: m.name, id: m.id })),
-  ...orders.map((o: any) => ({ type: "طلب", name: `طلب #${o.id}`, id: o.id })),
-  ...categories.map((c: any) => ({ type: "تصنيف", name: c.name, id: c.id })),
+  ...restaurants.map((r: any) => ({ type: "Restaurant", name: r.name, id: r.id })),
+  ...menuItems.map((m: any) => ({ type: "Meal", name: m.name, id: m.id })),
+  ...orders.map((o: any) => ({ type: "Order", name: `Order #${o.id}`, id: o.id })),
+  ...categories.map((c: any) => ({ type: "Category", name: c.name, id: c.id })),
 ];
 
     return allItems.filter((item) => item.name?.toLowerCase().includes(q));
@@ -68,7 +68,7 @@ const categories = Array.isArray((data as any)?.categories) ? (data as any).cate
         }}
       >
         <InputBase
-          placeholder="ابحث عن مطعم، وجبة، طلب أو تصنيف..."
+          placeholder="Search for restaurant, meal, order or category..."
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -119,7 +119,7 @@ const categories = Array.isArray((data as any)?.categories) ? (data as any).cate
             {results.length === 0 && (
               <Box sx={{ px: 3, py: 2 }}>
                 <Typography color="text.secondary" textAlign="center">
-                  لا توجد نتائج مطابقة
+                  No matching results
                 </Typography>
               </Box>
             )}

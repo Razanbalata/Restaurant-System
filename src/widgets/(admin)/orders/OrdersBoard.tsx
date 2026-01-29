@@ -26,7 +26,7 @@ export default function OrdersAdminPage() {
     <Box sx={{ bgcolor: theme.palette.background.default, minHeight: "100vh", py: 4 }}>
       <Container maxWidth="xl">
         <Typography variant="h4" fontWeight={900} mb={4} color="text.primary">
-          إدارة الطلبات الحية
+          Live Orders Management
         </Typography>
         
         <Stack 
@@ -36,19 +36,19 @@ export default function OrdersAdminPage() {
           sx={{ overflowX: "auto", pb: 2 }}
         >
           <OrderColumn 
-            title="طلبات جديدة" 
+            title="New Orders" 
             color={theme.palette.error.main}
             orders={orders.filter((o: any) => o.status.toLowerCase() === 'pending')} 
             onStatusChange={handleStatusUpdate}
           />
           <OrderColumn 
-            title="قيد التحضير" 
+            title="In Preparation" 
             color={theme.palette.warning.main}
             orders={orders.filter((o: any) => o.status === 'preparing')} 
             onStatusChange={handleStatusUpdate}
           />
           <OrderColumn 
-            title="تم الإنجاز" 
+            title="Completed" 
             color={theme.palette.success.main}
             orders={orders.filter((o: any) => o.status === 'COMPLETED')} 
             onStatusChange={handleStatusUpdate}

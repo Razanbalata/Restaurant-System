@@ -46,7 +46,7 @@ export default function RestaurantDetailPage() {
           
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Typography variant="h4" fontWeight={900} color="text.primary">
-              قائمة الطعام
+              Menu
             </Typography>
             {isOwner && (
               //  <Button 
@@ -73,10 +73,10 @@ export default function RestaurantDetailPage() {
             >
               <RestaurantMenuIcon sx={{ fontSize: 80, color: theme.palette.primary.main, mb: 2, opacity: 0.3 }} />
               <Typography variant="h5" fontWeight={800} gutterBottom>
-                قائمة الطعام قيد التحضير 👨‍🍳
+                Menu Under Preparation 👨‍🍳
               </Typography>
               <Typography color="text.secondary" mb={3}>
-                لم يقم المطعم بإضافة أصناف بعد، انتظرنا قريباً!
+                The restaurant hasn't added items yet, wait for us soon!
               </Typography>
               {isOwner && (
                 // <Button variant="contained" size="large" sx={{ borderRadius: '14px', px: 4 }}>

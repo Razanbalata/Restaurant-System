@@ -23,27 +23,27 @@ export function CartSummary({ total, subtotal, isEmpty }: CartSummaryProps) {
       bgcolor: theme.palette.background.default
     }}>
       <Typography variant="h5" fontWeight="900" mb={4} textAlign="center">
-        ملخص الطلب
+        Order Summary
       </Typography>
 
       <Stack spacing={2.5}>
         <Box display="flex" justifyContent="space-between">
-          <Typography color="text.secondary" fontWeight={600}>المجموع الفرعي</Typography>
+          <Typography color="text.secondary" fontWeight={600}>Subtotal</Typography>
           <Typography fontWeight="800">{subtotal} ₪</Typography>
         </Box>
 
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Stack direction="row" spacing={1} alignItems="center">
             {/* <LocalTruckOutlinedIcon fontSize="small" color="success" /> */}
-            <Typography color="text.secondary" fontWeight={600}>رسوم التوصيل</Typography>
+            <Typography color="text.secondary" fontWeight={600}>Delivery Fees</Typography>
           </Stack>
-          <Typography fontWeight="800" color="success.main">مجاني</Typography>
+          <Typography fontWeight="800" color="success.main">Free</Typography>
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
 
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h5" fontWeight="900">الإجمالي</Typography>
+          <Typography variant="h5" fontWeight="900">Total</Typography>
           <Typography variant="h4" fontWeight="900" color="primary">
             {total} ₪
           </Typography>
@@ -64,11 +64,11 @@ export function CartSummary({ total, subtotal, isEmpty }: CartSummaryProps) {
             mt: 2
           }}
         >
-          {isPending ? "جاري المعالجة..." : "إتمام الشراء ✨"}
+          {isPending ? "Processing..." : "Complete Purchase ✨"}
         </Button>
         
         <Typography variant="caption" color="text.secondary" textAlign="center" sx={{ mt: 2 }}>
-          الأسعار شاملة للضرائب المطبقة
+          Prices include applicable taxes
         </Typography>
       </Stack>
     </AppCard>

@@ -21,7 +21,7 @@ export async function PATCH(
     if (itemError || !item)
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
 
-    // جلب category للتحقق من ملكية المطعم
+    // Fetch category to verify restaurant ownership
     const { data: category, error: catError } = await supabase
       .from("categories")
       .select("restaurant_id")
@@ -72,7 +72,7 @@ export async function DELETE(
     if (itemError || !item)
       return NextResponse.json({ error: "Item not found" }, { status: 404 });
 
-    // جلب category للتحقق من ملكية المطعم
+    // Fetch category to verify restaurant ownership
     const { data: category, error: catError } = await supabase
       .from("categories")
       .select("restaurant_id")

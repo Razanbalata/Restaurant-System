@@ -3,18 +3,18 @@ import { Box, Grid, Typography, Container } from "@mui/material";
 const HOW_IT_WORKS_STEPS = [
   {
     icon: "📝",
-    title: "إنشاء حساب",
-    description: "يقوم المستخدم بإنشاء حساب سواء كزبون أو كصاحب مطعم للوصول إلى ميزات النظام المختلفة.",
+    title: "Create Account",
+    description: "Users can create accounts as either customers or restaurant owners to access various system features.",
   },
   {
     icon: "🍽️",
-    title: "إدارة أو اختيار مطعم",
-    description: "صاحب المطعم يمكنه إنشاء مطعمه وإدارة المنيو، بينما يستطيع الزبون تصفح المطاعم بسهولة.",
+    title: "Manage or Choose Restaurant",
+    description: "Restaurant owners can create and manage their menu, while customers can easily browse restaurants.",
   },
   {
     icon: "🚀",
-    title: "طلب أو استقبال الطلبات",
-    description: "الزبون يضيف الطلبات إلى السلة، وصاحب المطعم يستقبل الطلبات ويتابع حالتها فوراً.",
+    title: "Order or Receive Orders",
+    description: "Customers add orders to cart, restaurant owners receive and track orders in real-time.",
   },
 ];
 
@@ -39,13 +39,13 @@ export default function HowItWorksSection() {
               fontSize: { xs: "1.75rem", md: "2.5rem" },
             }}
           >
-            كيف يعمل التطبيق؟
+            How does the app work?
           </Typography>
           <Typography
             variant="body1"
             sx={{ color: "text.secondary", maxWidth: 600, mx: "auto", px: 2 }}
           >
-            رحلة بسيطة تبدأ بالتسجيل وتنتهي بوجبة لذيذة أو إدارة ناجحة لمطعمك.
+            A simple journey starting with registration and ending with a delicious meal or successful restaurant management.
           </Typography>
         </Box>
 

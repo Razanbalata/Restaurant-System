@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ restaurantId: string }> }, // تأكدي من تسمية المتغير id أو restaurantId حسب المجلد
+  { params }: { params: Promise<{ restaurantId: string }> }, // Make sure variable is named id or restaurantId according to folder
 ) {
   return withAuth(request,async(request, user) => {
     try {
@@ -23,7 +23,7 @@ export async function GET(
 
       if (!data) {
         return NextResponse.json(
-          { error: "المطعم غير موجود" },
+          { error: "Restaurant not found" },
           { status: 404 },
         );
       }
@@ -38,7 +38,7 @@ export async function GET(
   });
 }
 
-// PATCH: تعديل المطعم
+// PATCH: Update restaurant
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ restaurantId: string }> },
@@ -48,7 +48,7 @@ export async function PATCH(
 
     const userId = user?.userId;
 
-    // تحقق ملكية
+    // Verify ownership
     const ownership = await verifyRestaurantOwner(restaurantId, userId);
     if (!ownership.ok) return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
 
@@ -68,7 +68,7 @@ export async function PATCH(
   });
 }
 
-// DELETE: Soft Delete (تغيير is_active = false)
+// DELETE: Soft Delete (change is_active = false)
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ restaurantId: string }> },

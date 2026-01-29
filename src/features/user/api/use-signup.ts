@@ -17,18 +17,18 @@ export const useSignup = () => {
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err?.error || "فشل إنشاء الحساب");
+        throw new Error(err?.error || "Account creation failed");
       }
 
       return res.json(); // { user: {...}, message: "..." }
     },
     onSuccess: (data) => {
-      // نحفظ الـ user في cache
+      // Save user in cache
       queryClient.setQueryData(queryKeys.user.me(), data.user);
-      toast.success("تم انشاء الحساب بنجاح!")
+      toast.success("Account created successfully!")
     },
     onError(error) {
-      toast.error("حدث خطأ أثناء انشاء الحساب", {
+      toast.error("An error occurred during account creation", {
         description: error.message, // عرض التفاصيل تحت العنوان   
       }
       )

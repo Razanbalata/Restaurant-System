@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     if (!user || user.role !== "restaurant_owner")
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    // جلب category للتحقق من ملكية المطعم
+    // Fetch category to verify restaurant ownership
     const { data: category, error: catError } = await supabase
       .from("categories")
       .select("restaurant_id")
@@ -62,7 +62,7 @@ return withAuth(req,async(req,user)=>{
   if (!category_id || !name || !price)
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
 
-  // التحقق من ملكية المطعم عبر category
+  // Verify restaurant ownership via category
   const { data: category, error: catError } = await supabase
     .from("categories")
     .select("restaurant_id")

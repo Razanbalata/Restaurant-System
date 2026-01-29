@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionToken } from "./cookies"; // دالة تجيب التوكن من الكوكيز
-import { verifyToken, JWTPayload } from "./jwt"; // دوال التحقق من التوكن
+import { getSessionToken } from "./cookies"; // Function to get token from cookies
+import { verifyToken, JWTPayload } from "./jwt"; // Token verification functions
 
 /**
- * التحقق من وجود جلسة صالحة
+ * Check for a valid session
  * @param request NextRequest
  */
 export async function checkAuth(request: NextRequest): Promise<{
@@ -17,7 +17,7 @@ export async function checkAuth(request: NextRequest): Promise<{
     return {
       isAuthenticated: false,
       user: null,
-      error: "لا توجد جلسة نشطة",
+      error: "No active session",
     };
   }
 
@@ -27,7 +27,7 @@ export async function checkAuth(request: NextRequest): Promise<{
     return {
       isAuthenticated: false,
       user: null,
-      error: "جلسة غير صالحة أو منتهية",
+      error: "Invalid or expired session",
     };
   }
 
@@ -38,9 +38,9 @@ export async function checkAuth(request: NextRequest): Promise<{
 }
 
 /**
- * Wrapper لحماية أي API Route
+ * Wrapper to protect any API Route
  * @param request NextRequest
- * @param handler دالة الRoute اللي تعمل العملية
+ * @param handler Route function that performs the operation
  */
 export async function withAuth(
   request: NextRequest,
@@ -49,7 +49,7 @@ export async function withAuth(
   const { isAuthenticated, user, error } = await checkAuth(request);
   if (!isAuthenticated || !user) {
     return NextResponse.json(
-      { error: error || "غير مصرح" },
+      { error: error || "Unauthorized" },
       { status: 401 }
     );
   }
@@ -58,7 +58,7 @@ export async function withAuth(
 }
 
 /**
- * الحصول على المستخدم الحالي من التوكن بدون التحقق من المسار
+ * Get the current user from the token without path verification
  */
 export async function getCurrentUser(request: NextRequest): Promise<JWTPayload | null> {
   const token = getSessionToken(request);

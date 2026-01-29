@@ -22,7 +22,7 @@ export function LoginForm() {
   const onSubmit = (data: LoginFormValues) => {
     loginMutation.mutate(data, {
       onSuccess: (res) => {
-        setSuccessMessage(`تم تسجيل الدخول! دورك: ${res.user.role}`);
+        setSuccessMessage(`Login successful! Your role: ${res.user.role}`);
         setTimeout(() => {
           if (res.user.role === "customer") router.push("/dashboard");
           else router.push("/dashboard");
@@ -33,17 +33,17 @@ export function LoginForm() {
 
   return (
     <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={3} sx={{ width: "100%" }}>
-      <Typography variant="h5" fontWeight={800} textAlign="center">تسجيل الدخول</Typography>
+      <Typography variant="h5" fontWeight={800} textAlign="center">Login</Typography>
 
-      {/* Alert النجاح */}
+      {/* Success Alert */}
       {successMessage && <Alert severity="success" variant="filled">{successMessage}</Alert>}
 
-      {/* Alert الخطأ */}
-      {loginMutation.isError && <Alert severity="error" variant="filled">{loginMutation.error.message || "فشل تسجيل الدخول"}</Alert>}
+      {/* Error Alert */}
+      {loginMutation.isError && <Alert severity="error" variant="filled">{loginMutation.error.message || "Login failed"}</Alert>}
 
-      {/* البريد */}
+      {/* Email */}
       <TextField
-        label="البريد الإلكتروني"
+        label="Email Address"
         fullWidth
         {...register("email")}
         error={!!errors.email}
@@ -53,9 +53,9 @@ export function LoginForm() {
         }}
       />
 
-      {/* كلمة المرور */}
+      {/* Password */}
       <TextField
-        label="كلمة المرور"
+        label="Password"
         type={showPassword ? "text" : "password"}
         fullWidth
         {...register("password")}
@@ -73,11 +73,11 @@ export function LoginForm() {
         }}
       />
 
-      {/* زر الدخول */}
+      {/* Login Button */}
       <Button type="submit" variant="contained" fullWidth size="large" disabled={loginMutation.isPending}>
         {loginMutation.isPending ? <CircularProgress size={26} color="inherit" /> :
           <Stack direction="row" spacing={1} alignItems="center">
-            <span>تسجيل الدخول</span>
+            <span>Login</span>
             <ArrowRight size={20} />
           </Stack>
         }

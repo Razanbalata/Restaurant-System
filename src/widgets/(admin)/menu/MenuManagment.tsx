@@ -30,7 +30,7 @@ export default function MenuManagementPage() {
   const { useAdminCategories } = useCategories(selectedRestaurant?.id);
   const { data: categories, isLoading: catLoading } = useAdminCategories;
 
-  // 2. جلب "كل الوجبات" مرة واحدة (لضمان السرعة والـ Performance)
+  // 2. Fetch "all items" once (to ensure speed and performance)
   const { data: allMeals, isLoading: mealsLoading } = useMenu(
     selectedRestaurant?.id,
   );
@@ -45,7 +45,7 @@ export default function MenuManagementPage() {
   const displayedMeals = useMemo(() => {
     if (!allMeals) return [];
 
-    // إذا كان التاب "الكل" (Index 0)
+    // If the tab is "All" (Index 0)
     if (activeTab === 0) return allMeals;
 
     // فلترة الوجبات بناءً على التصنيف المختار
@@ -108,7 +108,7 @@ export default function MenuManagementPage() {
                 {/* يمكنك إضافة أيقونة هنا */}
               </Box>
               <Typography variant="h6" fontWeight={700} color="text.secondary">
-                لا توجد أطباق في هذا القسم بعد
+                No dishes in this category yet
               </Typography>
               {activeTab !== 0 && (
                 <MenuItemMutationButton

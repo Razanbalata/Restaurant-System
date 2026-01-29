@@ -28,7 +28,7 @@ import OrderSkelton from "@/shared/ui/Skeletons/OrderSkelton";
 import { OrderStatusTracker } from "./OrderStatusTracker";
 
 
-// --- 2. المكوّن الرئيسي (OrdersList) ---
+// --- 2. Main Component (OrdersList) ---
 export default function OrdersList() {
   const theme = useTheme();
   const { data: orders = [], isLoading } = useGetOrders();
@@ -47,7 +47,7 @@ export default function OrdersList() {
       py: 5 
     }}>
       <Container maxWidth="sm">
-        {/* الهيدر الرئيسي */}
+        {/* Main Header */}
         <Stack direction="row" spacing={2} mb={4} alignItems="center">
           <Box sx={{ 
             p: 1.2, 
@@ -59,12 +59,12 @@ export default function OrdersList() {
             <ReceiptLongOutlined />
           </Box>
           <Typography variant="h5" fontWeight="1000" color="text.primary">
-            طلباتي الأخيرة
+            My Recent Orders
           </Typography>
         </Stack>
 
         {orders.length === 0 && (
-          <Typography color="text.secondary" textAlign="center" py={5}>لا يوجد طلبات حالياً!</Typography>
+          <Typography color="text.secondary" textAlign="center" py={5}>No orders yet!</Typography>
         )}
 
         <Stack spacing={3}>
@@ -85,7 +85,7 @@ export default function OrdersList() {
                 }}
               >
                 <CardContent sx={{ p: 3 }}>
-                  {/* رقم الطلب والسعر */}
+                  {/* Order Details */}
                   <Stack direction="row" justifyContent="space-between" mb={2}>
                     <Box>
                       <Typography variant="caption" color="text.disabled" fontWeight="bold">
@@ -99,7 +99,7 @@ export default function OrdersList() {
 
                   <OrderStatusTracker status={order.status} />
 
-                  {/* تفاصيل المحتويات */}
+                  {/* Order Items */}
                   <Box sx={{
                     bgcolor: theme.palette.mode === 'light' ? theme.palette.grey[50] : alpha(theme.palette.common.white, 0.03),
                     borderRadius: 2,
@@ -108,7 +108,7 @@ export default function OrdersList() {
                   }}>
                     <Box sx={{ p: 1.5, borderBottom: `1px solid ${theme.palette.divider}`, display: "flex", alignItems: "center", gap: 1 }}>
                       <FastfoodOutlined sx={{ fontSize: 16, color: "text.secondary" }} />
-                      <Typography variant="caption" fontWeight="900" color="text.secondary">محتويات الطلب</Typography>
+                      <Typography variant="caption" fontWeight="900" color="text.secondary">Order Items</Typography>
                     </Box>
 
                     <Stack divider={<Divider flexItem sx={{ borderStyle: "dashed", mx: 2 }} />}>
@@ -135,12 +135,12 @@ export default function OrdersList() {
                     </Stack>
                   </Box>
 
-                  {/* بيانات التوصيل والوقت */}
+                  {/* Delivery and Time Info */}
                   <Stack spacing={1} sx={{ px: 1 }}>
                     <Stack direction="row" spacing={1} alignItems="center">
                       <LocationOnOutlined sx={{ fontSize: 16, color: theme.palette.primary.main }} />
                       <Typography variant="caption" fontWeight="600" color="text.primary">
-                        {order.address || "استلام من الفرع"}
+                        {order.address || "Pickup from location"}
                       </Typography>
                     </Stack>
                     
@@ -163,7 +163,7 @@ export default function OrdersList() {
                     <Stack direction="row" spacing={1} alignItems="center">
                       <AccessTime sx={{ fontSize: 14, color: "text.disabled" }} />
                       <Typography variant="caption" fontWeight="bold" color="text.disabled">
-                        {new Date(order.created_at).toLocaleDateString("ar-EG", {
+                        {new Date(order.created_at).toLocaleDateString("en-US", {
                           month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
                         })}
                       </Typography>

@@ -16,7 +16,7 @@ function DeleteMenuItem({r} : {r: MenuItem}) {
 
  function handleDelete(id: string, e: React.MouseEvent){
    e.stopPropagation()
-   if (window.confirm("هل أنت متأكد من حذف هذا المطعم؟")) {
+   if (window.confirm("Are you sure you want to delete this restaurant?")) {
       deleteMenuItem.mutate(id);
      }
  }
@@ -29,7 +29,7 @@ function DeleteMenuItem({r} : {r: MenuItem}) {
         startIcon={<DeleteIcon />}
         onClick={(e) => handleDelete(r.id, e)}
       >
-        حذف
+        Delete
       </Button>
   );
 }

@@ -6,23 +6,23 @@ export const useGenerateAndSaveMenu = (restaurantId: string) => {
 
   return useMutation({
     mutationFn: async ({ name, category }: { name: string; category?: string }) => {
-      // نستخدم الراوت المدمج الجديد الذي يقوم بالتوليد والحفظ معاً
+      // Using the new built-in route that generates and saves together
       const res = await fetch(`/api/admin/menu/generate-menu`, {
         method: "POST",
         body: JSON.stringify({ 
           restaurantName: name, 
           category, 
-          restaurantId // مهم جداً للحفظ في الداتابيز
+          restaurantId // Very important for saving in database
         }),
       });
 
-      if (!res.ok) throw new Error("فشل توليد وحفظ المنيو");
+      if (!res.ok) throw new Error("Failed to generate and save menu");
       const data = await res.json();
-      return data; // البيانات هنا هي الوجبات التي حُفظت فعلياً في Supabase
+      return data; // The data here are the meals that were actually saved in Supabase
     },
     onSuccess: (data) => {
-      console.log("✅ تم توليد وحفظ المنيو بنجاح",data);
-      // تحديث بيانات المطعم أو المنيو في الكاش فوراً
+      console.log("✅ Menu generated and saved successfully",data);
+      // Update restaurant or menu data in cache immediately
       queryClient.invalidateQueries({ 
         queryKey: queryKeys.restaurants.details(restaurantId) 
       });

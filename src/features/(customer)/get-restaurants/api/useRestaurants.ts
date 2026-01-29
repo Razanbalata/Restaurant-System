@@ -5,7 +5,7 @@ import { Restaurant } from "../libs/types";
 
 const fetchRestaurants = async (): Promise<Restaurant[]> => {
   const res = await fetch(`/api/customer/restaurants`);
-  if (!res.ok) throw new Error("فشل جلب المطاعم");
+  if (!res.ok) throw new Error("Failed to fetch restaurants");
   const data = await res.json();
   return  data ?? [];
 };

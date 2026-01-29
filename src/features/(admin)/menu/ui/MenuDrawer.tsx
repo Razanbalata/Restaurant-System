@@ -19,7 +19,7 @@ import { useMenuItems } from "../menu_items/api/useMenuItems";
 import { useCategories } from "../categories/api/useCategories";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
 
-// أضفنا initialData لمعرفة إذا كان هناك تعديل
+// We added initialData to know if there is an edit
 
 interface MealItem {
   id: string;
@@ -39,7 +39,7 @@ interface MealModalProps {
 
 const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
   const { selectedRestaurant } = useRestaurant();
-  const isEdit = !!initialData; // إذا وجد بيانات أولية، إذن نحن في وضع التعديل
+  const isEdit = !!initialData; // If initial data is found, then we are in edit mode
 
   // 1. حالات الفورم
   const [formData, setFormData] = useState({
@@ -54,7 +54,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
   const { useAdminCategories } = useCategories(selectedRestaurant?.id);
   const { data: categoriesData } = useAdminCategories;
 
-  // 3. هوكس الإضافة والتعديل
+  // 3. Hooks for adding and editing
   const { useAddMenuItem, useUpdateMenuItem } = useMenuItems(
     formData.category_id,
   );
@@ -63,7 +63,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
 
   const isLoading = addMenuItem.isPending || updateMenuItem.isPending;
 
-  // 4. تعبئة البيانات عند التعديل أو تصفيرها عند الإضافة
+  // 4. Populate data when editing or clear when adding
   useEffect(() => {
     if (isEdit && initialData) {
       setFormData({
@@ -98,15 +98,15 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
         },
       );
     } else {
-      // 1. تنظيف البيانات وتحويل الأنواع قبل الإرسال
+      // 1. Clean data and convert types before sending
       const formattedPayload = {
         name: formData.name,
-        price: Number(formData.price), // تحويل السعر لرقم
+        price: Number(formData.price), // Convert price to number
         description: formData.description || undefined,
-        image: null, // نرسل null حالياً لأن الـ Type لا يدعم File
+        image: null, // Send null for now because Type doesn't support File
       };
 
-      // 2. تمرير الكائن المنظف مباشرة (بدون newItem)
+      // 2. Pass the cleaned object directly (without newItem)
       addMenuItem.mutate(formattedPayload, {
         onSuccess: () => {
           onClose();
@@ -131,7 +131,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
         }}
       >
         <Typography variant="h6" fontWeight="800">
-          {isEdit ? "تعديل الوجبة" : "إضافة وجبة جديدة"}
+          {isEdit ? "Edit Meal" : "Add New Meal"}
         </Typography>
         <IconButton onClick={onClose}>
           <Close />
@@ -140,7 +140,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
 
       <DialogContent>
         <Stack spacing={3} sx={{ mt: 1 }}>
-          {/* قسم رفع الصورة (كما هو في كودك) */}
+          {/* Image upload section (as in your code) */}
           <Box
             sx={{
               border: "2px dashed #e0e0e0",
@@ -153,13 +153,13 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
           >
             <CloudUpload sx={{ fontSize: 40, color: "#FF5B22", mb: 1 }} />
             <Typography variant="body2" color="textSecondary">
-              {formData.image ? "تم اختيار صورة" : "ارفع صورة الوجبة هنا"}
+              {formData.image ? "Image selected" : "Upload meal image here"}
             </Typography>
           </Box>
 
           <TextField
             fullWidth
-            label="اسم الوجبة"
+            label="Meal Name"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
@@ -169,7 +169,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
             <TextField
               fullWidth
               select
-              label="التصنيف"
+              label="Category"
               value={formData.category_id}
               onChange={(e) =>
                 setFormData({ ...formData, category_id: e.target.value })
@@ -185,7 +185,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
 
             <TextField
               fullWidth
-              label="السعر ($)"
+              label="Price ($)"
               type="number"
               value={formData.price}
               onChange={(e) =>
@@ -199,7 +199,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
             fullWidth
             multiline
             rows={3}
-            label="وصف الوجبة"
+            label="Meal Description"
             value={formData.description}
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
@@ -211,7 +211,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
 
       <DialogActions sx={{ p: 3 }}>
         <Button onClick={onClose} sx={{ color: "#637381", fontWeight: 700 }}>
-          إلغاء
+          Cancel
         </Button>
         <Button
           variant="contained"
@@ -228,9 +228,9 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
           {isLoading ? (
             <CircularProgress size={24} color="inherit" />
           ) : isEdit ? (
-            "حفظ التعديلات"
+            "Save Changes"
           ) : (
-            "إضافة الوجبة"
+            "Add Meal"
           )}
         </Button>
       </DialogActions>

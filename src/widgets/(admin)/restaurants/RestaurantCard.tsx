@@ -87,7 +87,7 @@ export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardPr
               </Stack>
               <Stack direction="row" spacing={2} mt={1} alignItems="center" justifyContent={{ xs: "center", sm: "flex-start" }}>
                 <Chip 
-                  label={restaurant.category || "عام"} 
+                  label={restaurant.category || "General"} 
                   size="small" 
                   sx={{ fontWeight: 700, bgcolor: alpha(theme.palette.primary.main, 0.1), color: theme.palette.primary.main }} 
                 />
@@ -110,7 +110,7 @@ export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardPr
                 boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
               }}
             >
-              عرض المنيو
+              View Menu
             </Button>
           )}
         </Stack>
@@ -121,25 +121,25 @@ export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardPr
         <Box display="grid" gridTemplateColumns={{ xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" }} gap={4}>
           <InfoItem
             icon={<LocationOnRoundedIcon sx={{ color: theme.palette.primary.main }} />}
-            label="الموقع"
+            label="Location"
             value={`${restaurant.city}, ${restaurant.country}`}
           />
           <InfoItem
             icon={<AccessTimeRoundedIcon sx={{ color: theme.palette.primary.main }} />}
-            label="وقت التحضير"
-            value="30 – 45 دقيقة"
+            label="Prep Time"
+            value="30 – 45 minutes"
           />
           <InfoItem
             icon={<Box sx={{ width: 12, height: 12, borderRadius: "50%", bgcolor: "#4CAF50" }} />}
-            label="الحالة"
-            value="مفتوح الآن"
+            label="Status"
+            value="Open Now"
           />
         </Box>
 
         <Box sx={{ mt: 4, bgcolor: theme.palette.mode === 'light' ? "#F8F9FA" : alpha(theme.palette.action.hover, 0.05), p: 3, borderRadius: "24px" }}>
-          <Typography fontWeight={800} gutterBottom color="primary">عن المطعم</Typography>
+          <Typography fontWeight={800} gutterBottom color="primary">About Restaurant</Typography>
           <Typography color="text.secondary" lineHeight={1.8}>
-            {restaurant.description || "يقدم هذا المطعم وجبات عالية الجودة محضرة بمكونات طازجة ومعايير احترافية."}
+            {restaurant.description || "This restaurant offers high-quality meals prepared with fresh ingredients..."}
           </Typography>
         </Box>
       </Paper>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkAuth } from "@/shared/libs/auth/auth-file";
 
 // Pages by type
-const PUBLIC_ROUTES = ["/", "/login", "/register"]; // Public pages
+const PUBLIC_ROUTES = ["/", "/login", "/signUp"]; // Public pages
 const OWNER_ROUTES = ["/owner"];
 const CUSTOMER_ROUTES = ["/customer"];
 const SHARED_ROUTES = ["/dashboard", "/restaurants", "/menu"];

@@ -40,7 +40,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      {/* نستخدم h-screen لمنع السكرول في الجسم الرئيسي، و flex لتوزيع العناصر */}
+      {/* We use h-screen to prevent scrolling in the main body, and flex to distribute elements */}
       <body className=" h-screen bg-gray-100">
         <ReactQueryProvider dehydratedState={dehydratedState}>
           <AppThemeProvider>

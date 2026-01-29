@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { toast } from "sonner"; // تأكد من تثبيتها عبر npm install sonner
+import { toast } from "sonner"; // Make sure to install via npm install sonner
 
 type CartItem = {
   menuItemId: string;
@@ -26,14 +26,14 @@ export const useCartStore = create<CartStore>()(
       restaurantId: null,
       items: [],
 
-      // 1️⃣ إضافة صنف للسلة
+      // 1️⃣ Add item to cart
       addItem: (item, restaurantId) => {
         const state = get();
 
-        // 🧠 إذا حاول الزبون يطلب من مطعم ثاني، بننبهه وبنصفر السلة
+        // 🧠 If customer tries to order from another restaurant, warn and clear cart
         if (state.restaurantId && state.restaurantId !== restaurantId) {
           set({ items: [], restaurantId });
-          toast.warning("تم مسح السلة القديمة وبدء طلب من مطعم جديد");
+          toast.warning("Previous cart cleared and new order started from different restaurant");
         }
 
         const existing = state.items.find(
@@ -48,17 +48,17 @@ export const useCartStore = create<CartStore>()(
                 : i,
             ),
           });
-          toast.info(`تم زيادة كمية ${item.name}`);
+          toast.info(`Quantity of ${item.name} increased`);
         } else {
           set({
             items: [...state.items, { ...item, quantity: 1 }],
             restaurantId,
           });
-          toast.success(`تم إضافة ${item.name} للسلة`);
+          toast.success(`${item.name} added to cart`);
         }
       },
 
-      // 2️⃣ حذف صنف واحد
+      // 2️⃣ Remove single item
       removeItem: (menuItemId) => {
         const itemToDelete = get().items.find(i => i.menuItemId === menuItemId);
         set({
@@ -66,11 +66,11 @@ export const useCartStore = create<CartStore>()(
         });
         
         if (itemToDelete) {
-          toast.error(`تم حذف ${itemToDelete.name}`);
+          toast.error(`${itemToDelete.name} removed`);
         }
       },
 
-      // 3️⃣ تحديث الكمية (سواء زيادة أو نقصان)
+      // 3️⃣ Update quantity (increase or decrease)
       updateQty: (menuItemId, quantity) => {
         if (quantity <= 0) {
           get().removeItem(menuItemId);
@@ -84,20 +84,20 @@ export const useCartStore = create<CartStore>()(
         });
       },
 
-      // 4️⃣ تفريغ السلة بالكامل
+      // 4️⃣ Clear entire cart
       clearCart: () => {
         if (get().items.length === 0) return;
         
         set({ items: [], restaurantId: null });
-        toast.success("تم إفراغ السلة");
+        toast.success("Cart cleared");
       },
 
-      // 5️⃣ حساب المجموع النهائي
+      // 5️⃣ Calculate total price
       totalPrice: () =>
         get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
     }),
     { 
-      name: "cart-storage", // التخزين في الـ LocalStorage
+      name: "cart-storage", // Storage in LocalStorage
     },
   ),
 );

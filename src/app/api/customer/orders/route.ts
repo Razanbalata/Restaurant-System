@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     
-    // تعريف نوع العناصر بوضوح
+    // Define item types clearly
     interface OrderItem {
       id: string;
       price: number;
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     }
 
     const restaurantId = body.restaurantId;
-    const items = body.items as OrderItem[]; // هنا حددنا النوع للمصفوفة كاملة
+    const items = body.items as OrderItem[]; // Here we defined the type for the full array
 
     if (!restaurantId || !items || items.length === 0)
       return NextResponse.json(
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
 
-    // حساب total - الآن i معروفة تلقائياً أنها OrderItem
+    // Calculate total - now i is automatically known to be OrderItem
     const total = items.reduce((acc, i) => acc + i.price * i.quantity, 0);
 
     const { data: order, error: orderError } = await supabase
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
     if (orderError)
       return NextResponse.json({ error: orderError.message }, { status: 500 });
 
-    // إنشاء order_items - الآن map ستعرف نوع i تلقائياً
+    // Create order_items - now map will automatically know the type of i
     const { error: itemsError } = await supabase.from("order_items").insert(
       items.map((i) => ({
         order_id: order.id,

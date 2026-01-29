@@ -49,10 +49,10 @@ export const RestaurantPicker = () => {
       {/* العناوين */}
       <Box sx={{ mb: 5 }}>
         <Typography variant="h3" fontWeight={900} gutterBottom sx={{ color: 'text.primary' }}>
-          مرحباً بك 👋
+          Welcome 👋
         </Typography>
         <Typography variant="h6" sx={{ color: 'text.secondary', fontWeight: 500 }}>
-          {user?.role === "restaurant_owner" ? "إليك قائمة مطاعمك، اختر واحداً لإدارته" : "اكتشف أفضل المطاعم من حولك"}
+          {user?.role === "restaurant_owner" ? "Here's your restaurants list, choose one to manage" : "Discover the best restaurants around you"}
         </Typography>
       </Box>
 
@@ -87,7 +87,7 @@ export const RestaurantPicker = () => {
                   sx={{ transition: "transform 0.6s ease" }}
                 />
                 <Chip 
-                  label="نشط" 
+                  label="Active" 
                   size="small" 
                   sx={{ 
                     position: "absolute", 
@@ -116,14 +116,14 @@ export const RestaurantPicker = () => {
                 
                 <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 2, color: 'text.secondary' }}>
                   <LocationOnRounded sx={{ fontSize: 16, color: 'primary.main' }} />
-                  {res.city}، فلسطين
+                  {res.city}, Palestine
                 </Typography>
 
                 <Divider sx={{ mb: 2, opacity: 0.5 }} />
 
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                   <Typography variant="button" fontWeight={800} color="primary.main">
-                    {user?.role === "restaurant_owner" ? "إدارة المطعم" : "عرض المنيو"}
+                    {user?.role === "restaurant_owner" ? "Manage Restaurant" : "View Menu"}
                   </Typography>
                   <ArrowForwardRounded 
                     className="res-arrow" 

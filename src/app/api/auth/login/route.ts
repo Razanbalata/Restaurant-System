@@ -1,15 +1,15 @@
 /**
  * Login API Route
- * مسؤول عن تسجيل دخول المستخدم
+ * Responsible for user login
  *
- * الخطوات:
- * 1. استقبال email + password
- * 2. البحث عن المستخدم في قاعدة البيانات
- * 3. جلب الهاش المخزن
- * 4. مقارنة كلمة المرور المدخلة مع الهاش (باستخدام bcrypt)
- * 5. إذا كان التطابق صحيح → إنشاء JWT
- * 6. تخزين JWT في Cookie آمنة
- * 7. إرجاع بيانات المستخدم
+ * Steps:
+ * 1. Receive email + password
+ * 2. Search for user in database
+ * 3. Fetch stored hash
+ * 4. Compare entered password with hash (using bcrypt)
+ * 5. If match is correct → create JWT
+ * 6. Store JWT in secure Cookie
+ * 7. Return user data
  */
 
 import { supabase } from "@/shared/api/supabaseClient"; 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
     if (!email || !password) {
       return NextResponse.json(
-        { error: "الإيميل وكلمة المرور مطلوبان" },
+        { error: "Email and password are required" },
         { status: 400 }
       );
     }
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 
     if (dbError || !user) {
       return NextResponse.json(
-        { error: "البريد الإلكتروني غير صحيحة" },
+        { error: "Invalid email address" },
         { status: 401 }
       );
     }
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
 
     if (!isPasswordValid) {
       return NextResponse.json(
-        { error: " كلمة المرور غير صحيحة" },
+        { error: "Invalid password" },
         { status: 401 }
       );
     }
@@ -59,12 +59,12 @@ export async function POST(req: NextRequest) {
 
     return createResponseWithSession(
       {
-        message: "تم تسجيل الدخول بنجاح",
+        message: "Logged in successfully",
         user: {
           id: user.id,
           email: user.email,
           name: user.name,
-          role: user.role, // 👈 مهم جدًا
+          role: user.role, // 👈 Very important
           createdAt: user.created_at,
         },
       },
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json(
-      { error: "حدث خطأ أثناء تسجيل الدخول" },
+      { error: "An error occurred during login" },
       { status: 500 }
     );
   }

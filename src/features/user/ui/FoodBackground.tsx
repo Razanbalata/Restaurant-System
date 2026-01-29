@@ -21,12 +21,12 @@ export function FloatingFoodIcons() {
       className={`
         absolute inset-0 overflow-hidden transition-colors duration-500
         ${isDark 
-          ? "bg-[#020617]" // لون أسود كحلي عميق للدارك مود
-          : "bg-slate-50"   // لون فاتح جداً للايت مود
+          ? "bg-[#020617]" // Deep navy black for dark mode
+          : "bg-slate-50"   // Very light color for light mode
         }
       `}
     >
-      {/* طبقة التدرج اللوني (Gradient Overly) */}
+      {/* Gradient color overlay */}
       <div className={`
         absolute inset-0 
         ${isDark 
@@ -109,7 +109,7 @@ export function FloatingFoodIcons() {
   )
 }
 
-/* --- مكون الأيقونة الفرعي --- */
+/* --- Icon sub-component --- */
 function Icon({ className, icon, color, size = "w-8 h-8" }: { className: string; icon: React.ReactNode; color: string; size?: string }) {
   return (
     <div className={`absolute ${className} pointer-events-none`}>

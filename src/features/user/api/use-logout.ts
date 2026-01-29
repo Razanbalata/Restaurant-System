@@ -10,18 +10,18 @@ export const useLogout = () => {
       const res = await fetch("/api/auth/logout", { method: "POST" });
 
       if (!res.ok) {
-        throw new Error("فشل تسجيل الخروج");
+        throw new Error("Logout failed");
       }
 
       return res.json();
     },
     onSuccess: () => {
-      queryClient.setQueryData(queryKeys.user.me(), null); // إزالة اليوزر من React Query cache
-      queryClient.invalidateQueries({ queryKey: queryKeys.user.all }); // إعادة تحميل أي بيانات متعلقة
-     toast.success("تم تسجيل الخروج بنجاح!")
+      queryClient.setQueryData(queryKeys.user.me(), null); // Remove user from React Query cache
+      queryClient.invalidateQueries({ queryKey: queryKeys.user.all }); // Reload any related data
+     toast.success("Logout successful!")
     },
     onError:(error)=>{
-      toast.error("حدث خطأ أثناء تسجيل الخروج", {
+      toast.error("An error occurred during logout", {
         description: error.message, // عرض التفاصيل تحت العنوان
       }
       )

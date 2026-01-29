@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ restaurantId: string }> } // تأكدي من تسمية المتغير id أو restaurantId حسب المجلد
+  { params }: { params: Promise<{ restaurantId: string }> } // Make sure variable is named id or restaurantId according to folder
 ) {
   try {
     const { restaurantId } = await params;
@@ -13,14 +13,14 @@ export async function GET(
       .from("restaurants")
       .select("*")
       .eq("id", restaurantId)
-      .single(); // تجلب كائن واحد فقط بدل مصفوفة
+      .single(); // Fetch only one object instead of array
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     if (!data) {
-      return NextResponse.json({ error: "المطعم غير موجود" }, { status: 404 });
+      return NextResponse.json({ error: "Restaurant not found" }, { status: 404 });
     }
 
     return NextResponse.json(data);
@@ -49,7 +49,7 @@ export async function GET(
 
 //       if (!data) {
 //         return NextResponse.json(
-//           { error: "المطعم غير موجود" },
+//           { error: "Restaurant not found" },
 //           { status: 404 },
 //         );
 //       }

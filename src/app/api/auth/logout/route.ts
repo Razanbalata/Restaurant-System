@@ -1,14 +1,14 @@
 /**
  * Logout API Route
- * مسؤول عن تسجيل خروج المستخدم
+ * Handles user logout
  * 
- * الخطوات:
- * 1. استقبال الطلب
- * 2. حذف Cookie الجلسة
- * 3. إرجاع استجابة بنجاح
+ * Steps:
+ * 1. Receive request
+ * 2. Delete session cookie
+ * 3. Return success response
  * 
- * ملاحظة: الـ JWT نفسه لا يمكن "إلغاؤه" لأنه stateless
- * لكن بحذف الكوكي من المتصفح، لن يستطيع المستخدم استخدامه
+ * Note: JWT itself cannot be "revoked" because it's stateless
+ * But by deleting the cookie from the browser, the user won't be able to use it
  */
 
 import { NextRequest } from "next/server";
@@ -16,15 +16,15 @@ import { createResponseWithoutSession } from "@/shared/libs/auth/cookies";
 
 export const POST = async (req: NextRequest) => {
   try {
-    // حذف Cookie الجلسة وإرجاع استجابة
+    // Delete session cookie and return response
     return createResponseWithoutSession(
-      { message: "تم تسجيل الخروج بنجاح" },
+      { message: "Logged out successfully" },
       200
     );
   } catch (error) {
     console.error('Logout error:', error);
     return createResponseWithoutSession(
-      { error: "حدث خطأ أثناء تسجيل الخروج" },
+      { error: "An error occurred during logout" },
       500
     );
   }

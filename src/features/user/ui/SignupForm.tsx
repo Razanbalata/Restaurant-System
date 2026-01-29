@@ -25,7 +25,7 @@ export function SignupForm() {
   const [role, setRole] = useState<"customer" | "restaurant_owner" | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // قراءة الدور من localStorage
+  // Read role from localStorage
   useEffect(() => {
     const savedRole = localStorage.getItem("user_intent") as "customer" | "restaurant_owner";
     setRole(savedRole);
@@ -37,7 +37,7 @@ export function SignupForm() {
 
   const onSubmit = (data: SignupFormValues) => {
     if (!role) {
-      alert("حدث خطأ: لم يتم تحديد المسار");
+      alert("Error: Path not selected");
       return;
     }
 
@@ -45,10 +45,10 @@ export function SignupForm() {
       { ...data, role },
       {
         onSuccess: (res) => {
-          // عرض Alert النجاح
-          setSuccessMessage(`تم إنشاء الحساب! دورك: ${res.user.role}`);
+          // Show success alert
+          setSuccessMessage(`Account created! Your role: ${res.user.role}`);
 
-          // Redirect بعد ثانيتين
+          // Redirect after 2 seconds
           setTimeout(() => {
             if (res.user.role === "customer") {
               router.push("/dashboard");
@@ -74,26 +74,26 @@ export function SignupForm() {
   return (
     <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={2.5} sx={{ width: "100%" }}>
       <Typography variant="h5" fontWeight={800} textAlign="center" gutterBottom>
-        إنشاء حساب جديد ✨
+        Create New Account ✨
       </Typography>
 
-      {/* Alert النجاح */}
+      {/* Success Alert */}
       {successMessage && (
         <Alert severity="success" variant="filled" sx={{ borderRadius: 2 }}>
           {successMessage}
         </Alert>
       )}
 
-      {/* Alert الخطأ */}
+      {/* Error Alert */}
       {signup.isError && (
         <Alert severity="error" variant="filled" sx={{ borderRadius: 2 }}>
-          {signup.error.message || "فشل إنشاء الحساب، حاول مجدداً"}
+          {signup.error.message || "Account creation failed, please try again"}
         </Alert>
       )}
 
       <TextField
         fullWidth
-        label="الاسم الكامل"
+        label="Full Name"
         {...register("name")}
         error={!!errors.name}
         helperText={errors.name?.message}
@@ -109,7 +109,7 @@ export function SignupForm() {
 
       <TextField
         fullWidth
-        label="البريد الإلكتروني"
+        label="Email Address"
         {...register("email")}
         error={!!errors.email}
         helperText={errors.email?.message}
@@ -125,7 +125,7 @@ export function SignupForm() {
 
       <TextField
         fullWidth
-        label="كلمة المرور"
+        label="Password"
         type={showPassword ? "text" : "password"}
         {...register("password")}
         error={!!errors.password}
@@ -160,7 +160,7 @@ export function SignupForm() {
         ) : (
           <Stack direction="row" spacing={1} alignItems="center">
             <UserPlus size={20} />
-            <span>فتح حساب</span>
+            <span>Sign Up</span>
           </Stack>
         )}
       </Button>

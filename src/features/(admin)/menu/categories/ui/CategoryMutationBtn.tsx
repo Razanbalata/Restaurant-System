@@ -28,11 +28,11 @@ export const CategoryMutationButton = ({ mode = "add", restaurantId, category }:
           onClick={() => setOpen(true)}
           sx={{ borderRadius: "8px", fontWeight: 700 }}
         >
-          قسم جديد
+          New Category
         </Button>
       )}
 
-      {/* نمرر الـ Props للديالوج ليعرف ماذا سيفعل */}
+      {/* Pass props to dialog to know what to do */}
       <CategoryDialog 
         open={open} 
         onClose={() => setOpen(false)} 

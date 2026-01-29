@@ -19,8 +19,8 @@ function DeleteRestaurantBtn({r}:DeleteRestaurantBtnProps) {
  const deleteMutation = useDeleteRestaurant()
 
  function handleDelete(id: string, e: React.MouseEvent){
-      e.stopPropagation(); // منع فتح التفاصيل عند الضغط على حذف
-     if (window.confirm("هل أنت متأكد من حذف هذا المطعم؟")) {
+      e.stopPropagation(); // Prevent opening details when clicking delete
+     if (window.confirm("Are you sure you want to delete this restaurant?")) {
       deleteMutation.mutate(id);
      }
  }
@@ -34,7 +34,7 @@ function DeleteRestaurantBtn({r}:DeleteRestaurantBtnProps) {
         startIcon={<DeleteIcon />}
         onClick={(e) => handleDelete(r.id, e)}
       >
-        حذف
+        Delete
       </Button>
     </>
   );

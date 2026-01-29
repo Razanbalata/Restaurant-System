@@ -26,14 +26,14 @@ export default function HeroSection() {
           gutterBottom
           sx={{ fontSize: { xs: "2.5rem", md: "3.75rem" } }}
         >
-          إدارة مطعمك أو اطلب طعامك بسهولة 🍔
+          Manage your restaurant or order food easily 🍔
         </Typography>
 
         <Typography
           variant="h6"
           sx={{ color: alpha(theme.palette.common.white, 0.85), mb: 4 }}
         >
-          منصة ذكية تجمع أصحاب المطاعم والزبائن في تجربة واحدة
+          A smart platform that brings restaurant owners and customers together in one experience
         </Typography>
 
         <Button
@@ -48,7 +48,7 @@ export default function HeroSection() {
             borderRadius: `${Number(theme.shape.borderRadius) * 1.5}px`, // ربط الحواف بالثيم
           }}
         >
-          ابدأ الآن
+          Start Now
         </Button>
       </Container>
     </Box>

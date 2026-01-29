@@ -28,7 +28,7 @@ interface Props {
   mode?: "add" | "edit";
   restaurantId: string;
   categoryId?: string;
-  item?: any; // البيانات في حالة التعديل
+  item?: any; // Data in case of editing
   useAi?: boolean;
 }
 
@@ -40,7 +40,7 @@ export const MenuItemMutationButton = ({ mode = "add",item ,useAi}: Props) => {
 console.log(theme)
   return (
     <>
-      {/* 1. الزر المشغل للمودال */}
+      {/* 1. The button that triggers the modal */}
       {mode === "edit" ? (
         <IconButton 
           onClick={() => setOpen(true)} 
@@ -61,11 +61,11 @@ console.log(theme)
             "&:hover": { bgcolor:theme.theme } 
           }}
         >
-          إضافة وجبة
+          Add Meal
         </Button>
       )}
 
-      {/* 2. النافذة المنبثقة (Modal) */}
+      {/* 2. The modal popup window */}
       <MealModal open={open} onClose={handleClose} initialData={item}/>
     </>
   );

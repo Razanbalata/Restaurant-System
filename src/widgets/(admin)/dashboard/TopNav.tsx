@@ -51,7 +51,7 @@ const TopNav = () => {
                 {user?.name}
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                {user?.role === "restaurant_owner" ? "مالك مطعم" : "زبون"}
+                {user?.role === "restaurant_owner" ? "Restaurant Owner" : "Customer"}
               </Typography>
             </Box>
             <Avatar

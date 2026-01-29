@@ -51,7 +51,7 @@ export const Sidebar = ({ open, onToggle }: { open: boolean; onToggle: () => voi
               {user?.name}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              {isAdmin ? "مدير مطعم" : "عميل مميز"}
+              {isAdmin ? "Restaurant Manager" : "Premium Customer"}
             </Typography>
           </Box>
         )}
@@ -112,7 +112,7 @@ export const Sidebar = ({ open, onToggle }: { open: boolean; onToggle: () => voi
           <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto" }}>
             {theme.palette.mode === "dark" ? <LightModeRounded /> : <DarkModeRounded />}
           </ListItemIcon>
-          {open && <ListItemText primary={theme.palette.mode === "dark" ? "الوضع الفاتح" : "الوضع الداكن"} />}
+          {open && <ListItemText primary={theme.palette.mode === "dark" ? "Light Mode" : "Dark Mode"} />}
         </ListItemButton>
 
         <ListItemButton 
@@ -122,7 +122,7 @@ export const Sidebar = ({ open, onToggle }: { open: boolean; onToggle: () => voi
           <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto", color: "inherit" }}>
             <LogOutIcon size={20} />
           </ListItemIcon>
-          {open && <ListItemText primary="تسجيل الخروج" />}
+          {open && <ListItemText primary="Logout" />}
         </ListItemButton>
       </Box>
     </Box>

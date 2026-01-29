@@ -15,18 +15,18 @@ export const usePlaceOrder = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderBody),
       });
-      if (!res.ok) throw new Error("فشل إنشاء الطلب");
+      if (!res.ok) throw new Error("Failed to create order");
       return res.json();
     },
     onSuccess: () => {
       // تفريغ السلة من الكاش فوراً
       cart.clearCart();
       queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
-      toast.success("تم إرسال الطلب وتفريغ السلة بنجاح!")
+      toast.success("Order sent and cart cleared successfully!")
     },
     onError: (error: Error) => {
   // الخيار الأفضل: دمج الرسالة داخل النص
-  toast.error(`حدث خطأ أثناء إرسال الطلب: ${error.message}`);
+  toast.error(`An error occurred while sending the order: ${error.message}`);
   
 }
   });

@@ -17,7 +17,7 @@ export default function CTASection() {
       }}
     >
       <Typography variant="h4" fontWeight={800} mb={3}>
-        جاهز تبدأ؟
+        Ready to start?
       </Typography>
 
       <Button
@@ -31,17 +31,17 @@ export default function CTASection() {
         }}
         onClick={() => router.push("/signUp")}
       >
-        إنشاء حساب
+        Create Account
       </Button>
 
       <Typography mt={3} sx={{ opacity: 0.9 }}>
-        لديك حساب؟{" "}
+        Have an account?{" "}
         <Button
           variant="text"
           sx={{ color: "inherit", fontWeight: 700, textDecoration: "underline" }}
           onClick={() => router.push("/login")}
         >
-          تسجيل الدخول
+          Login
         </Button>
       </Typography>
     </Box>

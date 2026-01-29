@@ -45,7 +45,7 @@ export const CategoryTabs = ({ categories, activeTab, onTabChange, restaurantId 
           }
         }}
       >
-        <Tab label="الكل" />
+        <Tab label="All" />
         {categories?.map((cat) => (
           <Tab key={cat.id} label={cat.name} />
         ))}

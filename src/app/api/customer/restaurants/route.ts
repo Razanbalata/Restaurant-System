@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     const { data, error } = await supabase
       .from("restaurants")
       .select("*")
-      .eq("is_active", true); // فقط المطاعم المفعلّة
+      .eq("is_active", true); // Only active restaurants
 
 
     if (error)

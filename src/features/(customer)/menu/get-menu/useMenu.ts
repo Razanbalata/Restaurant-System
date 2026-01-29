@@ -7,7 +7,7 @@ export function useMenu(restaurantId: string) {
     queryFn: async () => {
       if (!restaurantId) return [];
       const res = await fetch(`/api/customer/menu/categories?restaurantId=${restaurantId}`);
-      if (!res.ok) throw new Error("فشل جلب المنيو");
+      if (!res.ok) throw new Error("Failed to fetch menu");
       const categories = await res.json();
       return categories.flatMap((category: any) =>
         category.items.map((item: any) => ({

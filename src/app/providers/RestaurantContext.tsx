@@ -1,14 +1,14 @@
 "use client";
 import { createContext, useContext, useEffect, useState, Dispatch, SetStateAction } from "react";
 
-// 1. تعريف شكل البيانات (Interface)
+// 1. Define the data shape (Interface)
 interface RestaurantContextType {
-  selectedRestaurant: any; // يفضل استبدال any بنوع المطعم لديك (مثلاً Restaurant | null)
+  selectedRestaurant: any; // Prefer replacing any with your restaurant type (e.g. Restaurant | null)
   setSelectedRestaurant: Dispatch<SetStateAction<any>>;
   isReady: boolean;
 }
 
-// 2. إعطاء الـ Context النوع الصحيح (إما النوع أو undefined كقيمة ابتدائية)
+// 2. Give the Context the correct type (either the type or undefined as initial value)
 const RestaurantContext = createContext<RestaurantContextType | undefined>(undefined);
 
 export const RestaurantProvider = ({ children }: { children: React.ReactNode }) => {
@@ -38,7 +38,7 @@ export const RestaurantProvider = ({ children }: { children: React.ReactNode }) 
   }, [selectedRestaurant, isReady]);
 
   return (
-    // الآن TypeScript سيفهم أن الـ value مطابقة للـ Interface
+    // Now TypeScript will understand that the value matches the Interface
     <RestaurantContext.Provider
       value={{ selectedRestaurant, setSelectedRestaurant, isReady }}
     >

@@ -18,7 +18,7 @@ export function CartWidget() {
   
   if (!user) return (
     <Container sx={{ textAlign: "center", py: 15 }}>
-      <Typography variant="h5" fontWeight={700}>يرجى تسجيل الدخول لعرض السلة</Typography>
+      <Typography variant="h5" fontWeight={700}>Please login to view your cart</Typography>
     </Container>
   );
 
@@ -27,7 +27,7 @@ export function CartWidget() {
       <Container maxWidth="lg">
         <Stack direction="row" alignItems="center" spacing={2} mb={6} justifyContent="center">
           <ShoppingCartOutlinedIcon sx={{ fontSize: 40, color: 'primary.main' }} />
-          <Typography variant="h3" fontWeight="900">سلة المشتريات</Typography>
+          <Typography variant="h3" fontWeight="900">Shopping Cart</Typography>
         </Stack>
 
         <Box sx={{ 
@@ -41,7 +41,7 @@ export function CartWidget() {
             {cart.length === 0 ? (
               <AppCard sx={{ textAlign: "center", py: 10, borderRadius: '24px' }}>
                 <ShoppingCartOutlinedIcon sx={{ fontSize: 80, opacity: 0.1, mb: 2 }} />
-                <Typography variant="h6" color="text.secondary">سلتك فارغة حالياً، ابدأ بإضافة وجباتك المفضلة!</Typography>
+                <Typography variant="h6" color="text.secondary">Your cart is currently empty, start by adding your favorite meals!</Typography>
               </AppCard>
             ) : (
               cart.map((item) => (

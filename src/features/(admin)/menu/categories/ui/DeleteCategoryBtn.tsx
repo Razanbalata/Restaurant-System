@@ -4,7 +4,7 @@ import { useCategories } from "../api/useCategories";
 import { DeleteIcon } from "lucide-react";
 
 interface DeleteCategoryBtnProps {
-  restaurantId: string; // أو number حسب قاعدة البيانات عندك
+  restaurantId: string; // or number depending on your database
   categoryId: string;
 }
 
@@ -15,7 +15,7 @@ function DeleteCategoryBtn({restaurantId,categoryId}: DeleteCategoryBtnProps) {
 
   function handleDelete (id: string, e: React.MouseEvent) {
     e.stopPropagation()
-   if (window.confirm("هل أنت متأكد من حذف هذا المطعم؟")) {
+   if (window.confirm("Are you sure you want to delete this category?")) {
       deleteCategory.mutate(id);
      }
   }
@@ -28,7 +28,7 @@ function DeleteCategoryBtn({restaurantId,categoryId}: DeleteCategoryBtnProps) {
       startIcon={<DeleteIcon />}
       onClick={(e) => handleDelete(categoryId, e)}
     >
-      حذف
+      Delete
     </Button>
   );
 }

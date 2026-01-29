@@ -21,7 +21,7 @@ export default function AdminDashboard() {
           sx={{
             mb: 4, p: 4,
             borderRadius: 5,
-            // تدرج لوني فخم يعتمد على ألوان الثيم الأساسية
+            // Elegant gradient using theme primary colors
             background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
             color: theme.palette.primary.contrastText,
             display: "flex",
@@ -32,12 +32,12 @@ export default function AdminDashboard() {
         >
           <Box>
             <Typography variant="h4" fontWeight={800} gutterBottom>
-              {!selectedRestaurant ? "أهلاً بك 👋" : selectedRestaurant.name}
+              {!selectedRestaurant ? "Welcome 👋" : selectedRestaurant.name}
             </Typography>
             <Typography variant="body1" sx={{ opacity: 0.9 }}>
               {user?.role === "restaurant_owner"
-                ? "إليك آخر إحصائيات مطعمك اليوم"
-                : "تصفح القائمة واختر وجبتك المفضلة"}
+                ? "Here are your restaurant's latest statistics today"
+                : "Browse the menu and choose your favorite meal"}
             </Typography>
           </Box>
 

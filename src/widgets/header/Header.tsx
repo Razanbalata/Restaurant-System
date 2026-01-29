@@ -44,8 +44,8 @@ export const Header = () => {
       position="sticky" 
       elevation={0} 
       sx={{ 
-        bgcolor: alpha(theme.palette.background.paper, 0.8), // شفافية خفيفة خلف الـ Header
-        backdropFilter: 'blur(8px)', // تأثير الزجاج (Glassmorphism)
+        bgcolor: alpha(theme.palette.background.paper, 0.8), // Slight transparency behind Header
+        backdropFilter: 'blur(8px)', // Glassmorphism effect
         borderBottom: 1, 
         borderColor: 'divider',
         color: 'text.primary'
@@ -138,18 +138,18 @@ export const Header = () => {
                 >
                   <MenuItem onClick={handleCloseMenu} component={Link} href="/profile">
                     <ListItemIcon><User size={18} /></ListItemIcon>
-                    بروفيلي
+                    My Profile
                   </MenuItem>
 
                   <MenuItem onClick={handleCloseMenu} component={Link} href="/orders">
                     <ListItemIcon><ClipboardList size={18} /></ListItemIcon>
-                    طلباتي
+                    My Orders
                   </MenuItem>
 
                   {hasRestaurant && (
                     <MenuItem onClick={handleCloseMenu} component={Link} href="/dashboard">
                       <ListItemIcon><Store size={18} /></ListItemIcon>
-                      لوحة التحكم
+                      Dashboard
                     </MenuItem>
                   )}
 
@@ -157,7 +157,7 @@ export const Header = () => {
                   
                   <MenuItem onClick={() => { logout(); handleCloseMenu(); }} sx={{ color: 'error.main' }}>
                     <ListItemIcon><LogOut size={18} color={theme.palette.error.main} /></ListItemIcon>
-                    تسجيل الخروج
+                      Logout
                   </MenuItem>
                 </Menu>
               </>
@@ -167,7 +167,7 @@ export const Header = () => {
                 component={Link} 
                 href="/login"
                 sx={{ 
-                  bgcolor: 'primary.main', // نستخدم اللون الرئيسي بدلاً من الأسود الثابت
+                  bgcolor: 'primary.main', // Use primary color instead of fixed black
                   color: 'primary.contrastText', 
                   px: 2.5, 
                   py: 1, 
@@ -182,7 +182,7 @@ export const Header = () => {
                   }
                 }}
               >
-                تسجيل الدخول
+                Login
               </Box>
             )}
             

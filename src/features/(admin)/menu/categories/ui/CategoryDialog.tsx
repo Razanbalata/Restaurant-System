@@ -28,7 +28,7 @@ function CategoryDialog({ open, onClose, mode, restaurantId, category }: DialogP
 
   const isLoading = addMutation.isPending || updateMutation.isPending;
 
-  // تهيئة البيانات عند الفتح
+  // Initialize data when dialog opens
   useEffect(() => {
     if (open) {
       setName(mode === "edit" ? category?.name || "" : "");
@@ -41,7 +41,7 @@ function CategoryDialog({ open, onClose, mode, restaurantId, category }: DialogP
     if (mode === "edit") {
       updateMutation.mutate(
         { id: category.id, updates: { name } },
-        { onSuccess: onClose } // نغلق المودال عند النجاح
+        { onSuccess: onClose } // Close dialog on success
       );
     } else {
       addMutation.mutate(
@@ -60,13 +60,13 @@ function CategoryDialog({ open, onClose, mode, restaurantId, category }: DialogP
       PaperProps={{ sx: { borderRadius: "16px" } }}
     >
       <DialogTitle fontWeight={800}>
-        {mode === "edit" ? "تعديل التصنيف" : "إضافة تصنيف جديد"}
+        {mode === "edit" ? "Edit Category" : "Add New Category"}
       </DialogTitle>
 
       <DialogContent>
         <TextField
           autoFocus
-          label="اسم القسم"
+          label="Category Name"
           fullWidth
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -77,7 +77,7 @@ function CategoryDialog({ open, onClose, mode, restaurantId, category }: DialogP
 
       <DialogActions sx={{ p: 2 }}>
         <Button onClick={onClose} color="inherit" disabled={isLoading}>
-          إلغاء
+          Cancel
         </Button>
         <Button
           variant="contained"
@@ -85,7 +85,7 @@ function CategoryDialog({ open, onClose, mode, restaurantId, category }: DialogP
           disabled={isLoading || !name.trim()}
           sx={{ borderRadius: "10px", bgcolor: "#000", minWidth: 80 }}
         >
-          {isLoading ? <CircularProgress size={20} color="inherit" /> : "حفظ"}
+          {isLoading ? <CircularProgress size={20} color="inherit" /> : "Save"}
         </Button>
       </DialogActions>
     </Dialog>

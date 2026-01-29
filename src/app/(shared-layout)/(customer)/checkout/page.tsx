@@ -29,7 +29,7 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <Typography sx={{ mt: 10, textAlign: "center" }}>
-        لا يوجد عناصر في السلة
+        No items in cart
       </Typography>
     );
   }
@@ -37,33 +37,33 @@ export default function CheckoutPage() {
   return (
     <Container maxWidth="md" sx={{ py: 6 }}>
       <Typography variant="h4" fontWeight="900" mb={4}>
-        إتمام الطلب 🧾
+        Complete Order 🧾
       </Typography>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={4}>
         {/* Left - Form */}
         <Paper sx={{ p: 4, flex: 2, borderRadius: 4 }}>
           <Typography fontWeight="800" mb={2}>
-            معلومات التوصيل
+            Delivery Information
           </Typography>
 
           <Stack spacing={3}>
             <TextField
-              label="العنوان"
+              label="Address"
               value={address}
               onChange={(e) => setFormData({...formData, address: e.target.value})}
               fullWidth
             />
 
             <TextField
-              label="رقم الهاتف"
+              label="Phone Number"
               value={phone}
               onChange={(e) => setFormData({...formData, phone: e.target.value})}
               fullWidth
             />
 
             <TextField
-              label="ملاحظات (اختياري)"
+              label="Notes (Optional)"
               value={notes}
               onChange={(e) => setFormData({...formData, notes: e.target.value})}
               multiline
@@ -76,7 +76,7 @@ export default function CheckoutPage() {
         {/* Right - Summary */}
         <Paper sx={{ p: 4, flex: 1, borderRadius: 4 }}>
           <Typography fontWeight="800" mb={2}>
-            ملخص الطلب
+            Order Summary
           </Typography>
 
           <Stack spacing={2}>
@@ -99,7 +99,7 @@ export default function CheckoutPage() {
             <Box
               sx={{ display: "flex", justifyContent: "space-between" }}
             >
-              <Typography fontWeight="800">الإجمالي</Typography>
+              <Typography fontWeight="800">Total</Typography>
               <Typography fontWeight="800">
                 {totalPrice} $
               </Typography>

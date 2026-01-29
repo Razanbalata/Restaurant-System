@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 export const signupSchema = z.object({
-  name: z.string().min(2, "الاسم قصير جدًا"),
-  email: z.string().email("إيميل غير صالح"),
+  name: z.string().min(2, "Name is too short"),
+  email: z.string().email("Invalid email address"),
   password: z
     .string()
-    .min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل"),
+    .min(8, "Password must be at least 8 characters"),
 });
 
 export type SignupFormValues = z.infer<typeof signupSchema>;

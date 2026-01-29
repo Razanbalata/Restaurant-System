@@ -25,9 +25,9 @@
 //     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 //     const prompt = `
-//       قم بتوليد قائمة طعام لمطعم فلسطيني اسمه "${restaurantName}" وتخصصه "${category || "عام"}".
-//       أريد 8 وجبات بأسعار واقعية بالشيكل (ILS) مع روابط صور عشوائية من Unsplash.
-//       النتيجة يجب أن تكون مصفوفة JSON فقط:
+//       Generate a menu for a Palestinian restaurant named "${restaurantName}" specializing in "${category || "General"}". 
+//       I want 8 meals at realistic prices in Shekel (ILS) with random image links from Unsplash.
+//       The result should be a JSON array only:
 //       [{"id": 1, "name": "...", "price": 0, "description": "...", "image_url": "..."}]
 //     `;
 
@@ -60,25 +60,25 @@ export async function POST(req: Request) {
     const { field, userPrompt } = await req.json();
     /**
      * field: "name" | "description" | "price" | "image_url"
-     * userPrompt: نص يكتبه المالك لتوجيه AI
+     * userPrompt: Text written by the owner to guide AI
      */
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = `
-      أنت مساعد AI لمطاعم فلسطينية. 
-      المالك يريد اقتراح قيمة لحقل "${field}" لوجبة واحدة.
-      النص المقدم من المالك: "${userPrompt}"
-      أجب بصيغة JSON فقط:
+      You are an AI assistant for Palestinian restaurants. 
+      The owner wants a suggestion value for the field "${field}" for a single meal.
+      Text provided by the owner: "${userPrompt}"
+      Answer in JSON format only:
       {"value": "..."}
 
-      لا تكتب أي شيء آخر خارج JSON.
+      Do not write anything else outside of JSON.
     `;
 
     const result = await model.generateContent(prompt);
     const text = result.response.text();
 
-    // تنظيف النص من أي ```json أو ``` إضافية
+    // Clean text from any ```json or ``` extra
     const cleanJson = text.replace(/```json|```/g, "").trim();
     const parsed = JSON.parse(cleanJson);
 

@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json(data ?? []); // نضمن إرجاع مصفوفة حتى لو null
+    return NextResponse.json(data ?? []); // Ensure we return an array even if null
   });
 }
 
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    // تجنب كراش لو الـ body فاضي
+    // Prevent crash if body is empty
     let body;
     try {
       body = await req.json();
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
     const ownership = await verifyRestaurantOwner(restaurant_id, userId);
     
-    // الحل هنا: نضع علامة ! أو نتأكد من الإرجاع
+    // Solution: we use ! or make sure the return is correct
     if (!ownership.ok) {
       return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
     }

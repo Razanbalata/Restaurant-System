@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAuth } from "@/shared/libs/auth/auth-file";
 
-// الصفحات حسب النوع
-const PUBLIC_ROUTES = ["/", "/login", "/register"]; // صفحات عامة
+// Pages by type
+const PUBLIC_ROUTES = ["/", "/login", "/register"]; // Public pages
 const OWNER_ROUTES = ["/owner"];
 const CUSTOMER_ROUTES = ["/customer"];
 const SHARED_ROUTES = ["/dashboard", "/restaurants", "/menu"];
@@ -10,7 +10,7 @@ const SHARED_ROUTES = ["/dashboard", "/restaurants", "/menu"];
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1️⃣ تجاهل الملفات والـ API
+  // 1️⃣ Ignore files and API
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
@@ -19,10 +19,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2️⃣ التحقق من التوكن
+  // 2️⃣ Check authentication token
   const { isAuthenticated, user } = await checkAuth(request);
 
-  // لو مش مسجل → يمنع صفحات محمية
+  // If not authenticated → block protected pages
   if (!isAuthenticated || !user) {
     if (!PUBLIC_ROUTES.includes(pathname)) {
       return NextResponse.redirect(
@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // لو مسجّل → يمنعه من اللوجين / التسجيل
+  // If authenticated → prevent access to login/signup
   if (isAuthenticated && PUBLIC_ROUTES.includes(pathname)) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
@@ -59,7 +59,7 @@ export async function middleware(request: NextRequest) {
         new URL(`/login?redirect=${pathname}`, request.url),
       );
     }
-    return NextResponse.next(); // أي مستخدم مسجّل يقدر يدخل
+    return NextResponse.next(); // Any authenticated user can access
   }
 
   return NextResponse.next();

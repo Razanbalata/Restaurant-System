@@ -17,7 +17,7 @@ export const MenuHeader = ({ restaurantName, restaurantId, categoryId }:MenuHead
       return (
         <Stack direction="row" justifyContent="space-between" alignItems="center" mb={4}>
         <Box>
-          <Typography variant="h4" fontWeight={900}>إدارة المنيو</Typography>
+          <Typography variant="h4" fontWeight={900}>Menu Management</Typography>
           <Typography color="text.secondary">{restaurantName}</Typography>
         </Box>
 

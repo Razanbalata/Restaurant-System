@@ -16,7 +16,7 @@ export const useOrders = (restaurantId?: string) => {
     },
   });
 
-  // ✅ 3. PATCH تحديث حالة الطلب
+  // ✅ 3. PATCH update order status
   const updateOrderStatus = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
       const res = await fetch(`/api/admin/orders/${id}`, {
@@ -26,17 +26,17 @@ export const useOrders = (restaurantId?: string) => {
       });
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err?.error || "فشل تحديث حالة الطلب");
+        throw new Error(err?.error || "Failed to update order status");
       }
       return res.json();
     },
     onSuccess: () => {
-      if (restaurantId) toast.success("تم تعديل الطلب بنجاح!");
+      if (restaurantId) toast.success("Order updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["orders", restaurantId] });
     },
     onError(error: Error) {
-        toast.error("حدث خطأ أثناء تعديل الطلب", {
-          description: error.message, // عرض التفاصيل تحت العنوان
+        toast.error("An error occurred while updating the order", {
+          description: error.message, // Show details below title
         });
       },
   });
@@ -58,17 +58,17 @@ export const useOrders = (restaurantId?: string) => {
   //         filter: `restaurant_id=eq.${restaurantId}`, // راقب مطعمك فقط!
   //       },
   //       (payload) => {
-  //         console.log("تغيير جديد في الطلبات:", payload);
-  //         // تحديث البيانات فوراً في المتصفح
+  //         console.log("New change in orders:", payload);
+  //         // Update data immediately in browser
   //         queryClient.invalidateQueries({ queryKey: ["orders", restaurantId] });
   //       },
   //     )
   //     .subscribe((status, err) => {
   //       if (status === "SUBSCRIBED") {
-  //         console.log("متصل بنجاح بالبث المباشر! ✅");
+  //         console.log("Connected to real-time broadcast! ✅");
   //       }
   //       if (status === "CHANNEL_ERROR") {
-  //         console.error("فشل الاتصال بالقناة: ❌", err);
+  //         console.error("Failed to connect to channel: ❌", err);
   //       }
   //     });
 

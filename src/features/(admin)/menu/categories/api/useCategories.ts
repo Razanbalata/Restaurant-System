@@ -4,20 +4,20 @@ import { toast } from "sonner";
 export const useCategories = (restaurantId: string) => {
   const queryClient = useQueryClient();
 
-  // 1️⃣ جلب كل التصنيفات مع الأصناف
+  // 1️⃣ Fetch all categories with items
   const useAdminCategories = useQuery({
     queryKey: ["categories", restaurantId],
     queryFn: async () => {
       const res = await fetch(
         `/api/admin/menu/categories?restaurantId=${restaurantId}`,
       );
-      if (!res.ok) throw new Error("فشل جلب التصنيفات");
+      if (!res.ok) throw new Error("Failed to fetch categories");
       return res.json();
     },
     enabled: !!restaurantId,
   });
 
-  // 2️⃣ إضافة تصنيف
+  // 2️⃣ Add category
   const useAddCategory = () =>
     useMutation({
       mutationFn: async (newCategory: { name: string }) => {
@@ -28,24 +28,24 @@ export const useCategories = (restaurantId: string) => {
         });
         if (!res.ok) {
           const err = await res.json();
-          throw new Error(err?.error || "فشل إضافة التصنيف");
+          throw new Error(err?.error || "Failed to add category");
         }
         return res.json();
       },
       onSuccess: () => {
-        toast.success("تم اضافة التصنيف بنجاح!");
+        toast.success("Category added successfully!");
         queryClient.invalidateQueries({
           queryKey: ["categories", restaurantId],
         });
       },
       onError(error: Error) {
-        toast.error("حدث خطأ أثناء تعديل التصنيف", {
-          description: error.message, // عرض التفاصيل تحت العنوان
+        toast.error("An error occurred while updating the category", {
+          description: error.message, // Show details below title
         });
       },
     });
 
-  // 3️⃣ تعديل تصنيف
+  // 3️⃣ Update category
   const useUpdateCategory = () =>
     useMutation({
       mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
@@ -55,41 +55,41 @@ export const useCategories = (restaurantId: string) => {
           body: JSON.stringify(updates),
         });
 
-        if (!res.ok) throw new Error("فشل تعديل التصنيف");
+        if (!res.ok) throw new Error("Failed to update category");
         return res.json();
       },
       onSuccess: () => {
-        toast.success("تم اضافة التصنيف بنجاح!");
+        toast.success("Category added successfully!");
         queryClient.invalidateQueries({
           queryKey: ["categories", restaurantId],
         });
       },
       onError(error: Error) {
-        toast.error("حدث خطأ أثناء تعديل التصنيف", {
-          description: error.message, // عرض التفاصيل تحت العنوان
+        toast.error("An error occurred while updating the category", {
+          description: error.message, // Show details below title
         });
       },
     });
 
-  // 4️⃣ حذف تصنيف (Soft Delete)
+  // 4️⃣ Delete category (Soft Delete)
   const useDeleteCategory = () =>
     useMutation({
       mutationFn: async (id: string) => {
         const res = await fetch(`/api/admin/menu/categories/${id}`, {
           method: "DELETE",
         });
-        if (!res.ok) throw new Error("فشل حذف التصنيف");
+        if (!res.ok) throw new Error("Failed to delete category");
         return res.json();
       },
       onSuccess: () => {
-        toast.success("تم حذف التصنيف بنجاح!");
+        toast.success("Category deleted successfully!");
         queryClient.invalidateQueries({
           queryKey: ["categories", restaurantId],
         });
       },
       onError(error: Error) {
-        toast.error("حدث خطأ أثناء تعديل التصنيف", {
-          description: error.message, // عرض التفاصيل تحت العنوان
+        toast.error("An error occurred while updating the category", {
+          description: error.message, // Show details below title
         });
       },
     });

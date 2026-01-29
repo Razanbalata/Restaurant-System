@@ -26,17 +26,17 @@ export function OrderCard({ order, onStatusChange, accentColor }: any) {
         <Stack direction="row" justifyContent="space-between" alignItems="start" mb={2}>
           <Box>
             <Typography variant="subtitle1" fontWeight={900} color="text.primary" sx={{ lineHeight: 1.2 }}>
-              طلب #{String(order.id).slice(0, 5).toUpperCase()}
+              Order #{String(order.id).slice(0, 5).toUpperCase()}
             </Typography>
             <Stack direction="row" spacing={0.5} alignItems="center" mt={0.5}>
               <Clock size={14} color={theme.palette.text.secondary} />
               <Typography variant="caption" fontWeight={600} color="text.secondary">
-                منذ 5 دقائق
+                5 minutes ago
               </Typography>
             </Stack>
           </Box>
           <Chip 
-            label={status === 'pending' ? 'جديد' : status === 'preparing' ? 'يتم التحضير' : 'منجز'} 
+            label={status === 'pending' ? 'New' : status === 'preparing' ? 'Preparing' : 'Completed'} 
             size="small" 
             sx={{ 
               fontWeight: 800, 
@@ -65,7 +65,7 @@ export function OrderCard({ order, onStatusChange, accentColor }: any) {
 
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Box>
-            <Typography variant="caption" display="block" color="text.secondary" sx={{ mb: -0.5 }}>الإجمالي</Typography>
+            <Typography variant="caption" display="block" color="text.secondary" sx={{ mb: -0.5 }}>Total</Typography>
             <Typography variant="h6" fontWeight={900} color="primary.main">
               {order.total_price}₪
             </Typography>
@@ -88,7 +88,7 @@ export function OrderCard({ order, onStatusChange, accentColor }: any) {
                   boxShadow: `0 4px 10px ${alpha(theme.palette.warning.main, 0.3)}`
                 }}
               >
-                تحضير
+                Prepare
               </Button>
             )}
 
@@ -107,7 +107,7 @@ export function OrderCard({ order, onStatusChange, accentColor }: any) {
                   boxShadow: `0 4px 10px ${alpha(theme.palette.success.main, 0.3)}`
                 }}
               >
-                جاهز
+                Ready
               </Button>
             )}
           </Stack>

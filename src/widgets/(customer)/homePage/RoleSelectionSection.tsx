@@ -14,21 +14,21 @@ export default function RoleSelectionSection() {
   return (
     <Box sx={{ py: 10, bgcolor: "background.default" }}>
       <Typography variant="h4" fontWeight={800} textAlign="center" mb={6} color="text.primary">
-        اختر دورك
+        Choose Your Role
       </Typography>
 
       <Grid container spacing={4} justifyContent="center">
         {[
           { 
             role: "customer", 
-            title: "👤 زبون", 
-            desc: "تصفح المطاعم، اطلب بسهولة، وتابع طلباتك لحظة بلحظة", 
+            title: "👤 Customer", 
+            desc: "Browse restaurants, order easily, and track your orders in real-time", 
             variant: "contained" 
           },
           { 
             role: "restaurant_owner", 
-            title: "🧑‍🍳 صاحب مطعم", 
-            desc: "أنشئ مطعمك، أدر المنيو، واستقبل الطلبات مباشرة", 
+            title: "🧑‍🍳 Restaurant Owner", 
+            desc: "Create your restaurant, manage menu, receive orders directly", 
             variant: "outlined" 
           }
         ].map((item) => (
@@ -62,7 +62,7 @@ export default function RoleSelectionSection() {
                 sx={{ fontWeight: 700, borderRadius: 2 }}
                 onClick={() => handleSelect(item.role as any)}
               >
-                {item.role === "customer" ? "المتابعة كزبون" : "المتابعة كصاحب مطعم"}
+                {item.role === "customer" ? "Continue as Customer" : "Continue as Restaurant Owner"}
               </Button>
             </Paper>
           </Grid>

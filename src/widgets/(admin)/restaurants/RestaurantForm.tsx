@@ -50,23 +50,23 @@ export default function RestaurantForm({ restaurant, onClose }:RestaurantFormPro
         </IconButton>
 
         <Typography variant="h5" fontWeight={900} mb={3} color="primary">
-          {restaurant ? "تعديل بيانات المطعم" : "إضافة مطعم جديد"}
+          {restaurant ? "Edit Restaurant Info" : "Add New Restaurant"}
         </Typography>
 
         <Stack spacing={2.5}>
           <TextField 
-            fullWidth label="اسم المطعم" 
+            fullWidth label="Restaurant Name" 
             variant="filled"
             value={formData.name}
             onChange={(e) => setFormData({...formData, name: e.target.value})}
             sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }}
           />
           <Stack direction="row" spacing={2}>
-             <TextField fullWidth label="المدينة" variant="filled" value={formData.city} onChange={(e) => setFormData({...formData, city: e.target.value})} sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }} />
-             <TextField fullWidth label="البلد" variant="filled" value={formData.country} onChange={(e) => setFormData({...formData, country: e.target.value})} sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }} />
+             <TextField fullWidth label="City" variant="filled" value={formData.city} onChange={(e) => setFormData({...formData, city: e.target.value})} sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }} />
+             <TextField fullWidth label="Country" variant="filled" value={formData.country} onChange={(e) => setFormData({...formData, country: e.target.value})} sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }} />
           </Stack>
           <TextField 
-            fullWidth label="الوصف" multiline rows={3} variant="filled"
+            fullWidth label="Description" multiline rows={3} variant="filled"
             value={formData.description}
             onChange={(e) => setFormData({...formData, description: e.target.value})}
             sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }}
@@ -78,7 +78,7 @@ export default function RestaurantForm({ restaurant, onClose }:RestaurantFormPro
             disabled={createMutation.isPending || updateMutation.isPending}
             sx={{ py: 1.8, borderRadius: "14px", fontWeight: 800, fontSize: "1rem" }}
           >
-            {restaurant ? "تحديث البيانات" : "إنشاء المطعم الآن"}
+            {restaurant ? "Update Info" : "Create Restaurant Now"}
           </Button>
         </Stack>
       </Box>

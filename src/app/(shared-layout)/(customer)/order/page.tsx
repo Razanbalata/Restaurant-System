@@ -7,20 +7,20 @@
 // } from "@mui/material";
 // import { useGetOrders } from "@/features/order/getOrder/api/useGetOrder";
 
-// // --- 1. ثوابت خارج المكون (Static Config) ---
-// // نقلها للخارج يمنع إعادة تعريف الكائن في كل Re-render
+// // --- 1. Constants outside the component (Static Config) ---
+// // Moving them outside prevents object redefinition on each Re-render
 // const STATUS_CONFIG: Record<string, { label: string; color: "warning" | "info" | "success" | "error" | "default" }> = {
-//   pending: { label: "قيد الانتظار", color: "warning" },
-//   preparing: { label: "جاري التحضير", color: "info" },
-//   delivered: { label: "تم التوصيل", color: "success" },
-//   cancelled: { label: "ملغي", color: "error" },
+//   pending: { label: "Pending", color: "warning" },
+//   preparing: { label: "Preparing", color: "info" },
+//   delivered: { label: "Delivered", color: "success" },
+//   cancelled: { label: "Cancelled", color: "error" },
 // };
 
-// // --- 2. مكونات صغيرة (Atoms) ---
+// // --- 2. Small components (Atoms) ---
 // const OrderStatusChip = ({ status }: { status: string }) => {
-//   // استخدام useMemo هنا لضمان عدم استخراج البيانات إلا لو تغيرت الحالة
+//   // Using useMemo here to ensure data is not extracted unless the status changes
 //   const config = useMemo(() => 
-//     STATUS_CONFIG[status] || { label: "غير معروف", color: "default" }, 
+//     STATUS_CONFIG[status] || { label: "Unknown", color: "default" }, 
 //   [status]);
 
 //   return (
@@ -42,23 +42,23 @@
 //   );
 // };
 
-// // --- 3. المكون الرئيسي (The Template) ---
+// // --- 3. Main Component (The Template) ---
 // export default function OrdersList({ userId }: { userId: string }) {
-//   // جلب البيانات من الهوك الخاص بكِ
+//   // Fetch data from your custom hook
 //   const { data: orders = [], isLoading, isError } = useGetOrders();
 
-//   // تحسين: معالجة البيانات قبل العرض (مثلاً ترتيبها) باستخدام useMemo
+//   // Optimization: Process data before displaying (e.g., sort it) using useMemo
 //   const sortedOrders = useMemo(() => {
 //     return [...orders].sort((a, b) => 
 //       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
 //     );
 //   }, [orders]);
 
-//   // حالة التحميل (Skeleton)
+//   // Loading state (Skeleton)
 //   if (isLoading) {
 //     return (
 //       <Container maxWidth="sm" sx={{ py: 4 }}>
-//         <Typography variant="h5" fontWeight="900" mb={3} textAlign="right">جاري تحميل طلباتك...</Typography>
+//         <Typography variant="h5" fontWeight="900" mb={3} textAlign="right">Loading your orders...</Typography>
 //         {[1, 2, 3].map((i) => (
 //           <Skeleton key={i} variant="rectangular" height={160} sx={{ borderRadius: 4, mb: 3 }} />
 //         ))}
@@ -66,21 +66,21 @@
 //     );
 //   }
 
-//   // حالة الخطأ
+//   // Error state
 //   if (isError) {
 //     return (
 //       <Container maxWidth="sm" sx={{ py: 10, textAlign: "center" }}>
-//         <Typography color="error" variant="h6" fontWeight="bold">عذراً، حدث خطأ أثناء جلب البيانات</Typography>
+//         <Typography color="error" variant="h6" fontWeight="bold">Sorry, an error occurred while fetching data</Typography>
 //       </Container>
 //     );
 //   }
 
-//   // حالة عدم وجود بيانات
+//   // No data state
 //   if (sortedOrders.length === 0) {
 //     return (
 //       <Container maxWidth="sm" sx={{ py: 10, textAlign: "center" }}>
 //         <Typography variant="h4" mb={2}>🍕</Typography>
-//         <Typography color="textSecondary" variant="h6" fontWeight="bold">لا توجد طلبات سابقة حتى الآن</Typography>
+//         <Typography color="textSecondary" variant="h6" fontWeight="bold">You don't have any previous orders yet</Typography>
 //       </Container>
 //     );
 //   }
@@ -88,7 +88,7 @@
 //   return (
 //     <Container maxWidth="sm" sx={{ py: 4 }}>
 //       <Typography variant="h5" fontWeight="900" gutterBottom mb={4} textAlign="right">
-//         📦 طلباتي الأخيرة
+//         📦 My Recent Orders
 //       </Typography>
 
 //       <Stack spacing={3}>
@@ -111,7 +111,7 @@
 //               {/* Header: ID & Status */}
 //               <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
 //                 <Box>
-//                   <Typography variant="caption" color="textSecondary" sx={{ display: "block", mb: 0.5 }}>رقم الطلب</Typography>
+//                   <Typography variant="caption" color="textSecondary" sx={{ display: "block", mb: 0.5 }}>Order Number</Typography>
 //                   <Typography fontWeight="800" variant="body2">
 //                     #{order.id?.toString().slice(0, 8).toUpperCase()}
 //                   </Typography>
@@ -129,7 +129,7 @@
 //                       <Box component="span" sx={{ color: 'orange', fontWeight: 900, mr: 1 }}>
 //                         {item.quantity} ×
 //                       </Box>
-//                       {item.menu_items?.name || "صنف مجهول"}
+//                       {item.menu_items?.name || "Unknown Item"}
 //                     </Typography>
 //                     <Typography variant="body2" fontWeight="600">
 //                       {(Number(item.price || 0) * item.quantity).toFixed(2)} ₪
@@ -143,7 +143,7 @@
 //               {/* Footer: Date & Total */}
 //               <Stack direction="row" justifyContent="space-between" alignItems="flex-end">
 //                 <Box>
-//                   <Typography variant="caption" color="textSecondary" sx={{ display: "block" }}>التاريخ</Typography>
+//                   <Typography variant="caption" color="textSecondary" sx={{ display: "block" }}>Date</Typography>
 //                   <Typography variant="body2" fontWeight="500">
 //                     {new Date(order.created_at).toLocaleDateString('ar-EG', { 
 //                       day: 'numeric', 
@@ -154,7 +154,7 @@
 //                   </Typography>
 //                 </Box>
 //                 <Box textAlign="right">
-//                   <Typography variant="caption" color="textSecondary" sx={{ display: "block" }}>المجموع الإجمالي</Typography>
+//                   <Typography variant="caption" color="textSecondary" sx={{ display: "block" }}>Total</Typography>
 //                   <PriceText amount={order.total_price} variant="h6" />
 //                 </Box>
 //               </Stack>

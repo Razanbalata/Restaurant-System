@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
     id,
     name,
     "order",
-    items:menu_items(*)  -- تجلب الأصناف المرتبطة بالكاتيجوري
+    items:menu_items(*)  -- Fetch items related to category
   `,
       )
       .eq("restaurant_id", restaurantId)

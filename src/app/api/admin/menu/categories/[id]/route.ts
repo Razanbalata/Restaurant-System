@@ -15,7 +15,7 @@ export async function PATCH(
     if (!userId)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const body = await req.json(); // غيرت الاسم لـ body لأنه يحتوي على البيانات
+    const body = await req.json(); // Changed name to body because it contains the data
     if (!body)
       return NextResponse.json({ error: "Data is required" }, { status: 400 });
 
@@ -30,12 +30,12 @@ export async function PATCH(
 
     const ownership = await verifyRestaurantOwner(category.restaurant_id, userId);
     
-    // تأكد أنك تعيد الـ response دائماً
+    // Make sure to always return the response
     if (!ownership.ok) return ownership.response!; 
 
     const { data, error } = await supabase
       .from("categories")
-      .update(body) // تأكد أن body عبارة عن object
+      .update(body) // Ensure body is an object
       .eq("id", id)
       .select("*")
       .single();
@@ -67,7 +67,7 @@ export async function DELETE(
     }
 
     const ownership = await verifyRestaurantOwner(category.restaurant_id, userId);
-    if (!ownership.ok) return ownership.response!; // علامة ! للتأكيد أنه ليس undefined
+    if (!ownership.ok) return ownership.response!; // Exclamation mark to confirm it's not undefined
 
     const { data, error } = await supabase
       .from("categories")
@@ -79,6 +79,6 @@ export async function DELETE(
     if (error)
       return NextResponse.json({ error: error.message }, { status: 500 });
 
-    return NextResponse.json(data ?? { success: true }); // تأمين الـ return الأخير
+    return NextResponse.json(data ?? { success: true }); // Ensure final return
   });
 }

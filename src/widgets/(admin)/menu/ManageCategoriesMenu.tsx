@@ -61,7 +61,7 @@ export const ManageCategoriesMenu = ({ categories, restaurantId }: ManageCategor
           <Stack direction="row" alignItems="center" spacing={1} width="100%">
             <AddCircleOutlineIcon fontSize="small" color="primary" />
             <Typography variant="body2" fontWeight={700} sx={{ flexGrow: 1 }}>
-               إضافة قسم جديد
+               Add New Category
             </Typography>
             <CategoryMutationButton mode="add" restaurantId={restaurantId} />
           </Stack>
@@ -70,7 +70,7 @@ export const ManageCategoriesMenu = ({ categories, restaurantId }: ManageCategor
         <Divider />
 
         <Typography variant="caption" sx={{ px: 2, py: 1.5, display: 'block', color: 'text.secondary', fontWeight: 800 }}>
-          الأقسام الحالية ({categories?.length || 0})
+          Current Categories ({categories?.length || 0})
         </Typography>
 
         {categories?.map((cat) => (

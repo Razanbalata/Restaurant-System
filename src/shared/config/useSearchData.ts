@@ -8,7 +8,6 @@ import { useMenu } from '@/features/(customer)/menu/get-menu/useMenu';
 import { useGetOrders } from '@/features/(customer)/order/getOrder/api/useGetOrder';
 import { useCartStore } from '@/features/(customer)/cart/model/useCartStore';
 import { useMe } from '@/features/user/api/use-me';
-import { useRestaurantById } from '@/features/(admin)/restaurant/get-restaurants/api/useRestaurantById';
 
 export function useSearchData() {
   const { data: user } = useMe(); // بيانات المستخدم

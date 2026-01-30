@@ -5,11 +5,18 @@ import { ShoppingCartIcon } from "lucide-react";
 import { useMe } from "@/features/user/api/use-me";
 import { useCartStore } from "@/features/(customer)/cart/model/useCartStore";
 import { SearchBar } from "./SearchBar";
+import { useRouter } from "next/navigation";
 
 const TopNav = () => {
   const { data: user } = useMe();
   const theme = useTheme();
   const { items } = useCartStore();
+  const router = useRouter();
+
+ function handleCart() {
+    // منطق فتح عربة التسوق أو التنقل إلى صفحة العربة
+    router.push("/cart"); 
+}
 
   return (
     <AppBar
@@ -36,7 +43,9 @@ const TopNav = () => {
           </IconButton>
 
           {user?.role !== "restaurant_owner" && (
-            <IconButton sx={{ bgcolor: theme.palette.action.hover, borderRadius: 3 }}>
+            <IconButton sx={{ bgcolor: theme.palette.action.hover, borderRadius: 3 }} 
+             onClick={handleCart}
+            >
               <Badge badgeContent={items.length} color="primary">
                 <ShoppingCartIcon size={20} />
               </Badge>

@@ -1,0 +1,6 @@
+- enhance the ui
+- add forget/reset pass 
+- sign with google
+- realtime and notifications 
+- ai helper in menu
+- language

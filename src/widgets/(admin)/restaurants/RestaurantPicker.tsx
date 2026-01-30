@@ -56,13 +56,13 @@ export const RestaurantPicker = () => {
         </Typography>
       </Box>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={2}>
         {restaurantsQuery.data?.map((res: any) => (
-          <Grid size={{xs:12,sm:6,md:4}} key={res.id}>
+          <Grid size={{xs:12,sm:6,md:3}} key={res.id} width="25%">
             <Card
               onClick={() => handleSelect(res)}
               sx={{
-                borderRadius: "24px",
+                borderRadius: "12px",
                 border: `1px solid ${theme.palette.divider}`,
                 bgcolor: "background.paper",
                 transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -74,11 +74,12 @@ export const RestaurantPicker = () => {
                   boxShadow: `0 20px 40px ${alpha(theme.palette.primary.main, 0.15)}`,
                   '& .res-media': { transform: 'scale(1.1)' },
                   '& .res-arrow': { transform: 'translateX(-5px)', color: 'primary.main' } // تعديل للـ RTL
-                }
+                },
+                
               }}
             >
               {/* صورة المطعم */}
-              <Box sx={{ position: "relative", overflow: "hidden", height: 200 }}>
+              <Box sx={{ position: "relative", overflow: "hidden" }}>
                 <CardMedia
                   className="res-media"
                   component="img"

@@ -19,6 +19,7 @@ export const adminMenu = [
 
 export const customerMenu = [
   { label: 'Explore Restaurants', icon: RestaurantMenuRounded, path: '/dashboard' },
+  { label: "Menu Management", icon: RestaurantMenuRounded, path: "/menu", requiresRestaurant: true },
   { label: 'My Current Orders', icon: ShoppingBagRounded, path: '/order' },
   { label: 'Order History', icon: HistoryRounded, path: '/cart' },
 ];

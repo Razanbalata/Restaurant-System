@@ -24,12 +24,12 @@ export function LoginForm() {
       onSuccess: (res) => {
         setSuccessMessage(`Login successful! Your role: ${res.user.role}`);
         setTimeout(() => {
-          if (res.user.role === "customer") router.push("/dashboard");
-          else router.push("/dashboard");
+           router.push("/dashboard");
         }, 2000);
       },
     });
   };
+  console.log("Login form errors:", errors);
 
   return (
     <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={3} sx={{ width: "100%" }}>

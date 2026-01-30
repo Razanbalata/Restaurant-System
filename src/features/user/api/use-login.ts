@@ -15,8 +15,9 @@ export const useLogin = () => {
       });
 
       if (!res.ok) {
-        throw new Error("Login failed");
+        throw new Error(res?.error || "Login failed");
       }
+      console.log("Login response status:", res.status);
 
       return res.json();
     },

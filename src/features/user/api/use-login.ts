@@ -14,11 +14,6 @@ export const useLogin = () => {
         body: JSON.stringify(data),
       });
 
-      if (!res.ok) {
-        throw new Error(res?.error || "Login failed");
-      }
-      console.log("Login response status:", res.status);
-
       return res.json();
     },
 
@@ -29,7 +24,7 @@ export const useLogin = () => {
     },
     onError(error) {
       toast.error("An error occurred during login", {
-        description: error.message, // عرض التفاصيل تحت العنوان
+        description: "Please check your credentials and try again.",
       }
       )
     },

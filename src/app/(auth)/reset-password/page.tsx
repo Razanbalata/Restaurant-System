@@ -1,8 +1,13 @@
+'use client';
+
 import ResetPasswordPage from '@/features/user/ui/ResetPassowrd';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 function page() {
-  return (<ResetPasswordPage/>
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordPage/>
+    </Suspense>
   );
 }
 

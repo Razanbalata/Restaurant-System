@@ -1,6 +1,6 @@
 // hooks/useResetPasswordMutation.ts
 import { useMutation } from "@tanstack/react-query";
-import { ResetPasswordValues } from "../libs/type";
+import { ResetPasswordValues } from "../model/type"; 
 
 
 type ResetPasswordOptions = {

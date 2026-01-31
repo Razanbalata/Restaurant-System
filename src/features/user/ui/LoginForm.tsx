@@ -39,7 +39,7 @@ export function LoginForm() {
 
   const onSubmit = (data: LoginFormValues) => {
     loginMutation.mutate(
-      { ...data, rememberMe },
+      { ...data },
       {
         onSuccess: (res) => {
           setSuccessMessage(`Login successful! Your role: ${res.user.role}`);

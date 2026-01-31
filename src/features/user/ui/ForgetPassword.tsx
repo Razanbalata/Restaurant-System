@@ -36,7 +36,6 @@ export default function ForgotPasswordPage() {
   });
 
   const onSubmit = (values: ForgotPasswordValues) => {
-    alert("ddd",values)
     mutate(values, {
       onSuccess: () => {
         toast.success("If the email exists, a reset link was sent.");

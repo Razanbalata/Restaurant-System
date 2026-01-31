@@ -30,4 +30,12 @@ export type SignupResponse = {
   user: User;
 };
 
+export interface ForgotPasswordValues {
+  email: string
+}
 
+export interface ResetPasswordValues {
+  token: string;
+  password: string;
+  confirmPassword: string;
+}

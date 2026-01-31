@@ -1,3 +1,5 @@
+'use client';
+
 // app/(auth)/login/page.tsx
 import { FloatingFoodIcons } from "@/features/user/ui/FoodBackground"; 
 import { LoginForm } from "@/features/user/ui/LoginForm";

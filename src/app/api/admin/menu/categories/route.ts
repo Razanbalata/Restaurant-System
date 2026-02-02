@@ -34,9 +34,7 @@ export async function POST(req: NextRequest) {
   return withAuth(req, async (req, user) => {
     const userId = user?.userId;
 
-    if (!userId || user.role !== "restaurant_owner") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
+
 
     // Prevent crash if body is empty
     let body;

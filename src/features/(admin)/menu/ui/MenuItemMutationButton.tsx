@@ -29,10 +29,9 @@ interface Props {
   restaurantId: string;
   categoryId?: string;
   item?: any; // Data in case of editing
-  useAi?: boolean;
 }
 
-export const MenuItemMutationButton = ({ mode = "add",item ,useAi}: Props) => {
+export const MenuItemMutationButton = ({ mode = "add",item}: Props) => {
   const [open, setOpen] = useState(false);
   const handleClose = ()=>setOpen(false)
   const theme = useTheme();

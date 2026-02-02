@@ -56,7 +56,7 @@ export default function RestaurantDetailPage() {
               //  >
               //    تحديث بواسطة AI
               //  </Button>
-              <MenuItemMutationButton mode="add" useAi={true} restaurantId={restaurantId}/>
+              <GenerateMenuButton restaurantId={restaurantId}/>
             )}
           </Stack>
 
@@ -107,4 +107,5 @@ export default function RestaurantDetailPage() {
 
 // مكون Stack صغير للتنظيم إذا لم يكن مستورداً
 import { Stack } from "@mui/material";
-import { MenuItemMutationButton } from "@/features/(admin)/menu/ui/MenuItemMutationButton";
+import { MenuItemMutationButton } from "@/features/(admin)/menu/ui/MenuItemMutationButton";import GenerateMenuButton from "@/features/(admin)/menu/ui/GenerateMenuButton";
+

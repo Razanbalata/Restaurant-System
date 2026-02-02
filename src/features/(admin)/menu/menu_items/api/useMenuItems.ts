@@ -1,6 +1,9 @@
 // features/(admin)/menu/api/useMenuItems.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Payload } from "../../generate-menu/libs/types";
+
+
 export const useMenuItems = (categoryId: string) => {
   const queryClient = useQueryClient();
   // 1️⃣ Fetch menu items
@@ -18,31 +21,36 @@ export const useMenuItems = (categoryId: string) => {
 
   // 2️⃣ Add menu item
   const useAddMenuItem = () =>
-    useMutation({
-      mutationFn: async (newItem: {
-        name: string;
-        price: number;
-        description?: string;
-        image?: null;
-      }) => {
-        const res = await fetch("/api/admin/menu/menu_items", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...newItem, category_id: categoryId }),
-        });
-        if (!res.ok) throw new Error("Failed to add menu item");
-        return res.json();
-      },
-      onSuccess: () => {
-        toast.success("Menu item added successfully!");
-        queryClient.invalidateQueries({ queryKey: ["menu_items", categoryId] });
-      },
-      onError(error: Error) {
-        toast.error("Error adding menu item", {
-          description: error.message, // Show details below title
-        });
-      },
-    });
+
+   useMutation({
+    mutationFn: async ({ restaurantId, categoryId, meals }: Payload) => {
+      // إذا كان عنصر واحد فقط، حوله لمصفوفة
+      const itemsToSave = Array.isArray(meals) ? meals : [meals];
+
+      const res = await fetch("/api/admin/menu/menu_items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ restaurantId, categoryId, items: itemsToSave }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Failed to save menu");
+      }
+
+      return res.json(); // يرجع البيانات المحفوظة
+    },
+    onSuccess: (_data, variables) => {
+      toast.success("✅ Menu saved successfully!");
+      // تحديث الكاش
+      queryClient.invalidateQueries({
+        queryKey: ["menu_items", categoryId],
+      });
+    },
+    onError: (error: any) => {
+      toast.error("❌ Failed to save menu", { description: error.message });
+    },
+  });
 
   // 3️⃣ Update menu item
   const useUpdateMenuItem = () =>

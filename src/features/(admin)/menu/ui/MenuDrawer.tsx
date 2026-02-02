@@ -18,6 +18,7 @@ import { useState, useEffect } from "react";
 import { useMenuItems } from "../menu_items/api/useMenuItems";
 import { useCategories } from "../categories/api/useCategories";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
+import { CategoryMutationButton } from "../categories/ui/CategoryMutationBtn";
 
 // We added initialData to know if there is an edit
 
@@ -103,11 +104,12 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
         name: formData.name,
         price: Number(formData.price), // Convert price to number
         description: formData.description || undefined,
-        image: null, // Send null for now because Type doesn't support File
+        image: null,
+        // Send null for now because Type doesn't support File
       };
 
       // 2. Pass the cleaned object directly (without newItem)
-      addMenuItem.mutate(formattedPayload, {
+      addMenuItem.mutate({meals:[formattedPayload], restaurantId: selectedRestaurant?.id,categoryId:formData.category_id }, {
         onSuccess: () => {
           onClose();
         },
@@ -176,11 +178,13 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
               }
               sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
             >
+              
               {categoriesData?.map((cat: { id: string; name: string }) => (
                 <MenuItem key={cat.id} value={cat.id}>
                   {cat.name}
                 </MenuItem>
               ))}
+              <CategoryMutationButton restaurantId={selectedRestaurant.id} mode="add" />
             </TextField>
 
             <TextField

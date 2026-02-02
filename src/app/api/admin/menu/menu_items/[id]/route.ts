@@ -60,8 +60,7 @@ export async function DELETE(
 ) {
   return withAuth(req, async (req, user) => {
     const { id } = await params;
-    if (!user || user.role !== "restaurant_owner")
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+   
 
     const { data: item, error: itemError } = await supabase
       .from("menu_items")

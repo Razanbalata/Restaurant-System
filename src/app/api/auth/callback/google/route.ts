@@ -1,0 +1,131 @@
+// /app/api/auth/callback/google/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { handleGoogleUser } from "@/shared/libs/auth/handleGoogleUser";
+import { createToken } from "@/shared/libs/auth/jwt";
+import {
+  setSessionCookie,
+  clearSessionCookie,
+} from "@/shared/libs/auth/cookies";
+import { cookies } from "next/headers";
+
+export async function GET(req: NextRequest) {
+  try {
+    const url = new URL(req.url);
+    const code = url.searchParams.get("code");
+    const state = url.searchParams.get("state");
+
+    console.log("🔹 Received code:", code);
+    console.log("🔹 Received state:", state);
+
+    if (!code)
+      return NextResponse.json({ error: "No code provided" }, { status: 400 });
+    if (!state)
+      return NextResponse.json({ error: "No state provided" }, { status: 400 });
+
+    // ✅ جلب الـ cookies بشكل صحيح
+    const cookieStore = await cookies();
+    const savedState = cookieStore.get("google_oauth_state")?.value;
+    console.log("🔹 Saved state cookie:", savedState);
+
+    // ✅ التحقق من state لمكافحة CSRF
+    if (state !== savedState) {
+      console.log("❌ State mismatch! Possible CSRF attack.");
+      return NextResponse.json({ error: "Invalid state" }, { status: 400 });
+    }
+    console.log("✅ State check passed");
+
+    // 🔹 تبادل code مع Google للحصول على tokens
+    const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        code,
+        client_id: process.env.GOOGLE_CLIENT_ID!,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+        redirect_uri: process.env.GOOGLE_REDIRECT_URI!,
+        grant_type: "authorization_code",
+      }),
+    });
+    console.log("ttttttt",tokenRes)
+
+    const tokenText = await tokenRes.text();
+    let tokenData: any;
+    try {
+      tokenData = JSON.parse(tokenText);
+    } catch {
+      tokenData = null;
+    }
+
+    if (!tokenRes.ok || !tokenData || !tokenData.id_token) {
+      console.error("❌ Google token exchange failed:", tokenText);
+      return NextResponse.json(
+        { error: "Google token exchange failed", details: tokenText },
+        { status: 500 },
+      );
+    }
+
+    const { id_token } = tokenData;
+    console.log("🔹 Received id_token:", id_token);
+
+    // 🔹 تحقق من id_token
+    const verifyRes = await fetch(
+      `https://oauth2.googleapis.com/tokeninfo?id_token=${id_token}`,
+    );
+    const googleUser = await verifyRes.json();
+    console.log("🔹 Google user info:", googleUser);
+
+    if (googleUser.aud !== process.env.GOOGLE_CLIENT_ID) {
+      console.log("❌ Invalid audience in id_token");
+      return NextResponse.json({ error: "Invalid audience" }, { status: 401 });
+    }
+
+    // 🔹 استخدام handleGoogleUser لتسجيل أو تحديث المستخدم
+    const appUser = await handleGoogleUser({
+      googleId: googleUser.sub,
+      email: googleUser.email,
+      name: googleUser.name,
+      picture: googleUser.picture,
+    });
+    console.log("🔹 App user after handleGoogleUser:", appUser);
+
+    // 🔹 إنشاء JWT
+    const jwt = await createToken({
+      userId: appUser.id,
+      email: appUser.email,
+      name: appUser.name,
+      role: appUser.role,
+    });
+    console.log("🔹 JWT created");
+
+    // 🔹 إعداد الرد ووضع JWT في cookie
+    // 🔹 إعداد الرد ووضع JWT في cookie
+    const response = NextResponse.redirect(
+  new URL("/dashboard", req.url)
+);
+
+    setSessionCookie(response, jwt);
+    console.log("✅ JWT set in cookie");
+
+    // ✅ مسح state cookie بالطريقة الصح
+    response.cookies.set("google_oauth_state", "", {
+      maxAge: 0,
+      path: "/",
+    });
+
+    console.log("✅ State cookie cleared");
+
+    return response;
+  } catch (err: any) {
+  console.error("❌ Google callback error:", err);
+
+  return NextResponse.json(
+    {
+      error: "Google authentication failed",
+      message: err?.message ?? "Unknown error",
+      stack: process.env.NODE_ENV === "development" ? err?.stack : undefined,
+    },
+    { status: 500 }
+  );
+}
+
+}

@@ -78,7 +78,7 @@ export function OrderCard({ order, onStatusChange, accentColor }: any) {
                 variant="contained" 
                 size="medium"
                 startIcon={<Flame size={16} />}
-                onClick={() => onStatusChange(order.id, 'PREPARING')}
+                onClick={() => onStatusChange(order.id, 'preparing')}
                 sx={{ 
                   borderRadius: 2.5, 
                   fontWeight: 800,
@@ -98,7 +98,7 @@ export function OrderCard({ order, onStatusChange, accentColor }: any) {
                 variant="contained" 
                 size="medium"
                 startIcon={<CheckCircle2 size={16} />}
-                onClick={() => onStatusChange(order.id, 'COMPLETED')}
+                onClick={() => onStatusChange(order.id, 'completed')}
                 sx={{ 
                   borderRadius: 2.5, 
                   fontWeight: 800,

@@ -5,20 +5,25 @@ import OrderColumn from "./OrderColumn";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
 import { useOrdersRealtime } from "@/features/(admin)/order/realTime/useOrdersRealtime"; 
 import { OrdersAdminSkeleton } from "@/shared/ui/Skeletons/OrdersAdminSkeleton";
+import { supabase } from "@/shared/api/supabaseRealTime";
 
 export default function OrdersAdminPage() {
   const theme = useTheme();
   const { selectedRestaurant } = useRestaurant();
+  console.log("Selected restaurant in OrdersAdminPage:", selectedRestaurant);
   const { useOrdersQuery , updateOrderStatus } = useOrders(selectedRestaurant?.id || '');
   const { data: orders = [], isLoading } = useOrdersQuery;
   const updateStatus = updateOrderStatus;
 
-  useOrdersRealtime(selectedRestaurant?.id || '');
+  const real = useOrdersRealtime(selectedRestaurant?.id || '');
+  console.log("Real-time hook data:", real);
+
 
   const handleStatusUpdate = (orderId: string, newStatus: string) => {
     updateStatus.mutate({ id:orderId, status: newStatus });
 
   };
+  console.log("Orders data:", orders);
 
   if (isLoading) return <OrdersAdminSkeleton />;
 
@@ -50,7 +55,7 @@ export default function OrdersAdminPage() {
           <OrderColumn 
             title="Completed" 
             color={theme.palette.success.main}
-            orders={orders.filter((o: any) => o.status === 'COMPLETED')} 
+            orders={orders.filter((o: any) => o.status === 'completed')} 
             onStatusChange={handleStatusUpdate}
           />
         </Stack>

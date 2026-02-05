@@ -26,10 +26,13 @@ import {
 import { useGetOrders } from "@/features/(customer)/order/getOrder/api/useGetOrder";
 import OrderSkelton from "@/shared/ui/Skeletons/OrderSkelton";
 import { OrderStatusTracker } from "./OrderStatusTracker";
+import { useCustomerOrdersRealtime } from "@/features/(customer)/order/realTime/useCustomerRealtime";
+import { useMe } from "@/features/user/api/use-me";
 
 
 // --- 2. Main Component (OrdersList) ---
 export default function OrdersList() {
+  const {data: user} = useMe();
   const theme = useTheme();
   const { data: orders = [], isLoading } = useGetOrders();
 
@@ -37,6 +40,7 @@ export default function OrdersList() {
     () => [...orders].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
     [orders]
   );
+  useCustomerOrdersRealtime(user?.id)
 
   if (isLoading) return <OrderSkelton />;
 

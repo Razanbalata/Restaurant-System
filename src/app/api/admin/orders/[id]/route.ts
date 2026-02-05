@@ -11,6 +11,7 @@ export async function PATCH(
 
 
     const { status } = await req.json();
+    console.log("Updating order ID:", id, "to status:", status);
     if (!status)
       return NextResponse.json({ error: "status required" }, { status: 400 });
 

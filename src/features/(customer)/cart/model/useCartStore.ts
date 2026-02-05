@@ -1,8 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { toast } from "sonner"; // Make sure to install via npm install sonner
+import { toast } from "sonner";
 
-type CartItem = {
+/* =======================
+   Types
+======================= */
+export type CartItem = {
   menuItemId: string;
   name: string;
   price: number;
@@ -13,64 +16,75 @@ type CartStore = {
   restaurantId: number | null;
   items: CartItem[];
 
-  addItem: (item: CartItem, restaurantId: number) => void;
+  addItem: (item: Omit<CartItem, "quantity">, restaurantId: number) => void;
   removeItem: (menuItemId: string) => void;
   updateQty: (menuItemId: string, quantity: number) => void;
   clearCart: () => void;
   totalPrice: () => number;
 };
 
+/* =======================
+   Store
+======================= */
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       restaurantId: null,
       items: [],
 
-      // 1️⃣ Add item to cart
+      /* ➕ Add item */
       addItem: (item, restaurantId) => {
-        const state = get();
+        const { items, restaurantId: currentRestaurant } = get();
 
-        // 🧠 If customer tries to order from another restaurant, warn and clear cart
-        if (state.restaurantId && state.restaurantId !== restaurantId) {
+        // ✅ handle restaurant switch (works with 0)
+        if (
+          currentRestaurant !== null &&
+          currentRestaurant !== restaurantId
+        ) {
           set({ items: [], restaurantId });
-          toast.warning("Previous cart cleared and new order started from different restaurant");
+          toast.warning(
+            "Previous cart cleared. New restaurant selected 🍽️",
+          );
         }
 
-        const existing = state.items.find(
+        const existingItem = items.find(
           (i) => i.menuItemId === item.menuItemId,
         );
 
-        if (existing) {
+        if (existingItem) {
           set({
-            items: state.items.map((i) =>
+            items: items.map((i) =>
               i.menuItemId === item.menuItemId
                 ? { ...i, quantity: i.quantity + 1 }
                 : i,
             ),
           });
-          toast.info(`Quantity of ${item.name} increased`);
-        } else {
-          set({
-            items: [...state.items, { ...item, quantity: 1 }],
-            restaurantId,
-          });
-          toast.success(`${item.name} added to cart`);
+          toast.info(`${item.name} quantity increased`);
+          return;
         }
+
+        set({
+          items: [...items, { ...item, quantity: 1 }],
+          restaurantId,
+        });
+
+        toast.success(`${item.name} added to cart`);
       },
 
-      // 2️⃣ Remove single item
+      /* ➖ Remove item */
       removeItem: (menuItemId) => {
-        const itemToDelete = get().items.find(i => i.menuItemId === menuItemId);
+        const item = get().items.find((i) => i.menuItemId === menuItemId);
+
         set({
           items: get().items.filter((i) => i.menuItemId !== menuItemId),
         });
-        
-        if (itemToDelete) {
-          toast.error(`${itemToDelete.name} removed`);
+
+        if (item) {
+          toast.error(`${item.name} removed`);
         }
       },
 
-      // 3️⃣ Update quantity (increase or decrease)
+      /* 🔄 Update quantity */
       updateQty: (menuItemId, quantity) => {
         if (quantity <= 0) {
           get().removeItem(menuItemId);
@@ -79,25 +93,30 @@ export const useCartStore = create<CartStore>()(
 
         set({
           items: get().items.map((i) =>
-            i.menuItemId === menuItemId ? { ...i, quantity } : i,
+            i.menuItemId === menuItemId
+              ? { ...i, quantity }
+              : i,
           ),
         });
       },
 
-      // 4️⃣ Clear entire cart
+      /* 🗑️ Clear cart */
       clearCart: () => {
         if (get().items.length === 0) return;
-        
+
         set({ items: [], restaurantId: null });
-        toast.success("Cart cleared");
+        toast.success("Cart cleared 🧹");
       },
 
-      // 5️⃣ Calculate total price
+      /* 💰 Total price */
       totalPrice: () =>
-        get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+        get().items.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0,
+        ),
     }),
-    { 
-      name: "cart-storage", // Storage in LocalStorage
+    {
+      name: "cart-storage",
     },
   ),
 );

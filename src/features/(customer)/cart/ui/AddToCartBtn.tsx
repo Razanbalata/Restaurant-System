@@ -1,17 +1,30 @@
 import { Button } from "@mui/material";
 import React from "react";
 import { useCartStore } from "../model/useCartStore";
+import { toast } from "sonner";
 
 function AddToCartBtn({
   item,
   restaurantId,
 }: {
   item: any;
-  restaurantId: string;
+  restaurantId?: string;
 }) {
+  
   const addItem = useCartStore((state) => state.addItem);
 
   function handleAdd() {
+   
+        const parsedRestaurantId = Number(restaurantId);
+   console.log("Parsed Restaurant ID:", parsedRestaurantId);
+    // 🚨 حماية قوية
+    if (!parsedRestaurantId || Number.isNaN(parsedRestaurantId)) {
+      console.error("❌ Invalid restaurantId in AddToCartBtn:", restaurantId);
+      toast.error("Restaurant not loaded yet");
+      return;
+    }
+
+
     addItem(
       {
         menuItemId: item.id.toString(), // ✅ المهم
@@ -19,7 +32,7 @@ function AddToCartBtn({
         price: item.price,
         quantity: 1,
       },
-      Number(restaurantId)
+      parsedRestaurantId
     );
   }
 

@@ -1,23 +1,28 @@
-import { FloatingFoodIcons } from '@/features/user/ui/FoodBackground';
-import { SignupForm } from '@/features/user/ui/SignupForm';
-import { Box, Paper } from '@mui/material';
-import React from 'react';
+"use client";
 
-function page() {
+import SignupForm from "@/features/user/ui/SignupForm";
+import { Box, alpha, useTheme } from "@mui/material";
+import { motion } from "framer-motion";
+
+export default function SignUpPage() {
+  const theme = useTheme();
+
   return (
-    <Box className="relative min-h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-slate-950">
-      {/* Background */}
-      <FloatingFoodIcons />
-
-      {/* Create Account Form */}
-      <Paper 
-        elevation={0}
-        className="z-10 w-full max-w-md p-8 rounded-3xl border border-white/20 backdrop-blur-xl bg-white/70 dark:bg-slate-900/70"
-      >
-      <SignupForm />
-    </Paper>
-    </Box>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      style={{ width: "100%", maxWidth: "450px" }}
+    >
+      <Box sx={{ 
+        p: { xs: 3, md: 5 }, 
+        borderRadius: "32px", 
+        backdropFilter: "blur(16px)",
+        bgcolor: alpha(theme.palette.background.paper, 0.75),
+        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+        boxShadow: "0 20px 40px rgba(0,0,0,0.05)"
+      }}>
+        <SignupForm />
+      </Box>
+    </motion.div>
   );
 }
-
-export default page;

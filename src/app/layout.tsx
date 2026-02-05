@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import "./styles/globals.css";
 import ReactQueryProvider from "./providers/QueryProvider";
-import { Header } from "@/widgets/header/Header";
 import { getUserServer } from "@/shared/libs/auth/getCurrentUser";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/shared/keys/query-keys";
 import { AppThemeProvider } from "./providers/ThemeProvider";
-import { RestaurantProvider } from "./providers/RestaurantContext";
-import { Sidebar } from "@/widgets/(admin)/dashboard/Sidebar";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {

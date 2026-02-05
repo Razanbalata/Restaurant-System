@@ -28,7 +28,7 @@ export const useOrdersRealtime = (restaurantId?: string) => {
           addNotification({
             id: Date.now(),
             type: payload.eventType,
-            status: payload.new?.status,
+            status: (payload.new as { status: string })?.status ,
             time: new Date().toLocaleTimeString(),
           });
           queryClient.invalidateQueries({

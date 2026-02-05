@@ -30,7 +30,7 @@ function AddToCartBtn({
         menuItemId: item.id.toString(), // ✅ المهم
         name: item.name,
         price: item.price,
-        quantity: 1,
+       // quantity: 1,
       },
       parsedRestaurantId
     );

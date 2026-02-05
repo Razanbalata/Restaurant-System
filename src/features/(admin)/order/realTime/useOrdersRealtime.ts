@@ -24,11 +24,11 @@ export const useOrdersRealtime = (restaurantId?: string) => {
         },
         (payload) => {
           notifyOrderEvent(payload, "admin");
-
+           console.log("Order event payload:", payload);
           addNotification({
             id: Date.now(),
             type: payload.eventType,
-            status: payload.new?.status,
+            status: (payload.new as { status: string })?.status,
             time: new Date().toLocaleTimeString(),
           });
           queryClient.invalidateQueries({

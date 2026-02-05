@@ -6,9 +6,10 @@ export const OrderStatusTracker = ({ status }: { status: string }) => {
   const configs: Record<string, { label: string; color: string; progress: number }> = {
     pending: { label: "Pending", color: theme.palette.warning.main, progress: 20 },
     preparing: { label: "Preparing", color: theme.palette.info.main, progress: 55 },
-    delivered: { label: "Delivered", color: theme.palette.success.main, progress: 100 },
+    completed: { label: "Completed", color: theme.palette.success.main, progress: 100 },
     cancelled: { label: "Cancelled", color: theme.palette.error.main, progress: 0 },
   };
+   
 
   const config = configs[status] || { label: "Unknown", color: theme.palette.grey[500], progress: 0 };
 

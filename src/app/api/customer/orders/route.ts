@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await req.json();
-    
+    console.log("Received order body:", body);
     // Define item types clearly
     interface OrderItem {
       id: string;

@@ -5,12 +5,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Container } from "@mui/material";
 import { useMe } from "@/features/user/api/use-me";
-import HeroSection from "@/widgets/(customer)/homePage/HeroSection"; 
-import RoleSelectionSection from "@/widgets/(customer)/homePage/RoleSelectionSection"; 
-import HowItWorksSection from "@/widgets/(customer)/homePage/HowItWorksSection"; 
-import CTASection from "@/widgets/(customer)/homePage/CTASection"; 
 import { LandingPageSkeleton } from "@/shared/ui/Skeletons/LandingPageSkeleton";
-
+import HomePage from "@/widgets/homePage/Home"; 
 export default function LandingPage() {
   const router = useRouter();
   const { data: user, isLoading } = useMe();
@@ -25,10 +21,7 @@ export default function LandingPage() {
 
   return (
     <Container maxWidth={false} disableGutters>
-      <HeroSection />
-      <RoleSelectionSection />
-      <HowItWorksSection />
-      <CTASection />
+      <HomePage/>
     </Container>
   );
 }

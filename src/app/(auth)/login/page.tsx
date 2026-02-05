@@ -1,23 +1,29 @@
+// app/(auth)/login/page.tsx
 'use client';
 
-// app/(auth)/login/page.tsx
-import { FloatingFoodIcons } from "@/features/user/ui/FoodBackground"; 
-import { LoginForm } from "@/features/user/ui/LoginForm";
-import { Box, Paper } from "@mui/material";
+import LoginForm from "@/features/user/ui/LoginForm";
+import { Box, alpha, useTheme } from "@mui/material";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
-  return (
-    <Box className="relative min-h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-slate-950">
-      {/* Background */}
-      <FloatingFoodIcons />
+  const theme = useTheme();
 
-      {/* Login Form */}
-      <Paper 
-        elevation={0}
-        className="z-10 w-full max-w-md p-8 rounded-3xl border border-white/20 backdrop-blur-xl bg-white/70 dark:bg-slate-900/70"
-      >
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      style={{ width: "100%", maxWidth: "440px", padding: '0 20px' }}
+    >
+      <Box sx={{ 
+        p: { xs: 3, md: 5 }, 
+        borderRadius: "32px", 
+        backdropFilter: "blur(16px)",
+        bgcolor: alpha(theme.palette.background.paper, 0.7),
+        border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+        boxShadow: "0 20px 40px rgba(0,0,0,0.05)"
+      }}>
         <LoginForm />
-      </Paper>
-    </Box>
+      </Box>
+    </motion.div>
   );
 }

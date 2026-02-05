@@ -1,33 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, LoginFormValues } from "../libs/login.schema";
-import { useLogin } from "../api/use-login";
-import {
-  TextField,
-  Button,
-  Stack,
-  InputAdornment,
-  IconButton,
-  Alert,
-  CircularProgress,
-  Typography,
-  Checkbox,
-  FormControlLabel,
-  Divider,
+import { 
+  TextField, Button, Stack, InputAdornment, IconButton, 
+  Alert, CircularProgress, Typography, Checkbox, 
+  FormControlLabel, Divider 
 } from "@mui/material";
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function LoginForm() {
+// استيراد الـ Schema والـ Hook الخاص بك
+import { loginSchema, LoginFormValues } from "../libs/login.schema";
+import { useLogin } from "../api/use-login";
+
+export default function LoginForm() {
   const router = useRouter();
   const loginMutation = useLogin();
-
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const {
     register,
@@ -38,46 +29,33 @@ export function LoginForm() {
   });
 
   const onSubmit = (data: LoginFormValues) => {
-    loginMutation.mutate(
-      { ...data },
-      {
-        onSuccess: (res) => {
-          setSuccessMessage(`Login successful! Your role: ${res.user.role}`);
-
-          setTimeout(() => {
-            router.push("/dashboard");
-          }, 1500);
-        },
-      }
-    );
+    loginMutation.mutate(data, {
+      onSuccess: (res) => {
+        // توجيه المستخدم حسب الرتبة
+        if (res.user.role === "owner") {
+          router.push("/owner/dashboard");
+        } else {
+          router.push("/customer/restaurants");
+        }
+      },
+    });
   };
 
   return (
-    <Stack
-      component="form"
-      onSubmit={handleSubmit(onSubmit)}
-      spacing={3}
-      sx={{ width: "100%" }}
-    >
-      <Typography variant="h5" fontWeight={800} textAlign="center">
-        Login
+    <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={3} sx={{ width: "100%" }}>
+      
+      <Typography variant="h5" sx={{ fontWeight: 800, textAlign: "center", mb: 1 }}>
+        Login to FoodFlow
       </Typography>
 
-      {/* Success */}
-      {successMessage && (
-        <Alert severity="success" variant="filled">
-          {successMessage}
-        </Alert>
-      )}
-
-      {/* Error */}
+      {/* رسالة الخطأ في حال فشل الطلب */}
       {loginMutation.isError && (
-        <Alert severity="error" variant="filled">
-          {loginMutation.error?.message || "Login failed"}
+        <Alert severity="error" variant="filled" sx={{ borderRadius: "12px" }}>
+          {loginMutation.error?.message || "Login failed. Please try again."}
         </Alert>
       )}
 
-      {/* Email */}
+      {/* حقل البريد الإلكتروني */}
       <TextField
         label="Email Address"
         fullWidth
@@ -94,7 +72,7 @@ export function LoginForm() {
         }}
       />
 
-      {/* Password */}
+      {/* حقل كلمة المرور */}
       <TextField
         label="Password"
         type={showPassword ? "text" : "password"}
@@ -111,10 +89,7 @@ export function LoginForm() {
           ),
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton
-                onClick={() => setShowPassword(!showPassword)}
-                edge="end"
-              >
+              <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </IconButton>
             </InputAdornment>
@@ -122,61 +97,61 @@ export function LoginForm() {
         }}
       />
 
-      {/* Remember + Forgot */}
+      {/* تذكرني + نسيان كلمة المرور */}
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <FormControlLabel
-          control={
-            <Checkbox
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-            />
-          }
-          label="Remember me"
+          control={<Checkbox size="small" />}
+          label={<Typography variant="body2">Remember me</Typography>}
         />
-
         <Typography
           variant="body2"
-          sx={{
-            textDecoration: "underline",
-            cursor: "pointer",
-            fontWeight: 500,
-          }}
+          sx={{ cursor: "pointer", fontWeight: 600, color: "primary.main", "&:hover": { textDecoration: "underline" } }}
           onClick={() => router.push("/forget-password")}
         >
           Forgot password?
         </Typography>
       </Stack>
 
-      {/* Login Button */}
+      {/* زر تسجيل الدخول */}
       <Button
         type="submit"
         variant="contained"
         fullWidth
         size="large"
         disabled={loginMutation.isPending}
+        sx={{ 
+          py: 1.5, 
+          borderRadius: "12px", 
+          fontWeight: 700, 
+          boxShadow: "0 4px 12px rgba(0,0,0,0.1)" 
+        }}
       >
         {loginMutation.isPending ? (
-          <CircularProgress size={26} color="inherit" />
+          <CircularProgress size={24} color="inherit" />
         ) : (
           <Stack direction="row" spacing={1} alignItems="center">
-            <span>Login</span>
+            <span>Sign In</span>
             <ArrowRight size={20} />
           </Stack>
         )}
       </Button>
 
-      {/* Divider */}
-      <Divider>OR</Divider>
+      <Divider sx={{ my: 1 }}>
+        <Typography variant="caption" color="text.secondary">OR</Typography>
+      </Divider>
 
-      {/* Google Login */}
+      {/* تسجيل الدخول بواسطة Google */}
       <Button
         variant="outlined"
         fullWidth
         size="large"
+        startIcon={<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/smartlock/google.svg" width="18" alt="google" />}
+        sx={{ py: 1.5, borderRadius: "12px", borderColor: "divider", color: "text.primary" }}
         onClick={() => (window.location.href = "/api/auth/google")}
       >
-        Sign in with Google
+        Continue with Google
       </Button>
+
     </Stack>
   );
 }

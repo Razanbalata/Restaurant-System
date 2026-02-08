@@ -102,7 +102,7 @@ export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardPr
               size="large"
               variant="contained"
               startIcon={<RestaurantMenuRoundedIcon />}
-              onClick={() => router.push(`/menu`)}
+              onClick={() => router.push(`/shared/menu`)}
               sx={{
                 px: 5, py: 1.5,
                 borderRadius: "16px",

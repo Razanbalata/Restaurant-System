@@ -41,7 +41,7 @@ export function PlaceOrderButton({ formData }: Props) {
       onSuccess: (data) => {
         console.log("✅ Order placed successfully:", data); 
         clearCart();
-        router.push("/"); // هذا يجب أن يعمل إذا وصلت هنا
+        router.push("/customer/order"); // هذا يجب أن يعمل إذا وصلت هنا
       },
       onError: (err: any) => {
         console.error("❌ Order failed:", err);

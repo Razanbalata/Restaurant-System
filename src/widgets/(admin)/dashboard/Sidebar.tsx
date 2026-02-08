@@ -1,11 +1,23 @@
 "use client";
 import {
-  Box, List, ListItemButton, ListItemIcon, ListItemText,
-  Typography, Avatar, Divider, IconButton, useTheme, Tooltip
+  Box,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  Avatar,
+  Divider,
+  IconButton,
+  useTheme,
+  Tooltip,
 } from "@mui/material";
 import {
-  ChevronLeft, ChevronRight, DarkModeRounded, LightModeRounded,
-  SettingsRounded
+  ChevronLeft,
+  ChevronRight,
+  DarkModeRounded,
+  LightModeRounded,
+  SettingsRounded,
 } from "@mui/icons-material";
 import { usePathname, useRouter } from "next/navigation";
 import { useMe } from "@/features/user/api/use-me";
@@ -15,7 +27,13 @@ import { useColorMode } from "@/app/providers/ThemeProvider";
 import { LogOutIcon } from "lucide-react";
 import { useLogout } from "@/features/user/api/use-logout";
 
-export const Sidebar = ({ open, onToggle }: { open: boolean; onToggle: () => void; }) => {
+export const Sidebar = ({
+  open,
+  onToggle,
+}: {
+  open: boolean;
+  onToggle: () => void;
+}) => {
   const theme = useTheme();
   const pathname = usePathname();
   const router = useRouter();
@@ -41,7 +59,9 @@ export const Sidebar = ({ open, onToggle }: { open: boolean; onToggle: () => voi
     >
       {/* Profile Section */}
       <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 2 }}>
-        <Avatar sx={{ bgcolor: theme.palette.primary.main, fontWeight: 'bold' }}>
+        <Avatar
+          sx={{ bgcolor: theme.palette.primary.main, fontWeight: "bold" }}
+        >
           {user?.name?.[0]}
         </Avatar>
 
@@ -65,9 +85,9 @@ export const Sidebar = ({ open, onToggle }: { open: boolean; onToggle: () => voi
 
       {/* Menu Items */}
       <List sx={{ flexGrow: 1, px: 1.5, py: 2 }}>
-        {menuItems.map(({ label, icon: Icon, path }:any) => {
-          const fullPath = path.includes("restaurantDetails") 
-            ? `${path}/${selectedRestaurant?.id}` 
+        {menuItems.map(({ label, icon: Icon, path }: any) => {
+          const fullPath = path.includes("restaurantDetails")
+            ? `${path}/${selectedRestaurant?.id}`
             : path;
           const isActive = pathname === fullPath;
 
@@ -80,24 +100,35 @@ export const Sidebar = ({ open, onToggle }: { open: boolean; onToggle: () => voi
                   mb: 1,
                   justifyContent: open ? "initial" : "center",
                   // استخدام لون البراند مع شفافية بسيطة عند التفعيل
-                  bgcolor: isActive ? `${theme.palette.primary.main}15` : "transparent",
-                  color: isActive ? theme.palette.primary.main : theme.palette.text.secondary,
+                  bgcolor: isActive
+                    ? `${theme.palette.primary.main}15`
+                    : "transparent",
+                  color: isActive
+                    ? theme.palette.primary.main
+                    : theme.palette.text.secondary,
                   "&:hover": {
-                    bgcolor: isActive ? `${theme.palette.primary.main}25` : theme.palette.action.hover,
+                    bgcolor: isActive
+                      ? `${theme.palette.primary.main}25`
+                      : theme.palette.action.hover,
                   },
                 }}
               >
-                <ListItemIcon sx={{ 
-                  minWidth: 0, 
-                  mr: open ? 2 : "auto", 
-                  color: isActive ? theme.palette.primary.main : "inherit" 
-                }}>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 2 : "auto",
+                    color: isActive ? theme.palette.primary.main : "inherit",
+                  }}
+                >
                   <Icon size={22} />
                 </ListItemIcon>
                 {open && (
-                  <ListItemText 
-                    primary={label} 
-                    primaryTypographyProps={{ fontSize: "0.9rem", fontWeight: isActive ? 700 : 500 }} 
+                  <ListItemText
+                    primary={label}
+                    primaryTypographyProps={{
+                      fontSize: "0.9rem",
+                      fontWeight: isActive ? 700 : 500,
+                    }}
                   />
                 )}
               </ListItemButton>
@@ -108,18 +139,36 @@ export const Sidebar = ({ open, onToggle }: { open: boolean; onToggle: () => voi
 
       {/* Bottom Actions */}
       <Box sx={{ p: 1.5, borderTop: `1px solid ${theme.palette.divider}` }}>
-        <ListItemButton onClick={toggleColorMode} sx={{ borderRadius: 3, mb: 0.5 }}>
+        <ListItemButton
+          onClick={toggleColorMode}
+          sx={{ borderRadius: 3, mb: 0.5 }}
+        >
           <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto" }}>
-            {theme.palette.mode === "dark" ? <LightModeRounded /> : <DarkModeRounded />}
+            {theme.palette.mode === "dark" ? (
+              <LightModeRounded />
+            ) : (
+              <DarkModeRounded />
+            )}
           </ListItemIcon>
-          {open && <ListItemText primary={theme.palette.mode === "dark" ? "Light Mode" : "Dark Mode"} />}
+          {open && (
+            <ListItemText
+              primary={
+                theme.palette.mode === "dark" ? "Light Mode" : "Dark Mode"
+              }
+            />
+          )}
         </ListItemButton>
 
-        <ListItemButton 
-          onClick={() => mutate()} 
+        <ListItemButton
+          onClick={() => {
+            mutate();
+            router.replace("/");
+          }}
           sx={{ borderRadius: 3, color: theme.palette.error.main }}
         >
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto", color: "inherit" }}>
+          <ListItemIcon
+            sx={{ minWidth: 0, mr: open ? 2 : "auto", color: "inherit" }}
+          >
             <LogOutIcon size={20} />
           </ListItemIcon>
           {open && <ListItemText primary="Logout" />}

@@ -16,8 +16,8 @@ export const useLogout = () => {
       return res.json();
     },
     onSuccess: () => {
-      queryClient.setQueryData(queryKeys.user.me(), null); // Remove user from React Query cache
-      queryClient.invalidateQueries({ queryKey: queryKeys.user.all }); // Reload any related data
+      queryClient.setQueryData(queryKeys.auth.me(), null); // Remove user from React Query cache
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.users() }); // Reload any related data
      toast.success("Logout successful!")
     },
     onError:(error)=>{

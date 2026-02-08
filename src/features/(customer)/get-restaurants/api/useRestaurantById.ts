@@ -1,9 +1,10 @@
+import { queryKeys } from "@/shared/keys/query-keys";
 import { useQuery } from "@tanstack/react-query";
 
 // 1. هوك جلب تفاصيل المطعم
 export const useRestaurant = (id: string) => {
  return useQuery({
-    queryKey: ["restaurant", id],
+    queryKey: queryKeys.customer.restaurant(id),
     queryFn: async () => {
       const response = await fetch(`/api/customer/restaurants/${id}`,
         {

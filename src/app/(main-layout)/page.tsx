@@ -12,7 +12,7 @@ export default function LandingPage() {
   const { data: user, isLoading } = useMe();
 
   useEffect(() => {
-    if (user) router.replace("/dashboard");
+    if (user) router.replace("/shared/dashboard");
   }, [user, router]);
 
   if (isLoading) {

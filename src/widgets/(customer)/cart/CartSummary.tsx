@@ -54,7 +54,7 @@ export function CartSummary({ total, subtotal, isEmpty }: CartSummaryProps) {
           size="large"
           variant="contained"
           disabled={isEmpty || isPending}
-          onClick={() => router.push("/checkout")}
+          onClick={() => router.push("/customer/checkout")}
           sx={{ 
             py: 2, 
             borderRadius: "16px", 

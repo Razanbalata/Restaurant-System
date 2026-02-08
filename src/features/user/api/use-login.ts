@@ -22,8 +22,8 @@ export const useLogin = () => {
     },
 
     onSuccess: (data) => {
-      queryClient.setQueryData(queryKeys.user.me(), data.user);
-      queryClient.invalidateQueries({ queryKey: queryKeys.user.all });
+      queryClient.setQueryData(queryKeys.auth.me(), data.user);
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.users()});
       toast.success("Login successful!")
     },
     onError(error) {

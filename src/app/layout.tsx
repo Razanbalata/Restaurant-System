@@ -24,7 +24,7 @@ export default async function RootLayout({
 
     try {
       await queryClient.prefetchQuery({
-        queryKey: queryKeys.user.me(),
+        queryKey: queryKeys.auth.me(),
         queryFn: getUserServer,
       });
 

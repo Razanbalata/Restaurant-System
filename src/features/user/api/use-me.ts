@@ -8,7 +8,7 @@ type MeResponse = {
 
 export function useMe() {
   return useQuery<User | null>({
-    queryKey: queryKeys.user.me(),
+    queryKey:queryKeys.auth.me(),
     queryFn: async () => {
       const res = await fetch("/api/auth/me");
 

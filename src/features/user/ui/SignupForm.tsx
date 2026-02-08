@@ -198,7 +198,7 @@ export default function SignupForm() {
     signupMutation.mutate(formData, {
       onSuccess: () => {
         toast.success("Account created successfully! ✨");
-        router.push("/dashboard");
+        router.push("/shared/dashboard");
       },
       onError: (error: any) => {
         toast.error(error.message || "Registration failed");

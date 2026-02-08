@@ -32,8 +32,8 @@ export default function LoginForm() {
     loginMutation.mutate(data, {
       onSuccess: (res) => {
         // توجيه المستخدم حسب الرتبة
-        if (res.user.role === "owner") {
-          router.push("/owner/dashboard");
+        if (res.user.role === "restaurant_owner") {
+          router.push("/shared/dashboard");
         } else {
           router.push("/customer/restaurants");
         }

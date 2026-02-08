@@ -6,10 +6,15 @@ import AddToCartBtn from '@/features/(customer)/cart/ui/AddToCartBtn';
 import { useMe } from '@/features/user/api/use-me';
 
 export default function FoodCard({ item }: { item: any }) {
-  console.log("Rendering FoodCard for item:", item);
   const { data: user } = useMe();
   const theme = useTheme();
   const isAdmin = user?.role === "restaurant_owner";
+
+   console.log(`🍱 FoodCard [ID: ${item.id}] Data:`, {
+    name: item.name,
+    price: item.price,
+    category: item.category_id
+  });
 
   return (
     <Paper 

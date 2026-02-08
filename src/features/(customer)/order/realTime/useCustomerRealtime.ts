@@ -28,7 +28,7 @@ export const useCustomerOrdersRealtime = (userId?: string) => {
 
           // 5. تحديث كاش طلبات الزبون (تأكدي أن الكي مطابق لما تستخدمينه في الكويري)
           queryClient.invalidateQueries({
-            queryKey: queryKeys.orders.details(userId),
+            queryKey: queryKeys.customer.orders(userId),
           });
         }
       )

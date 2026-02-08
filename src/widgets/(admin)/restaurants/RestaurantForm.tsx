@@ -1,35 +1,49 @@
 "use client";
 import { Box, Stack, TextField, Button, Typography, useTheme, alpha, IconButton } from "@mui/material";
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRestaurants } from "@/features/(admin)/restaurant/get-restaurants/api/useRestaurants";
-import { useMe } from "@/features/user/api/use-me";
 import { Restaurant } from "@/features/(customer)/get-restaurants/libs/types";
 
 interface RestaurantFormProps {
-  restaurant?: Restaurant; // علامة الاستفهام تعني أنه اختياري (لحالة الإضافة)
-  onClose: () => void;      // دالة لا تعيد شيئاً
+  restaurant?: Restaurant;
+  onClose: () => void;
 }
 
-export default function RestaurantForm({ restaurant, onClose }:RestaurantFormProps) {
+export default function RestaurantForm({ restaurant, onClose }: RestaurantFormProps) {
   const theme = useTheme();
-  const { data: owner } = useMe();
+
+  // بيانات الفورم
   const [formData, setFormData] = useState({
-    name: restaurant?.name || "",
-    city: restaurant?.city || "",
-    country: restaurant?.country || "",
-    description: restaurant?.description || "",
+    name: "",
+    city: "",
+    country: "",
+    description: "",
   });
 
+  // ✅ Hooks
   const { useAddRestaurant, useUpdateRestaurant } = useRestaurants();
   const createMutation = useAddRestaurant();
   const updateMutation = useUpdateRestaurant();
 
-  const handleSave = () => {
-    const action = restaurant ? updateMutation : createMutation;
-    const payload = restaurant ? { id: restaurant.id, updates: formData } : formData;
+  // ✅ لو في restaurant، حط الديفولت values
+  useEffect(() => {
+    if (restaurant) {
+      setFormData({
+        name: restaurant.name || "",
+        city: restaurant.city || "",
+        country: restaurant.country || "",
+        description: restaurant.description || "",
+      });
+    }
+  }, [restaurant]);
 
-    action.mutate(payload as any, { onSuccess: () => onClose() });
+  const handleSave = () => {
+    if (restaurant) {
+      updateMutation.mutate({ id: restaurant.id, updates: formData }, { onSuccess: onClose });
+    } else {
+      createMutation.mutate(formData, { onSuccess: onClose });
+    }
   };
 
   return (
@@ -54,30 +68,29 @@ export default function RestaurantForm({ restaurant, onClose }:RestaurantFormPro
         </Typography>
 
         <Stack spacing={2.5}>
-          <TextField 
-            fullWidth label="Restaurant Name" 
-            variant="filled"
+          <TextField fullWidth label="Restaurant Name" variant="filled"
             value={formData.name}
-            onChange={(e) => setFormData({...formData, name: e.target.value})}
-            sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }}
-          />
-          <Stack direction="row" spacing={2}>
-             <TextField fullWidth label="City" variant="filled" value={formData.city} onChange={(e) => setFormData({...formData, city: e.target.value})} sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }} />
-             <TextField fullWidth label="Country" variant="filled" value={formData.country} onChange={(e) => setFormData({...formData, country: e.target.value})} sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }} />
-          </Stack>
-          <TextField 
-            fullWidth label="Description" multiline rows={3} variant="filled"
-            value={formData.description}
-            onChange={(e) => setFormData({...formData, description: e.target.value})}
-            sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }}
-          />
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }} />
 
-          <Button 
-            fullWidth variant="contained" size="large" 
+          <Stack direction="row" spacing={2}>
+            <TextField fullWidth label="City" variant="filled" value={formData.city}
+              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }} />
+            <TextField fullWidth label="Country" variant="filled" value={formData.country}
+              onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+              sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }} />
+          </Stack>
+
+          <TextField fullWidth label="Description" multiline rows={3} variant="filled"
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            sx={{ '& .MuiFilledInput-root': { borderRadius: '12px' } }} />
+
+          <Button fullWidth variant="contained" size="large"
             onClick={handleSave}
             disabled={createMutation.isPending || updateMutation.isPending}
-            sx={{ py: 1.8, borderRadius: "14px", fontWeight: 800, fontSize: "1rem" }}
-          >
+            sx={{ py: 1.8, borderRadius: "14px", fontWeight: 800, fontSize: "1rem" }}>
             {restaurant ? "Update Info" : "Create Restaurant Now"}
           </Button>
         </Stack>

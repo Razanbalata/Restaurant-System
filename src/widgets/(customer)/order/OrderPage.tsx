@@ -34,7 +34,7 @@ import { useMe } from "@/features/user/api/use-me";
 export default function OrdersList() {
   const {data: user} = useMe();
   const theme = useTheme();
-  const { data: orders = [], isLoading } = useGetOrders();
+  const { data: orders = [], isLoading } = useGetOrders(user?.id);
 
   const sortedOrders = useMemo(
     () => [...orders].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),

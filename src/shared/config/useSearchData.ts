@@ -28,7 +28,7 @@ export function useSearchData() {
   // ===================== Customer =====================
   const { data: restaurants } = useRestaurantsForCustomer();
   const { data: menuItems } = useMenu(selectedRestaurant?.id || '');
-  const { data: customerOrders } = useGetOrders();
+  const { data: customerOrders } = useGetOrders(user?.id);
   const { items: cartItems } = useCartStore();
 
   return {

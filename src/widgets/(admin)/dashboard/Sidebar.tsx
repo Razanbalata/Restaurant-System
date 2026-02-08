@@ -17,6 +17,7 @@ import {
   ChevronRight,
   DarkModeRounded,
   LightModeRounded,
+  SettingsRounded,
 } from "@mui/icons-material";
 import { usePathname, useRouter } from "next/navigation";
 import { useMe } from "@/features/user/api/use-me";
@@ -196,22 +197,38 @@ export const Sidebar = ({
 
       {/* Bottom Actions */}
       <Box sx={{ p: 1.5, borderTop: `1px solid ${theme.palette.divider}` }}>
-        <ListItemButton onClick={toggleColorMode} sx={{ borderRadius: 3, mb: 0.5 }}>
+        <ListItemButton
+          onClick={toggleColorMode}
+          sx={{ borderRadius: 3, mb: 0.5 }}
+        >
           <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto" }}>
-            {theme.palette.mode === "dark" ? <LightModeRounded /> : <DarkModeRounded />}
+            {theme.palette.mode === "dark" ? (
+              <LightModeRounded />
+            ) : (
+              <DarkModeRounded />
+            )}
           </ListItemIcon>
           {open && (
             <ListItemText
-              primary={theme.palette.mode === "dark" ? "Light Mode" : "Dark Mode"}
+
+              primary={
+                theme.palette.mode === "dark" ? "Light Mode" : "Dark Mode"
+              }
             />
           )}
         </ListItemButton>
 
         <ListItemButton
-          onClick={() => mutate()}
+
+          onClick={() => {
+            mutate();
+            router.replace("/");
+          }}
           sx={{ borderRadius: 3, color: theme.palette.error.main }}
         >
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto", color: "inherit" }}>
+          <ListItemIcon
+            sx={{ minWidth: 0, mr: open ? 2 : "auto", color: "inherit" }}
+          >
             <LogOutIcon size={20} />
           </ListItemIcon>
           {open && <ListItemText primary="Logout" />}

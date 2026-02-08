@@ -10,16 +10,16 @@ import {
 } from '@mui/icons-material';
 
 export const adminMenu = [
-  { label: "My Restaurants", icon: BarChartRounded, path: "/dashboard" },
-  { label: "Dashboard", icon: DashboardRounded, path: "/restaurantDetails", requiresRestaurant: true },
-  { label: "Live Orders", icon: ShoppingCartRounded, path: "/orders", requiresRestaurant: true },
-  { label: "Menu Management", icon: RestaurantMenuRounded, path: "/menu", requiresRestaurant: true },
+  { label: "My Restaurants", icon: BarChartRounded, path: "/shared/dashboard" },
+  { label: "Dashboard", icon: DashboardRounded, path: "/shared/restaurantDetails", requiresRestaurant: true },
+  { label: "Live Orders", icon: ShoppingCartRounded, path: "/owner/orders", requiresRestaurant: true },
+  { label: "Menu Management", icon: RestaurantMenuRounded, path: "/shared/menu", requiresRestaurant: true },
 ];
 
 
 export const customerMenu = [
-  { label: 'Explore Restaurants', icon: RestaurantMenuRounded, path: '/dashboard' },
-  { label: "Menu Management", icon: RestaurantMenuRounded, path: "/menu", requiresRestaurant: true },
-  { label: 'My Current Orders', icon: ShoppingBagRounded, path: '/order' },
-  { label: 'Order History', icon: HistoryRounded, path: '/cart' },
+  { label: 'Explore Restaurants', icon: RestaurantMenuRounded, path: '/shared/dashboard' },
+  { label: 'My Current Orders', icon: ShoppingBagRounded, path: '/customer/order' },
+  { label: 'Order History', icon: HistoryRounded, path: '/customer/cart' },
+
 ];

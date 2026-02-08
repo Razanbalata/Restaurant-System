@@ -57,7 +57,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
 
   // 3. Hooks for adding and editing
   const { useAddMenuItem, useUpdateMenuItem } = useMenuItems(
-    formData.category_id,
+   formData.category_id,
   );
   const addMenuItem = useAddMenuItem();
   const updateMenuItem = useUpdateMenuItem();
@@ -86,36 +86,30 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
   }, [initialData, open, isEdit]);
 
   const onSave = () => {
-    const payload = { ...formData, restaurant_id: selectedRestaurant?.id };
-
-    if (isEdit) {
-      // منطق التعديل
-      updateMenuItem.mutate(
-        { id: initialData.id, updates: payload },
-        {
-          onSuccess: () => {
-            onClose();
-          },
-        },
-      );
-    } else {
-      // 1. Clean data and convert types before sending
-      const formattedPayload = {
-        name: formData.name,
-        price: Number(formData.price), // Convert price to number
-        description: formData.description || undefined,
-        image: null,
-        // Send null for now because Type doesn't support File
-      };
-
-      // 2. Pass the cleaned object directly (without newItem)
-      addMenuItem.mutate({meals:[formattedPayload], restaurantId: selectedRestaurant?.id,categoryId:formData.category_id }, {
-        onSuccess: () => {
-          onClose();
-        },
-      });
-    }
+  // تجميع البيانات والتأكد من تحويل السعر لرقم والـ ID لنص
+  const payload = { 
+    ...formData, 
+    price: Number(formData.price),
+    category_id: String(formData.category_id), // مهم جداً
+    restaurant_id: selectedRestaurant?.id 
   };
+
+  if (isEdit) {
+    updateMenuItem.mutate(
+      { id: String(initialData.id), updates: payload }, // نمرر الـ ID كـ String
+      { onSuccess: () => onClose() }
+    );
+  } else {
+    addMenuItem.mutate(
+      { 
+        meals: [payload], 
+        restaurantId: selectedRestaurant?.id, 
+        categoryId: String(formData.category_id) 
+      },
+      { onSuccess: () => onClose() }
+    );
+  }
+};
 
   return (
     <Dialog

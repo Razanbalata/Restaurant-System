@@ -26,7 +26,7 @@ export const RestaurantPicker = () => {
 
   const handleSelect = (res: any) => {
     setSelectedRestaurant(res);
-    router.push(`/restaurantDetails/${res.id}`);
+    router.push(`/shared/restaurantDetails/${res.id}`);
   };
 
   // حالة التحميل (Skeleton) مرتبطة بالثيم

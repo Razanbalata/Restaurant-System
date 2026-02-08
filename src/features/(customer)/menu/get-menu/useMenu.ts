@@ -3,7 +3,7 @@ import { queryKeys } from "@/shared/keys/query-keys";
 
 export function useMenu(restaurantId: string) {
   return useQuery({
-    queryKey: queryKeys.restaurants.details(restaurantId),
+    queryKey: queryKeys.customer.menu(restaurantId),
     queryFn: async () => {
       if (!restaurantId) return [];
       const res = await fetch(`/api/customer/menu/categories?restaurantId=${restaurantId}`);

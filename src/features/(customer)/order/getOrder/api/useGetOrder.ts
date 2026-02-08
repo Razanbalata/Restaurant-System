@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { queryKeys } from "@/shared/keys/query-keys";
 
-export const useGetOrders = () => {
+export const useGetOrders = (userId?: string) => {
   return useQuery({
-    queryKey: queryKeys.orders.all,
+    queryKey: queryKeys.customer.orders(userId),
     queryFn: async () => {
       const res = await fetch("/api/customer/orders");
       if (!res.ok) throw new Error("Failed to fetch orders");

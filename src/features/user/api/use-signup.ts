@@ -24,7 +24,7 @@ export const useSignup = () => {
     },
     onSuccess: (data) => {
       // Save user in cache
-      queryClient.setQueryData(queryKeys.user.me(), data.user);
+      queryClient.setQueryData(queryKeys.auth.me(), data.user);
       toast.success("Account created successfully!")
     },
     onError(error) {

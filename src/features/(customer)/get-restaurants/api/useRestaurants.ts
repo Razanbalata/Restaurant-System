@@ -13,7 +13,7 @@ const fetchRestaurants = async (): Promise<Restaurant[]> => {
 
 export const useRestaurantsForCustomer = () => {
   return useQuery({
-    queryKey: ["restaurants"],
+    queryKey: queryKeys.customer.restaurants(),
     queryFn: () => fetchRestaurants(),
     // 2. التعديل هنا: بدلاً من true، نمرر الدالة المستوردة
     placeholderData: keepPreviousData, 

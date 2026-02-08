@@ -188,7 +188,8 @@ console.log("هل الـ anchorEl موجود؟", !!anchorEl);
 
             <IconButton
               sx={{ bgcolor: theme.palette.action.hover, borderRadius: 3 }}
-              onClick={()=>router.push("/cart")} 
+
+              onClick={()=>router.push("/customer/cart")}
             >
               <Badge badgeContent={items.length} color="primary">
                 <ShoppingCartIcon size={20} />

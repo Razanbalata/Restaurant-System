@@ -35,8 +35,8 @@ export const MenuItemMutationButton = ({ mode = "add",item}: Props) => {
   const [open, setOpen] = useState(false);
   const handleClose = ()=>setOpen(false)
   const theme = useTheme();
+  console.log("ite",item)
 
-console.log(theme)
   return (
     <>
       {/* 1. The button that triggers the modal */}

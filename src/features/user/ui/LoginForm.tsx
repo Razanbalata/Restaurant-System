@@ -40,7 +40,13 @@ export default function LoginForm() {
   const onSubmit = (data: LoginFormValues) => {
     loginMutation.mutate(data, {
       onSuccess: (res) => {
-        router.push("/dashboard");
+
+        // توجيه المستخدم حسب الرتبة
+        if (res.user.role === "restaurant_owner") {
+          router.push("/shared/dashboard");
+        } else {
+          router.push("/customer/restaurants");
+        }
       },
     });
   };

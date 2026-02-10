@@ -5,8 +5,8 @@ import { Plus } from 'lucide-react';
 
 // 1. تعريف الأنواع المتوقعة
 interface MenuHeaderProps {
-  restaurantName: string;
-  restaurantId: string;
+  restaurantName?: string;
+  restaurantId?: string;
   categoryId?: string; // أضفت علامة الاستفهام لأنه قد لا يتوفر دائماً
 }
 

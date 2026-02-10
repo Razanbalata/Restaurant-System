@@ -1,7 +1,7 @@
 import { queryKeys } from "@/shared/keys/query-keys";
 import { useQuery } from "@tanstack/react-query";
 
-export const useRestaurantById = (restaurantId: string) => {
+export const useRestaurantById = (restaurantId?: string) => {
   return useQuery({
     queryKey: queryKeys.owner.restaurant(restaurantId), // ✅ key صحيح
     queryFn: async () => {

@@ -25,8 +25,8 @@ export async function GET(req: NextRequest) {
     total_price,
     status,
     created_at,
-    address,
-    phone,
+    delivery_address,
+    customer_phone,
     notes,
     order_items (
       id,

@@ -1,62 +1,106 @@
-import { Box, Container, Stack, Skeleton, Paper, Grid } from "@mui/material";
+import { Box, Card, Skeleton, Stack, Divider, alpha, useTheme } from "@mui/material";
 
-export const OrdersAdminSkeleton = () => {
+export const OrderCardSkeleton = () => {
+  const theme = useTheme();
+
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* عنوان الصفحة */}
-      <Skeleton variant="text" width="250px" height={60} sx={{ mb: 4, borderRadius: 2 }} />
+    <Card 
+      elevation={0}
+      sx={{ 
+        mb: 3, 
+        p: 0, // ليتناسب مع CardHeader في الكارت الأصلي
+        borderRadius: 3, 
+        border: "1px solid",
+        borderColor: theme.palette.divider,
+      }}
+    >
+      {/* Header Skeleton */}
+      <Box sx={{ p: 2, pb: 1.5, borderBottom: `1px solid ${alpha(theme.palette.divider, 0.05)}` }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Stack direction="row" spacing={1.5} alignItems="center">
+            {/* رقم الطلب */}
+            <Skeleton variant="text" width={60} height={32} sx={{ borderRadius: 1 }} />
+            {/* حالة الطلب (Chip) */}
+            <Skeleton variant="rounded" width={80} height={24} sx={{ borderRadius: 1.5 }} />
+          </Stack>
+          {/* وقت الطلب */}
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <Skeleton variant="circular" width={14} height={14} />
+            <Skeleton variant="text" width={50} height={20} />
+          </Stack>
+        </Stack>
+      </Box>
 
-      {/* أعمدة الطلبات */}
-      <Stack direction="row" spacing={3} alignItems="flex-start" sx={{ overflowX: 'auto', pb: 2 }}>
-        {[1, 2, 3].map((column) => (
+      <Box sx={{ p: 2.5 }}>
+        <Stack spacing={3}>
+          
+          {/* Customer Info Box Skeleton */}
           <Box 
-            key={column} 
             sx={{ 
-              flex: 1, 
-              minWidth: '300px', 
-              bgcolor: '#f5f5f5', 
               p: 2, 
-              borderRadius: 2, 
-              minHeight: '70vh' 
+              bgcolor: alpha(theme.palette.action.hover, 0.4), 
+              borderRadius: 2,
+              border: `1px solid ${theme.palette.divider}`
             }}
           >
-            {/* عنوان العمود (جديدة، قيد التحضير، مكتملة) */}
-            <Skeleton 
-              variant="rectangular" 
-              width="60%" 
-              height={30} 
-              sx={{ mx: 'auto', mb: 3, borderRadius: 1 }} 
-            />
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Skeleton variant="circular" width={40} height={40} />
+              <Box flex={1}>
+                <Skeleton variant="text" width="40%" height={24} />
+                <Stack direction="row" spacing={1}>
+                  <Skeleton variant="text" width="30%" height={18} />
+                  <Skeleton variant="text" width="30%" height={18} />
+                </Stack>
+              </Box>
+              <Skeleton variant="rounded" width={32} height={32} sx={{ borderRadius: 1 }} />
+            </Stack>
+          </Box>
 
-            {/* كروت الطلبات داخل العمود */}
-            <Stack spacing={2}>
-              {[1, 2, 3].map((card) => (
-                <Paper key={card} sx={{ p: 2, borderRadius: 2, boxShadow: 2 }}>
-                  <Stack direction="row" justifyContent="space-between" mb={2}>
-                    <Skeleton variant="text" width="40%" height={20} />
-                    <Skeleton variant="rounded" width="20%" height={20} />
-                  </Stack>
-                  
-                  {/* أسطر الوجبات */}
-                  <Skeleton variant="text" width="80%" height={15} />
-                  <Skeleton variant="text" width="60%" height={15} />
-
-                  {/* السعر */}
-                  <Skeleton variant="text" width="30%" height={35} sx={{ mt: 2 }} />
-
-                  {/* الزر السفلي */}
-                  <Skeleton 
-                    variant="rectangular" 
-                    width="100%" 
-                    height={36} 
-                    sx={{ mt: 2, borderRadius: 1 }} 
-                  />
-                </Paper>
+          {/* Items List Skeleton */}
+          <Box>
+            <Stack direction="row" spacing={1} alignItems="center" mb={1.5}>
+              <Skeleton variant="circular" width={18} height={18} />
+              <Skeleton variant="text" width={100} height={24} />
+            </Stack>
+            
+            <Stack spacing={1}>
+              {[1, 2].map((i) => (
+                <Stack 
+                  key={i} 
+                  direction="row" 
+                  justifyContent="space-between" 
+                  alignItems="center"
+                  sx={{ 
+                    p: 1.5, 
+                    borderRadius: 2, 
+                    border: `1px solid ${theme.palette.divider}`,
+                  }}
+                >
+                  <Box flex={1}>
+                    <Skeleton variant="text" width="60%" height={20} />
+                    <Skeleton variant="text" width="30%" height={16} />
+                  </Box>
+                  <Skeleton variant="text" width={40} height={24} />
+                </Stack>
               ))}
             </Stack>
           </Box>
-        ))}
-      </Stack>
-    </Container>
+
+          <Divider sx={{ borderStyle: 'dashed', opacity: 0.6 }} />
+
+          {/* Footer Skeleton */}
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+            <Box>
+              <Skeleton variant="text" width={80} height={16} sx={{ mb: 0.5 }} />
+              <Skeleton variant="text" width={100} height={40} />
+            </Box>
+            <Stack direction="row" spacing={1}>
+              <Skeleton variant="rectangular" width={80} height={36} sx={{ borderRadius: 2 }} />
+              <Skeleton variant="rectangular" width={140} height={40} sx={{ borderRadius: 2 }} />
+            </Stack>
+          </Box>
+        </Stack>
+      </Box>
+    </Card>
   );
 };

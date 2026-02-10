@@ -34,14 +34,12 @@ export function PlaceOrderButton({ formData }: Props) {
     items,
   };
 
-
   try {
-    mutate(payload, {
-      
+    mutate(payload, {  
       onSuccess: (data) => {
         console.log("✅ Order placed successfully:", data); 
         clearCart();
-        router.push("/customer/order"); // هذا يجب أن يعمل إذا وصلت هنا
+        router.replace("/customer/order"); // هذا يجب أن يعمل إذا وصلت هنا
       },
       onError: (err: any) => {
         console.error("❌ Order failed:", err);

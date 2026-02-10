@@ -42,7 +42,7 @@ export default function LoginForm() {
       onSuccess: (res) => {
 
         // توجيه المستخدم حسب الرتبة
-        if (res.user.role === "restaurant_owner") {
+        if (res.user?.role === "restaurant_owner") {
           router.push("/shared/dashboard");
         } else {
           router.push("/customer/restaurants");

@@ -89,7 +89,7 @@ export const queryKeys = {
   customer: {
     restaurants: () => ["customer", "restaurants"] as const,
     restaurant: (restaurantId: string) => ["customer", "restaurant", restaurantId] as const,
-    menu: (restaurantId: string) => ["customer", "menu", restaurantId] as const,
+    menu: (restaurantId?: string) => ["customer", "menu", restaurantId] as const,
     orders: (userId?: string) => ["customer", "orders", userId] as const,
   },
 
@@ -98,7 +98,7 @@ export const queryKeys = {
    * ===================================================== */
   owner: {
     restaurants: () => ["owner", "restaurants"] as const,
-    restaurant: (restaurantId: string) => ["owner", "restaurant", restaurantId] as const,
+    restaurant: (restaurantId?: string) => ["owner", "restaurant", restaurantId] as const,
     menu: (restaurantId: string) => ["owner", "menu", restaurantId] as const,
     orders: (restaurantId: string) => ["owner", "orders", restaurantId] as const,
     dashboard: (restaurantId: string) => ["owner", "dashboard", restaurantId] as const,

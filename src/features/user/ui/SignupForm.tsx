@@ -173,7 +173,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Loader2, Users, Store, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Loader2, Users, Store, Mail, Lock, User, ArrowRight, Phone } from "lucide-react";
 import { TextField, Button, InputAdornment, IconButton, Stack, Typography, Box, alpha, useTheme } from "@mui/material";
 import { useSignup } from "../api/use-signup";
 import { toast } from "sonner";
@@ -188,6 +188,7 @@ export default function SignupForm() {
   // المصدر الوحيد للحقيقة (Single Source of Truth)
   const [formData, setFormData] = useState({
     name: "",
+    phone:"",
     email: "",
     password: "",
     role: "customer" as "customer" | "restaurant_owner",
@@ -274,6 +275,17 @@ export default function SignupForm() {
           value={formData.email}
           onChange={(e) => handleChange("email", e.target.value)}
           InputProps={{ startAdornment: <InputAdornment position="start"><Mail size={18} className="text-primary" /></InputAdornment> }}
+          sx={fieldStyle}
+        />
+
+        <TextField
+          label="Phone Number"
+          type="phone"
+          fullWidth
+          required
+          value={formData.phone}
+          onChange={(e) => handleChange("phone", e.target.value)}
+          InputProps={{ startAdornment: <InputAdornment position="start"><Phone size={18} className="text-primary" /></InputAdornment> }}
           sx={fieldStyle}
         />
 

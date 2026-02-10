@@ -10,8 +10,8 @@ export async function PATCH(
   return withAuth(req, async (req, user) => {
     const { id } = await params;
 
-    const { name, description, price } = await req.json();
-
+    const { updates } = await req.json();
+    console.log("req", updates);
     const { data: item, error: itemError } = await supabase
       .from("menu_items")
       .select("category_id")
@@ -38,11 +38,15 @@ export async function PATCH(
       category.restaurant_id,
       user.userId,
     );
-    if (!ownership.ok) return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
+    if (!ownership.ok)
+      return (
+        ownership.response ??
+        NextResponse.json({ error: "Ownership check failed" }, { status: 403 })
+      );
 
     const { data, error } = await supabase
       .from("menu_items")
-      .update({ name, description, price })
+      .update(updates)
       .eq("id", id)
       .select("*")
       .single();
@@ -60,7 +64,6 @@ export async function DELETE(
 ) {
   return withAuth(req, async (req, user) => {
     const { id } = await params;
-   
 
     const { data: item, error: itemError } = await supabase
       .from("menu_items")
@@ -88,14 +91,17 @@ export async function DELETE(
       category.restaurant_id,
       user.userId,
     );
-    if (!ownership.ok) return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
+    if (!ownership.ok)
+      return (
+        ownership.response ??
+        NextResponse.json({ error: "Ownership check failed" }, { status: 403 })
+      );
 
     const { data, error } = await supabase
       .from("menu_items")
-      .update({ is_active: false })
+      .delete()
       .eq("id", id)
-      .select("*")
-      .single();
+      .select("*");
 
     if (error)
       return NextResponse.json({ error: error.message }, { status: 500 });

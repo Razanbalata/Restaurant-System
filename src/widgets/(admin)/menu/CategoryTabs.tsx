@@ -1,59 +1,129 @@
+// "use client";
+// import { Stack, Tab, Tabs, Box, useTheme } from "@mui/material";
+// import { ManageCategoriesMenu } from "./ManageCategoriesMenu";
+// import { useMe } from "@/features/user/api/use-me";
+
+// // 1. تعريف شكل التصنيف
+// interface Category {
+//   id: string;
+//   name: string;
+// }
+
+// // 2. تعريف واجهة الـ Props
+// interface CategoryTabsProps {
+//   categories: Category[];
+//   activeTab: number;
+//   onTabChange: (index: number) => void;
+//   restaurantId: string;
+// }
+
+// export const CategoryTabs = ({ categories, activeTab, onTabChange, restaurantId }: CategoryTabsProps) => {
+//   const { data: user } = useMe();
+//   const theme = useTheme();
+//   const isOwner = user?.role === "restaurant_owner";
+
+//   return (
+//     <Stack 
+//       direction="row" 
+//       alignItems="center" 
+//       spacing={1} 
+//       sx={{ borderBottom: `1px solid ${theme.palette.divider}`, mb: 4 }}
+//     >
+//       <Tabs 
+//         value={activeTab} 
+//         onChange={(e, v) => onTabChange(v)} 
+//         variant="scrollable" 
+//         scrollButtons="auto"
+//         textColor="primary"
+//         indicatorColor="primary"
+//         sx={{ 
+//           flexGrow: 1,
+//           '& .MuiTab-root': {
+//             fontWeight: 700,
+//             fontSize: '0.95rem',
+//             transition: '0.3s'
+//           }
+//         }}
+//       >
+//         <Tab label="All" />
+//         {categories?.map((cat) => (
+//           <Tab key={cat.id} label={cat.name} />
+//         ))}
+//       </Tabs>
+
+//       <Box sx={{ px: 1 }}>
+//         {isOwner && <ManageCategoriesMenu categories={categories} restaurantId={restaurantId} />}
+//       </Box>
+//     </Stack>
+//   );
+// };
+
+
+
 "use client";
-import { Stack, Tab, Tabs, Box, useTheme } from "@mui/material";
+import { Stack, TextField, MenuItem, Select, InputAdornment, Box, useTheme, alpha } from "@mui/material";
+import { Search, Filter } from "lucide-react";
 import { ManageCategoriesMenu } from "./ManageCategoriesMenu";
-import { useMe } from "@/features/user/api/use-me";
 
-// 1. تعريف شكل التصنيف
-interface Category {
-  id: string;
-  name: string;
-}
-
-// 2. تعريف واجهة الـ Props
-interface CategoryTabsProps {
-  categories: Category[];
+interface MenuFiltersProps {
+  categories: any[];
   activeTab: number;
-  onTabChange: (index: number) => void;
-  restaurantId: string;
+  onTabChange: (value: number) => void;
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
+  restaurantId?: string;
 }
 
-export const CategoryTabs = ({ categories, activeTab, onTabChange, restaurantId }: CategoryTabsProps) => {
-  const { data: user } = useMe();
+export const MenuFilters = ({ categories, activeTab, onTabChange, searchQuery, onSearchChange, restaurantId }: MenuFiltersProps) => {
   const theme = useTheme();
-  const isOwner = user?.role === "restaurant_owner";
 
   return (
-    <Stack 
-      direction="row" 
-      alignItems="center" 
-      spacing={1} 
-      sx={{ borderBottom: `1px solid ${theme.palette.divider}`, mb: 4 }}
-    >
-      <Tabs 
-        value={activeTab} 
-        onChange={(e, v) => onTabChange(v)} 
-        variant="scrollable" 
-        scrollButtons="auto"
-        textColor="primary"
-        indicatorColor="primary"
-        sx={{ 
-          flexGrow: 1,
-          '& .MuiTab-root': {
-            fontWeight: 700,
-            fontSize: '0.95rem',
-            transition: '0.3s'
-          }
+    <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mb: 6 }}>
+      <TextField
+        placeholder="Search for a dish..."
+        fullWidth
+        size="small"
+        value={searchQuery}
+        onChange={(e) => onSearchChange(e.target.value)}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Search size={18} color={theme.palette.text.secondary} />
+            </InputAdornment>
+          ),
         }}
-      >
-        <Tab label="All" />
-        {categories?.map((cat) => (
-          <Tab key={cat.id} label={cat.name} />
-        ))}
-      </Tabs>
-
-      <Box sx={{ px: 1 }}>
-        {isOwner && <ManageCategoriesMenu categories={categories} restaurantId={restaurantId} />}
-      </Box>
+        sx={{ 
+          '& .MuiOutlinedInput-root': { 
+            borderRadius: 2.5, 
+            bgcolor: 'background.paper',
+            '& fieldset': { borderColor: theme.palette.divider }
+          } 
+        }}
+      />
+      
+      <Stack direction="row" spacing={1.5} alignItems="center">
+        <Select
+          value={activeTab}
+          onChange={(e) => onTabChange(Number(e.target.value))}
+          size="small"
+          sx={{ 
+            minWidth: 200, 
+            borderRadius: 2.5, 
+            bgcolor: 'background.paper',
+            '& .MuiSelect-select': { display: 'flex', alignItems: 'center' }
+          }}
+          startAdornment={<Filter size={16} style={{ marginRight: 10, opacity: 0.5 }} />}
+        >
+          <MenuItem value={0} sx={{ fontWeight: 600 }}>All Dishes</MenuItem>
+          {categories?.map((cat, index) => (
+            <MenuItem key={cat.id} value={index + 1}>{cat.name}</MenuItem>
+          ))}
+        </Select>
+        
+        <Box sx={{ borderLeft: `1px solid ${theme.palette.divider}`, pl: 1.5 }}>
+          <ManageCategoriesMenu categories={categories} restaurantId={restaurantId} />
+        </Box>
+      </Stack>
     </Stack>
   );
 };

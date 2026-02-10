@@ -48,7 +48,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
     price: 0,
     description: "",
     category_id: "", // نستخدم الـ ID بدلاً من الاسم
-    image: null as File | null,
+    image_url: null as File | null,
   });
 
   // 2. جلب التصنيفات الحقيقية من السيرفر
@@ -72,7 +72,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
         price: initialData.price || 0,
         description: initialData.description || "",
         category_id: initialData.category_id || "",
-        image: null,
+        image_url: null,
       });
     } else {
       setFormData({
@@ -80,7 +80,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
         price: 0,
         description: "",
         category_id: "",
-        image: null,
+        image_url: null,
       });
     }
   }, [initialData, open, isEdit]);

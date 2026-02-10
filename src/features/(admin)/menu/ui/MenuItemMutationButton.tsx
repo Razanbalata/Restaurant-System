@@ -1,71 +1,89 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { 
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions, 
   Button, 
-  TextField, 
-  Stack, 
   IconButton, 
-  Typography, 
-  Box,
-  CircularProgress
+  Tooltip, 
+  alpha, 
+  useTheme 
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from "@mui/icons-material/Close";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { Plus, Pencil } from "lucide-react"; // أيقونات Lucide أرشق
 
-import { useMenuItems } from "../menu_items/api/useMenuItems";
 import MealModal from "./MenuDrawer";
-import { useTheme } from "next-themes";
-import { th } from "zod/v4/locales";
 
 interface Props {
   mode?: "add" | "edit";
   restaurantId: string;
   categoryId?: string;
-  item?: any; // Data in case of editing
+  item?: any;
 }
 
-export const MenuItemMutationButton = ({ mode = "add",item}: Props) => {
+export const MenuItemMutationButton = ({ mode = "add", item }: Props) => {
   const [open, setOpen] = useState(false);
-  const handleClose = ()=>setOpen(false)
-  const theme = useTheme();
-  console.log("ite",item)
+  const theme = useTheme(); // استخدام ثيم MUI للوصول للألوان والـ alpha
+
+  const handleOpen = (e: React.MouseEvent) => {
+    e.stopPropagation(); // منع تفعيل أي حدث على الكارد عند الضغط على التعديل
+    setOpen(true);
+  };
+
+  const handleClose = () => setOpen(false);
 
   return (
     <>
-      {/* 1. The button that triggers the modal */}
       {mode === "edit" ? (
-        <IconButton 
-          onClick={() => setOpen(true)} 
-          size="small" 
-          sx={{ bgcolor: '#f5f5f5', '&:hover': { bgcolor: '#e0e0e0' } }}
-        >
-          <EditIcon fontSize="small" color="primary" />
-        </IconButton>
+        <Tooltip title="Edit Item" arrow>
+          <IconButton 
+            onClick={handleOpen} 
+            size="small" 
+            sx={{ 
+              width: 34,
+              height: 34,
+              borderRadius: "10px",
+              color: "primary.main",
+              border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+              bgcolor: alpha(theme.palette.primary.main, 0.02),
+              transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+              '&:hover': { 
+                bgcolor: alpha(theme.palette.primary.main, 0.08),
+                borderColor: theme.palette.primary.main,
+                transform: "translateY(-2px)",
+                boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.12)}`,
+              } 
+            }}
+          >
+            <Pencil size={16} strokeWidth={2.2} />
+          </IconButton>
+        </Tooltip>
       ) : (
         <Button 
           variant="contained" 
-          startIcon={<AddIcon />} 
+          disableElevation
+          startIcon={<Plus size={18} strokeWidth={2.5} />} 
           onClick={() => setOpen(true)}
           sx={{ 
-            bgcolor: theme.theme, 
+            bgcolor: 'primary.main', 
+            color: 'white',
             borderRadius: "12px", 
             px: 3,
-            "&:hover": { bgcolor:theme.theme } 
+            py: 1,
+            fontWeight: 700,
+            textTransform: 'none', // لمنع تحويل النص لـ Capital بالكامل
+            transition: 'all 0.2s',
+            "&:hover": { 
+                bgcolor: 'primary.dark',
+                transform: 'translateY(-1px)',
+                boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.2)}`
+            } 
           }}
         >
           Add Meal
         </Button>
       )}
 
-      {/* 2. The modal popup window */}
-      <MealModal open={open} onClose={handleClose} initialData={item}/>
+      {/* المودال */}
+      <MealModal open={open} onClose={handleClose} initialData={item} />
     </>
   );
 };

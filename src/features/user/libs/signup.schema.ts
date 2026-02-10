@@ -2,6 +2,11 @@ import { z } from "zod";
 
 export const signupSchema = z.object({
   name: z.string().min(2, "Name is too short"),
+  phone: z
+    .string()
+    .min(9, "Phone number is too short")
+    .max(15, "Phone number is too long")
+    .regex(/^[0-9+]+$/, "Phone number is invalid"),
   email: z.string().email("Invalid email address"),
   password: z
     .string()

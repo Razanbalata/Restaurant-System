@@ -1,166 +1,219 @@
 "use client";
-import { Paper, Stack, Typography, Rating, Divider, Chip, Box, CardActions, Avatar, Button, useTheme, alpha } from "@mui/material";
-import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
-import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
+import React from "react";
+import { 
+  Paper, Stack, Typography, Rating, Divider, Chip, Box, 
+  Avatar, Button, useTheme, alpha 
+} from "@mui/material";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
-import RestaurantMenuRoundedIcon from "@mui/icons-material/RestaurantMenuRounded";
+import { MapPin, Clock, UtensilsCrossed } from "lucide-react";
 import MutationButton from "@/features/(admin)/restaurant/mutations-restaurant/ui/MutationButton";
 import DeleteRestaurantBtn from "@/features/(admin)/restaurant/delete-restaurant/ui/DeleteRestaurantBtn";
-import { useRouter } from "next/navigation";
 
-// 1. تعريف شكل بيانات المطعم
-interface Restaurant {
-  id: string;
-  name: string;
-  category?: string;
-  city: string;
-  country: string;
-  description?: string;
-  // أضف أي حقول أخرى تأتي من الـ API وتستخدمها هنا
-}
-
-// 2. تعريف واجهة الـ Props للمكون الرئيسي والـ InfoItem
 interface RestaurantInfoCardProps {
-  restaurant: Restaurant;
+  restaurant: any;
   isOwner: boolean;
 }
 
 export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardProps) => {
-  const router = useRouter();
   const theme = useTheme();
 
   return (
     <Box sx={{ width: "100%", position: "relative" }}>
-      {/* Banner */}
+      {/* Banner Section */}
       <Box
         sx={{
-          height: 280,
-          borderRadius: "0 0 40px 40px",
-          background: `linear-gradient(to bottom, ${alpha(theme.palette.common.black, 0.2)}, ${alpha(theme.palette.common.black, 0.8)}), url("/restaurant-cover.jpg")`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          height: { xs: 220, md: 380 },
+          borderRadius: { xs: "0", md: "0 0 64px 64px" },
+          position: "relative",
+          overflow: "hidden",
+          transition: "all 0.5s ease-in-out",
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            height: "60%",
+            background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)",
+          },
         }}
-      />
+      >
+        <Box
+          component="img"
+          src="/restaurant-cover.jpg" // استبدله بـ restaurant.cover_image
+          sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+      </Box>
 
-      {/* Main Info Card */}
+      {/* Main Glass Card */}
       <Paper
         elevation={0}
         sx={{
-          mt: "-100px",
-          mx: { xs: 2, md: 4 },
-          p: { xs: 3, md: 5 },
-          borderRadius: "32px",
-          border: `1px solid ${theme.palette.divider}`,
-          bgcolor: theme.palette.background.paper,
-          boxShadow: theme.palette.mode === 'light' ? "0 20px 40px rgba(0,0,0,0.05)" : "0 20px 40px rgba(0,0,0,0.3)",
           position: "relative",
+          mt: { xs: -6, md: -10 },
+          mx: { xs: 2, md: 6, lg: 10 },
+          p: { xs: 3, md: 6 },
+          borderRadius: "48px",
+          backdropFilter: "blur(12px)",
+          bgcolor: alpha(theme.palette.background.paper, 0.85),
+          border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+          boxShadow: theme.palette.mode === 'light' 
+            ? "0 20px 60px -12px rgba(0,0,0,0.08)" 
+            : "0 20px 60px -12px rgba(0,0,0,0.5)",
         }}
       >
-        {isOwner && (
-          <CardActions sx={{ position: "absolute", top: 24, right: 24, gap: 1 }}>
-            <MutationButton mode="edit" restaurant={restaurant} />
-            <DeleteRestaurantBtn r={restaurant} />
-          </CardActions>
-        )}
-
-        <Stack direction={{ xs: "column", md: "row" }} justifyContent="space-between" alignItems={{ md: "center" }} spacing={3}>
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={3} alignItems="center">
+        <Stack
+          direction={{ xs: "column", lg: "row" }}
+          justifyContent="space-between"
+          alignItems={{ xs: "center", lg: "flex-start" }}
+          spacing={4}
+        >
+          {/* Left Side: Avatar & Name */}
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            alignItems={{ xs: "center", sm: "flex-start" }}
+            spacing={4}
+            textAlign={{ xs: "center", sm: "left" }}
+          >
             <Avatar
               sx={{
-                width: 110, height: 110,
-                fontSize: "2.5rem", fontWeight: 900,
-                bgcolor: theme.palette.primary.main,
-                color: theme.palette.primary.contrastText,
-                border: `6px solid ${theme.palette.background.paper}`,
-                boxShadow: theme.shadows[3]
+                width: { xs: 100, md: 150 },
+                height: { xs: 100, md: 150 },
+                fontSize: "3.5rem",
+                fontWeight: 900,
+                bgcolor: "primary.main",
+                border: `8px solid ${theme.palette.background.paper}`,
+                boxShadow: theme.shadows[10],
               }}
             >
               {restaurant.name?.charAt(0)}
             </Avatar>
 
-            <Box sx={{ textAlign: { xs: "center", sm: "left" } }}>
-              <Stack direction="row" alignItems="center" spacing={1} justifyContent={{ xs: "center", sm: "flex-start" }}>
-                <Typography variant="h3" fontWeight={900} sx={{ letterSpacing: "-1px" }}>
+            <Box>
+              <Stack 
+                direction="row" 
+                alignItems="center" 
+                justifyContent={{ xs: "center", sm: "flex-start" }} 
+                spacing={1.5}
+                mb={1.5}
+              >
+                <Typography 
+                  variant="h2" 
+                  sx={{ 
+                    fontWeight: 900, 
+                    fontSize: { xs: "1.8rem", md: "3rem" },
+                    letterSpacing: "-0.04em"
+                  }}
+                >
                   {restaurant.name}
                 </Typography>
-                <VerifiedRoundedIcon sx={{ color: theme.palette.primary.main }} />
+                <VerifiedRoundedIcon color="primary" sx={{ fontSize: { xs: 24, md: 36 } }} />
               </Stack>
-              <Stack direction="row" spacing={2} mt={1} alignItems="center" justifyContent={{ xs: "center", sm: "flex-start" }}>
+
+              <Stack 
+                direction="row" 
+                spacing={2} 
+                justifyContent={{ xs: "center", sm: "flex-start" }}
+                alignItems="center"
+              >
                 <Chip 
                   label={restaurant.category || "General"} 
-                  size="small" 
-                  sx={{ fontWeight: 700, bgcolor: alpha(theme.palette.primary.main, 0.1), color: theme.palette.primary.main }} 
+                  sx={{ 
+                    fontWeight: 800, 
+                    bgcolor: alpha(theme.palette.primary.main, 0.1),
+                    color: "primary.main",
+                    borderRadius: "12px"
+                  }} 
                 />
-                <Rating value={4.8} readOnly size="small" sx={{ color: "#FFB400" }} />
-                <Typography fontWeight={700} variant="body2">4.8</Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                  <Rating value={4.8} readOnly size="small" />
+                  <Typography variant="subtitle2" fontWeight={900}>4.8</Typography>
+                </Box>
               </Stack>
             </Box>
           </Stack>
 
-          {!isOwner && (
-            <Button
-              size="large"
-              variant="contained"
-              startIcon={<RestaurantMenuRoundedIcon />}
-              onClick={() => router.push(`/shared/menu`)}
-              sx={{
-                px: 5, py: 1.5,
-                borderRadius: "16px",
-                fontWeight: 800,
-                boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
-              }}
-            >
-              View Menu
-            </Button>
-          )}
+          {/* Right Side: Action Buttons */}
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center" }}>
+            {isOwner ? (
+              <Stack direction="row" spacing={1.5}>
+                {/* مكوناتك الخاصة بالأدمن */}
+                <MutationButton mode="edit" restaurant={restaurant} />
+                <DeleteRestaurantBtn r={restaurant} />
+              </Stack>
+            ) : (
+              <Button
+                variant="contained"
+                size="large"
+                startIcon={<UtensilsCrossed size={20} />}
+                sx={{
+                  borderRadius: "20px",
+                  px: 5,
+                  py: 2,
+                  fontWeight: 900,
+                  fontSize: "1rem",
+                  boxShadow: `0 12px 24px ${alpha(theme.palette.primary.main, 0.3)}`,
+                  "&:hover": { transform: "translateY(-2px)", boxShadow: theme.shadows[15] },
+                  transition: "all 0.3s ease"
+                }}
+              >
+                Order Now
+              </Button>
+            )}
+          </Box>
         </Stack>
 
-        <Divider sx={{ my: 4, opacity: 0.6 }} />
+        <Divider sx={{ my: { xs: 4, md: 6 }, opacity: 0.5 }} />
 
-        {/* Info Grid */}
-        <Box display="grid" gridTemplateColumns={{ xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" }} gap={4}>
-          <InfoItem
-            icon={<LocationOnRoundedIcon sx={{ color: theme.palette.primary.main }} />}
-            label="Location"
-            value={`${restaurant.city}, ${restaurant.country}`}
+        {/* Bottom Stats: Info Grid */}
+        <Box 
+          sx={{ 
+            display: "grid", 
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr" }, 
+            gap: { xs: 4, md: 2 },
+            textAlign: { xs: "center", sm: "left" }
+          }}
+        >
+          <InfoItem 
+            icon={<MapPin size={22} color={theme.palette.primary.main} />} 
+            label="Location" 
+            value={`${restaurant.city}, ${restaurant.country}`} 
           />
-          <InfoItem
-            icon={<AccessTimeRoundedIcon sx={{ color: theme.palette.primary.main }} />}
-            label="Prep Time"
-            value="30 – 45 minutes"
+          <InfoItem 
+            icon={<Clock size={22} color={theme.palette.primary.main} />} 
+            label="Avg. Prep Time" 
+            value="25 - 35 mins" 
           />
-          <InfoItem
-            icon={<Box sx={{ width: 12, height: 12, borderRadius: "50%", bgcolor: "#4CAF50" }} />}
-            label="Status"
-            value="Open Now"
+          <InfoItem 
+            icon={<Box sx={{ width: 12, height: 12, bgcolor: "#4CAF50", borderRadius: "50%", animation: "pulse 2s infinite" }} />} 
+            label="Status" 
+            value="Open Now" 
           />
-        </Box>
-
-        <Box sx={{ mt: 4, bgcolor: theme.palette.mode === 'light' ? "#F8F9FA" : alpha(theme.palette.action.hover, 0.05), p: 3, borderRadius: "24px" }}>
-          <Typography fontWeight={800} gutterBottom color="primary">About Restaurant</Typography>
-          <Typography color="text.secondary" lineHeight={1.8}>
-            {restaurant.description || "This restaurant offers high-quality meals prepared with fresh ingredients..."}
-          </Typography>
         </Box>
       </Paper>
     </Box>
   );
 };
 
-interface InfoItemProps {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}
-
-const InfoItem = ({ icon, label, value }: InfoItemProps) => (
-  <Box>
-    <Typography variant="caption" color="text.secondary" fontWeight={800} sx={{ textTransform: "uppercase", display: "block", mb: 0.5 }}>
+// Sub-component for Grid Items
+const InfoItem = ({ icon, label, value }: { icon: any, label: string, value: string }) => (
+  <Stack spacing={0.5} alignItems={{ xs: "center", sm: "flex-start" }}>
+    <Typography 
+      variant="caption" 
+      sx={{ 
+        fontWeight: 900, 
+        textTransform: "uppercase", 
+        letterSpacing: "0.1em",
+        color: "text.secondary"
+      }}
+    >
       {label}
     </Typography>
     <Stack direction="row" spacing={1.5} alignItems="center">
       {icon}
-      <Typography fontWeight={700} variant="body1">{value}</Typography>
+      <Typography variant="body1" fontWeight={700}>
+        {value}
+      </Typography>
     </Stack>
-  </Box>
+  </Stack>
 );

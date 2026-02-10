@@ -1,3 +1,4 @@
+"use client";
 import { 
   Box, 
   Container, 
@@ -5,62 +6,86 @@ import {
   Stack, 
   Skeleton, 
   Paper, 
-  Divider 
+  useTheme,
+  alpha 
 } from "@mui/material";
 
 export const MenuManagementSkeleton = () => {
+  const theme = useTheme();
+
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="xl" sx={{ py: 6 }}> {/* استخدمنا xl ليعطي مساحة للـ 4 كروت */}
+      
       {/* 1. Header Skeleton */}
-      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={4}>
-        <Box sx={{ width: '100%' }}>
-          <Skeleton variant="text" width="200px" height={40} sx={{ borderRadius: 1 }} />
-          <Skeleton variant="text" width="150px" height={25} sx={{ opacity: 0.6 }} />
-        </Box>
-        {/* Add Button Skeleton */}
-        <Skeleton variant="rounded" width={120} height={40} sx={{ borderRadius: '12px' }} />
+      <Stack 
+        direction={{ xs: 'column', sm: 'row' }} 
+        justifyContent="space-between" 
+        alignItems={{ xs: 'flex-start', sm: 'center' }} 
+        spacing={2} 
+        mb={6}
+      >
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Skeleton variant="rounded" width={48} height={48} sx={{ borderRadius: 2.5 }} />
+          <Box>
+            <Skeleton variant="text" width="160px" height={30} sx={{ borderRadius: 1 }} />
+            <Skeleton variant="text" width="220px" height={20} sx={{ opacity: 0.5 }} />
+          </Box>
+        </Stack>
+        <Skeleton variant="rounded" width={130} height={42} sx={{ borderRadius: 2 }} />
       </Stack>
 
-      {/* 2. Tabs Skeleton */}
-      <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 4 }}>
-        <Stack direction="row" spacing={2} alignItems="center" sx={{ pb: 1 }}>
-          {[1, 2, 3, 4, 5].map((i) => (
-            <Skeleton key={i} variant="rounded" width={80} height={35} sx={{ borderRadius: '20px' }} />
-          ))}
-          <Box sx={{ flexGrow: 1 }} />
-          {/* Settings Icon Skeleton */}
-          <Skeleton variant="circular" width={32} height={32} />
-        </Stack>
-      </Box>
+      {/* 2. Filters Skeleton (Select + Search) */}
+      <Stack direction="row" spacing={2} mb={5} alignItems="center">
+        {/* Search Bar Skeleton */}
+        <Skeleton variant="rounded" width="100%" height={45} sx={{ borderRadius: 3, maxWidth: 1000 }} />
+        
+        {/* Select Category Skeleton */}
+        <Skeleton variant="rounded" width={180} height={45} sx={{ borderRadius: 3 }} />
+        
+        <Box sx={{ flexGrow: 1 }} />
+        
+        {/* Settings Icon Skeleton */}
+        <Skeleton variant="rounded" width={40} height={40} sx={{ borderRadius: 2.5 }} />
+      </Stack>
 
-      {/* 3. Dishes Grid Skeleton */}
-      <Grid container spacing={3}>
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={i} sx={{ display: 'flex', justifyContent: { xs: 'center', md: 'flex-start' } }}>
+      {/* 3. Dishes Grid Skeleton (4 Columns Layout) */}
+      <Grid container spacing={2}>
+        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+          <Grid size={{xs:12,sm:6,md:4,lg:3}} key={i}> {/* lg: 3 تعني 4 كروت في الصف */}
             <Paper 
               elevation={0}
               sx={{ 
-                width: "290px", // نفس عرض الكارد الحقيقي
-                borderRadius: '20px', 
+                width: "100%", 
+                borderRadius: 1, 
                 overflow: 'hidden',
-                border: '1px solid #eee',
+                border: `1px solid ${theme.palette.divider}`,
               }}
             >
               {/* Image Skeleton */}
-              <Skeleton variant="rectangular" height={220} animation="wave" />
+              <Skeleton 
+                variant="rectangular" 
+                height={160} // قللنا الارتفاع قليلاً ليتناسب مع 4 كروت
+                animation="wave" 
+                sx={{ bgcolor: alpha(theme.palette.action.hover, 0.05) }} 
+              />
 
               {/* Content Skeleton */}
-              <Box sx={{ p: 3 }}>
-                <Skeleton variant="text" width="70%" height={30} sx={{ mb: 1 }} />
-                <Skeleton variant="text" width="90%" height={20} />
-                <Skeleton variant="text" width="85%" height={20} sx={{ mb: 3 }} />
+              <Box sx={{ p: 2 }}>
+                <Stack direction="row" justifyContent="space-between" mb={1.5}>
+                  <Skeleton variant="text" width="60%" height={22} />
+                  <Skeleton variant="text" width="30px" height={20} />
+                </Stack>
+                
+                <Skeleton variant="text" width="90%" height={14} />
+                <Skeleton variant="text" width="70%" height={14} sx={{ mb: 2.5 }} />
 
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Stack direction="row" spacing={1} sx={{ width: '100%' }}>
-                    <Skeleton variant="rounded" width="50%" height={35} sx={{ borderRadius: '10px' }} />
-                    <Skeleton variant="rounded" width="50%" height={35} sx={{ borderRadius: '10px' }} />
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                  <Skeleton variant="rounded" width={60} height={20} sx={{ borderRadius: 1 }} />
+                  <Stack direction="row" spacing={1}>
+                    <Skeleton variant="circular" width={28} height={28} />
+                    <Skeleton variant="circular" width={28} height={28} />
                   </Stack>
-                </Box>
+                </Stack>
               </Box>
             </Paper>
           </Grid>

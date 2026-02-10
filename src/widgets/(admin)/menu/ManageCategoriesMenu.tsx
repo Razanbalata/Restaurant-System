@@ -1,18 +1,28 @@
 "use client";
-import { Menu, MenuItem, IconButton, Typography, Stack, Divider, useTheme, alpha } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { CategoryMutationButton } from "@/features/(admin)/menu/categories/ui/CategoryMutationBtn"; 
-import DeleteCategoryBtn from "@/features/(admin)/menu/categories/ui/DeleteCategoryBtn"; 
 import { useState } from "react";
+import { Settings, Plus, Pencil, Trash2 } from "lucide-react";
+import { 
+  Box, 
+  IconButton, 
+  Typography, 
+  Menu, 
+  Divider, 
+  Button, 
+  Stack, 
+  useTheme, 
+  alpha,
+  Tooltip
+} from "@mui/material";
 
-// 1. تعريف شكل القسم (Category)
-interface Category {
+// بفرض أن هذه المكونات موجودة لديك كما في الكود السابق
+import { CategoryMutationButton } from "@/features/(admin)/menu/categories/ui/CategoryMutationBtn";
+import DeleteCategoryBtn from "@/features/(admin)/menu/categories/ui/DeleteCategoryBtn";
+
+export interface Category {
   id: string;
   name: string;
 }
 
-// 2. تعريف واجهة الـ Props لهذا المكون
 interface ManageCategoriesMenuProps {
   categories: Category[];
   restaurantId: string;
@@ -28,60 +38,164 @@ export const ManageCategoriesMenu = ({ categories, restaurantId }: ManageCategor
 
   return (
     <>
-      <IconButton 
-        onClick={handleClick} 
-        size="small" 
-        sx={{ 
-          bgcolor: theme.palette.action.hover, 
-          borderRadius: 2,
-          border: `1px solid ${theme.palette.divider}` 
-        }}
-      >
-        <SettingsIcon fontSize="small" color="action" />
-      </IconButton>
+      <Tooltip title="Settings">
+        <IconButton
+          onClick={handleClick}
+          size="small"
+          sx={{
+            height: 36,
+            width: 36,
+            borderRadius: "10px",
+            transition: "all 0.2s ease-in-out",
+            bgcolor: open ? alpha(theme.palette.primary.main, 0.1) : "transparent",
+            color: open ? "primary.main" : "text.secondary",
+            "&:hover": {
+              bgcolor: alpha(theme.palette.primary.main, 0.05),
+              color: "primary.main",
+            },
+          }}
+        >
+          <Settings size={18} strokeWidth={1.8} />
+        </IconButton>
+      </Tooltip>
 
       <Menu
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        PaperProps={{ 
-          elevation: 4,
-          sx: { 
-            width: 280, 
-            borderRadius: 4, 
-            p: 1, mt: 1.5,
-            bgcolor: theme.palette.background.paper,
-            border: `1px solid ${theme.palette.divider}`
-          } 
+        disableScrollLock
+        elevation={0}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        PaperProps={{
+          sx: {
+            width: 260,
+            mt: 1,
+            borderRadius: "14px",
+            border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
+            bgcolor: alpha(theme.palette.background.paper, 0.8), // تأثير الشفافية
+            backdropFilter: "blur(12px)", // تأثير الزجاج
+            boxShadow: `0 10px 30px -10px ${alpha(theme.palette.common.black, 0.1)}`,
+            p: 0,
+            overflow: "hidden",
+          },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem sx={{ borderRadius: 2, mb: 1 }}>
-          <Stack direction="row" alignItems="center" spacing={1} width="100%">
-            <AddCircleOutlineIcon fontSize="small" color="primary" />
-            <Typography variant="body2" fontWeight={700} sx={{ flexGrow: 1 }}>
-               Add New Category
+        {/* Header Section */}
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ px: 2, py: 1.2 }}
+        >
+          <Typography
+            sx={{
+              fontSize: "10px",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              color: "text.secondary",
+              opacity: 0.8,
+            }}
+          >
+            Categories
+          </Typography>
+          
+          {/* زر إضافة سريع */}
+          <Box sx={{ scale: "0.8" }}>
+             <CategoryMutationButton mode="add" restaurantId={restaurantId} />
+          </Box>
+        </Stack>
+
+        <Divider sx={{ mx: 1.5, opacity: 0.5 }} />
+
+        {/* Categories List */}
+        <Box sx={{ maxHeight: 240, overflowY: "auto", p: 0.8 }}>
+          {categories?.length === 0 && (
+            <Typography
+              variant="caption"
+              sx={{
+                display: "block",
+                textAlign: "center",
+                py: 4,
+                color: "text.disabled",
+                fontSize: "12px",
+              }}
+            >
+              No categories yet
             </Typography>
-            <CategoryMutationButton mode="add" restaurantId={restaurantId} />
-          </Stack>
-        </MenuItem>
+          )}
 
-        <Divider />
+          {categories?.map((cat) => (
+            <Box
+              key={cat.id}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
+                px: 1.5,
+                py: 1,
+                borderRadius: "8px",
+                transition: "all 0.15s ease",
+                cursor: "default",
+                "&:hover": {
+                  bgcolor: alpha(theme.palette.action.active, 0.04),
+                  "& .action-btns": { opacity: 1 },
+                },
+              }}
+            >
+              {/* Dot Indicator */}
+              <Box
+                sx={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  bgcolor: alpha(theme.palette.primary.main, 0.4),
+                  flexShrink: 0,
+                }}
+              />
 
-        <Typography variant="caption" sx={{ px: 2, py: 1.5, display: 'block', color: 'text.secondary', fontWeight: 800 }}>
-          Current Categories ({categories?.length || 0})
-        </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  flex: 1,
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {cat.name}
+              </Typography>
 
-        {categories?.map((cat) => (
-          <MenuItem key={cat.id} disableRipple sx={{ borderRadius: 2, justifyContent: 'space-between', mb: 0.5 }}>
-            <Typography variant="body2" fontWeight={500}>{cat.name}</Typography>
-            <Stack direction="row" spacing={0.5}>
-              <CategoryMutationButton mode="edit" category={cat} restaurantId={restaurantId} />
-              <DeleteCategoryBtn categoryId={cat.id} restaurantId={restaurantId} />
-            </Stack>
-          </MenuItem>
-        ))}
+              {/* Action Buttons (Visible on Hover) */}
+              <Stack
+                className="action-btns"
+                direction="row"
+                spacing={0}
+                sx={{ opacity: 0, transition: "opacity 0.2s ease" }}
+              >
+                <CategoryMutationButton mode="edit" category={cat} restaurantId={restaurantId} />
+                <DeleteCategoryBtn categoryId={cat.id} restaurantId={restaurantId} />
+              </Stack>
+            </Box>
+          ))}
+        </Box>
+
+        {/* Footer Section */}
+        {categories?.length > 0 && (
+          <>
+            <Divider sx={{ mx: 1.5, opacity: 0.5 }} />
+            <Box sx={{ px: 2, py: 1 }}>
+              <Typography
+                sx={{ fontSize: "10px", color: "text.disabled", fontWeight: 600 }}
+              >
+                {categories.length} sections active
+              </Typography>
+            </Box>
+          </>
+        )}
       </Menu>
     </>
   );

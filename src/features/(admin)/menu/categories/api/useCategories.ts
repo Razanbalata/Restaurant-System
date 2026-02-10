@@ -1,7 +1,7 @@
 // features/(admin)/menu/api/useCategories.ts
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-export const useCategories = (restaurantId: string) => {
+export const useCategories = (restaurantId?: string) => {
   const queryClient = useQueryClient();
 
   // 1️⃣ Fetch all categories with items

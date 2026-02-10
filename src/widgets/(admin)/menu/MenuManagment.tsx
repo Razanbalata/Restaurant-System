@@ -15,7 +15,7 @@ import { useCategories } from "@/features/(admin)/menu/categories/api/useCategor
 import { useMenu } from "@/features/(customer)/menu/get-menu/useMenu";
 import FoodCard from "./DishesGrid";
 import { MenuHeader } from "./MenuHeader";
-import { CategoryTabs, MenuFilters } from "./CategoryTabs";
+import {  MenuFilters } from "./CategoryTabs";
 import { MenuItemMutationButton } from "@/features/(admin)/menu/ui/MenuItemMutationButton";
 import { MenuManagementSkeleton } from "@/shared/ui/Skeletons/MenuManagementSkeleton";
 import { useTheme } from "@mui/material";

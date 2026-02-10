@@ -29,7 +29,7 @@ export function InfoSection({ data, onChange }: any) {
           />
         </Box>
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid size={{xs:6}}>
             <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>Phone</Typography>
             <TextField 
               fullWidth size="small" 
@@ -40,7 +40,7 @@ export function InfoSection({ data, onChange }: any) {
               onChange={(e) => onChange({ phone: e.target.value })} 
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid size={{xs:6}}>
             <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>Email</Typography>
             <TextField 
               fullWidth size="small" 

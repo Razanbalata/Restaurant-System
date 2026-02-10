@@ -25,7 +25,7 @@ export interface Category {
 
 interface ManageCategoriesMenuProps {
   categories: Category[];
-  restaurantId: string;
+  restaurantId?: string;
 }
 
 export const ManageCategoriesMenu = ({ categories, restaurantId }: ManageCategoriesMenuProps) => {

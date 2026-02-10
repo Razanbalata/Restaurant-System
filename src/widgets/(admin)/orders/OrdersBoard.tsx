@@ -110,7 +110,7 @@ export default function OwnerOrdersPage() {
 
 const filteredOrders = useMemo(() => {
   if (!orders) return [];
-  return orders.filter((order) => {
+  return orders.filter((order:any) => {
     const search = searchQuery.toLowerCase();
     const matchesSearch =
       String(order.id).includes(search) ||
@@ -137,10 +137,10 @@ const filteredOrders = useMemo(() => {
 
   // حساب الإحصائيات
   const stats = [
-    { label: "Pending", color: "orange", count: orders?.filter(o => o.status === "pending").length || 0 },
-    { label: "Preparing", color: "purple", count: orders?.filter(o => o.status === "preparing").length || 0 },
-    { label: "Ready", color: "green", count: orders?.filter(o => o.status === "ready").length || 0 },
-    { label: "On the Way", color: "teal", count: orders?.filter(o => o.status === "out_for_delivery").length || 0 },
+    { label: "Pending", color: "orange", count: orders?.filter((o:any) => o.status === "pending").length || 0 },
+    { label: "Preparing", color: "purple", count: orders?.filter((o:any) => o.status === "preparing").length || 0 },
+    { label: "Ready", color: "green", count: orders?.filter((o:any) => o.status === "ready").length || 0 },
+    { label: "On the Way", color: "teal", count: orders?.filter((o:any) => o.status === "out_for_delivery").length || 0 },
   ];
 
   return (
@@ -149,7 +149,7 @@ const filteredOrders = useMemo(() => {
      <OrdersHeader/>
 
       {/* Filters */}
-      <OrdersFilters search={searchQuery} status={statusFilter} onSearchChange={setSearchQuery} onStatusChange={setStatusFilter}/>
+      <OrdersFilters search={searchQuery} status={statusFilter} onSearchChange={setSearchQuery} onStatusChange={(val) => setStatusFilter(val as OrderStatus | "all")}/>
 
       {/* Stats Cards */}
       <OrdersStats stats={stats}/>

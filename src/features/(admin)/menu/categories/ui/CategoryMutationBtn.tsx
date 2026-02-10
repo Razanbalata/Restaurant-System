@@ -6,7 +6,7 @@ import CategoryDialog from "./CategoryDialog";
 
 interface Props {
   mode?: "add" | "edit";
-  restaurantId: string;
+  restaurantId?: string;
   category?: any;
 }
 

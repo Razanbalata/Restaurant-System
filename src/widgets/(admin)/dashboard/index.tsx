@@ -26,7 +26,7 @@ export default function AdminDashboard() {
     <Box
       sx={{
         display: "flex",
-        bgcolor: theme.palette.background, // لون خلفية هادئ جداً ليبرز الكروت
+        bgcolor: theme.palette.background.default, // لون خلفية هادئ جداً ليبرز الكروت
         minHeight: "100vh",
       }}
     >

@@ -284,7 +284,7 @@
 //   const { selectedRestaurant } = useRestaurant();
 //   const { toggleColorMode } = useColorMode();
 //   const { mutate: logout } = useLogout();
-  
+
 //   // لجلب عدد الطلبات كما في كود التيلويند
 //   const { useOrdersQuery } = useOrders(selectedRestaurant?.id || "rest-1");
 //   const { data: orders } = useOrdersQuery
@@ -309,23 +309,23 @@
 //       }}
 //     >
 //       {/* 1. Logo Section (نفس تصميم التيلويند) */}
-//       <Box sx={{ 
-//         height: 64, 
-//         display: 'flex', 
-//         alignItems: 'center', 
-//         px: open ? 2.5 : 0, 
+//       <Box sx={{
+//         height: 64,
+//         display: 'flex',
+//         alignItems: 'center',
+//         px: open ? 2.5 : 0,
 //         justifyContent: open ? 'flex-start' : 'center',
-//         gap: 1.5, 
-//         borderBottom: `1px solid ${theme.palette.divider}` 
+//         gap: 1.5,
+//         borderBottom: `1px solid ${theme.palette.divider}`
 //       }}>
-//         <Box sx={{ 
-//           minWidth: 36, 
-//           height: 36, 
-//           bgcolor: 'primary.main', 
+//         <Box sx={{
+//           minWidth: 36,
+//           height: 36,
+//           bgcolor: 'primary.main',
 //           borderRadius: 2, // rounded-lg
-//           display: 'flex', 
-//           alignItems: 'center', 
-//           justifyContent: 'center' 
+//           display: 'flex',
+//           alignItems: 'center',
+//           justifyContent: 'center'
 //         }}>
 //           <Utensils size={18} color="white" />
 //         </Box>
@@ -359,16 +359,16 @@
 //             },
 //           }}
 //         >
-//           <ListItemIcon sx={{ 
-//             minWidth: 0, 
+//           <ListItemIcon sx={{
+//             minWidth: 0,
 //             mr: open ? 1.2 : 0, // تقريب الأيقونة من النص
 //             color: isActive ? "primary.main" : "inherit",
 //             display: 'flex',
 //             justifyContent: 'center'
 //           }}>
-//             <Icon size={18} strokeWidth={isActive ? 2.5 : 2} /> 
+//             <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
 //           </ListItemIcon>
-          
+
 //           {open && (
 //             <ListItemText
 //               primary={label}
@@ -382,15 +382,15 @@
 
 //           {/* Badge الطلبات المعلقة - صغرنا حجمه أيضاً */}
 //           {open && label === "Orders" && pendingOrdersCount > 0 && (
-//             <Box 
-//               sx={{ 
-//                 height: 18, 
-//                 minWidth: 18, 
+//             <Box
+//               sx={{
+//                 height: 18,
+//                 minWidth: 18,
 //                 px: 0.6,
 //                 bgcolor: 'primary.main',
 //                 color: 'white',
 //                 borderRadius: 1,
-//                 fontSize: '0.65rem', 
+//                 fontSize: '0.65rem',
 //                 fontWeight: 'bold',
 //                 display: 'flex',
 //                 alignItems: 'center',
@@ -408,18 +408,18 @@
 
 //       {/* 3. User Section (تحت المنوية مباشرة قبل الـ Logout) */}
 //       <Box sx={{ p: 2, borderTop: `1px solid ${theme.palette.divider}` }}>
-//         <Box sx={{ 
-//           display: 'flex', 
-//           alignItems: 'center', 
-//           gap: 1.5, 
+//         <Box sx={{
+//           display: 'flex',
+//           alignItems: 'center',
+//           gap: 1.5,
 //           mb: 2,
 //           justifyContent: open ? 'flex-start' : 'center'
 //         }}>
-//           <Avatar 
-//             sx={{ 
-//               width: 36, 
-//               height: 36, 
-//               bgcolor: 'primary.main', 
+//           <Avatar
+//             sx={{
+//               width: 36,
+//               height: 36,
+//               bgcolor: 'primary.main',
 //               fontSize: '0.9rem',
 //               fontWeight: 'bold'
 //             }}
@@ -455,12 +455,12 @@
 //               logout();
 //               router.replace("/");
 //             }}
-//             sx={{ 
-//               borderRadius: 2, 
-//               justifyContent: open ? "initial" : "center", 
+//             sx={{
+//               borderRadius: 2,
+//               justifyContent: open ? "initial" : "center",
 //               px: open ? 2 : 0,
 //               color: 'error.main',
-//               "&:hover": { bgcolor: 'error.lighter' } 
+//               "&:hover": { bgcolor: 'error.lighter' }
 //             }}
 //           >
 //             <ListItemIcon sx={{ minWidth: 0, mr: open ? 1.5 : 0, color: 'inherit' }}>
@@ -488,14 +488,8 @@ import {
   Tooltip,
   useTheme,
 } from "@mui/material";
-import {
-  DarkModeRounded,
-  LightModeRounded,
-} from "@mui/icons-material";
-import {
-  Utensils,
-  LogOut,
-} from "lucide-react";
+import { DarkModeRounded, LightModeRounded } from "@mui/icons-material";
+import { Utensils, LogOut } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useMe } from "@/features/user/api/use-me";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
@@ -519,13 +513,14 @@ export const Sidebar = ({
   const { selectedRestaurant } = useRestaurant();
   const { toggleColorMode } = useColorMode();
   const { mutate: logout } = useLogout();
-  
+
   // جلب الطلبات لحساب عدد التنبيهات على رابط الـ Orders
   const { useOrdersQuery } = useOrders(selectedRestaurant?.id || "rest-1");
   const { data: orders } = useOrdersQuery;
-  const pendingOrdersCount = orders?.filter(
-    (o: any) => ["pending", "confirmed", "preparing"].includes(o.status)
-  ).length || 0;
+  const pendingOrdersCount =
+    orders?.filter((o: any) =>
+      ["pending", "confirmed", "preparing"].includes(o.status),
+    ).length || 0;
 
   const isAdmin = user?.role === "restaurant_owner";
   const menuItems = isAdmin ? adminMenu : customerMenu;
@@ -545,30 +540,43 @@ export const Sidebar = ({
       }}
     >
       {/* 1. Header Section (Logo & Notifications) */}
-      <Box sx={{ 
-        height: 64, 
-        display: 'flex', 
-        alignItems: 'center', 
-        px: open ? 2 : 0, 
-        justifyContent: open ? 'space-between' : 'center',
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        overflow: 'hidden'
-      }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Box sx={{ 
-            minWidth: 36, 
-            height: 36, 
-            bgcolor: 'primary.main', 
-            borderRadius: 2, 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            cursor: 'pointer'
-          }} onClick={onToggle}>
+      <Box
+        sx={{
+          height: 64,
+          display: "flex",
+          alignItems: "center",
+          px: open ? 2 : 0,
+          justifyContent: open ? "space-between" : "center",
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          overflow: "hidden",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Box
+            sx={{
+              minWidth: 36,
+              height: 36,
+              bgcolor: "primary.main",
+              borderRadius: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
+            onClick={onToggle}
+          >
             <Utensils size={18} color="white" />
           </Box>
           {open && (
-            <Typography variant="h6" sx={{ fontWeight: 800, fontSize: '1.1rem', letterSpacing: '-0.02em', noWrap: true }}>
+            <Typography
+              variant="h6"
+              noWrap // وضعت هنا كـ Prop مستقل
+              sx={{
+                fontWeight: 800,
+                fontSize: "1.1rem",
+                letterSpacing: "-0.02em",
+              }}
+            >
               FoodFlow
             </Typography>
           )}
@@ -580,119 +588,164 @@ export const Sidebar = ({
 
       {/* 2. Navigation Items */}
       <List sx={{ flexGrow: 1, px: 1.5, py: 2 }}>
-   {menuItems.map(({ label, icon: Icon, path }: any) => {
-    const fullPath = path.includes("restaurantDetails") ? `${path}/${selectedRestaurant?.id}` : path;
-    const isActive = pathname === fullPath;
+        {menuItems.map(({ label, icon: Icon, path }: any) => {
+          const fullPath = path.includes("restaurantDetails")
+            ? `${path}/${selectedRestaurant?.id}`
+            : path;
+          const isActive = pathname === fullPath;
 
-    return (
-      <Tooltip key={label} title={open ? "" : label} placement="right">
-        <ListItemButton
-          onClick={() => router.push(fullPath)}
-          sx={{
-            borderRadius: 1.5, // انحناء أقل قليلاً للمستطيلات
-            mb: 0.4, // مسافة بسيطة بين الروابط
-            px: open ? 1.5 : 0, // padding أفقي
-            py: 0.6, // تقليل الـ padding العمودي لجعل المستطيل "نحيف"
-            minHeight: 38, // تحديد ارتفاع ثابت وصغير للمستطيل
-            justifyContent: open ? "initial" : "center",
-            bgcolor: isActive ? `${theme.palette.primary.main}15` : "transparent",
-            color: isActive ? "primary.main" : "text.secondary",
-            "&:hover": {
-              bgcolor: isActive ? `${theme.palette.primary.main}25` : "action.hover",
-            },
-          }}
-        >
-          <ListItemIcon sx={{ 
-            minWidth: 0, 
-            mr: open ? 1.2 : 0, // تقريب الأيقونة من النص
-            color: isActive ? "primary.main" : "inherit",
-            display: 'flex',
-            justifyContent: 'center'
-          }}>
-            <Icon size={18} strokeWidth={isActive ? 2.5 : 2} /> 
-          </ListItemIcon>
-          
-          {open && (
-            <ListItemText
-              primary={label}
-              primaryTypographyProps={{
-                fontSize: "0.82rem", // تصغير الخط قليلاً ليتناسب مع المستطيل النحيف
-                fontWeight: isActive ? 600 : 500,
-                letterSpacing: '0.01em'
-              }}
-            />
-          )}
+          return (
+            <Tooltip key={label} title={open ? "" : label} placement="right">
+              <ListItemButton
+                onClick={() => router.push(fullPath)}
+                sx={{
+                  borderRadius: 1.5, // انحناء أقل قليلاً للمستطيلات
+                  mb: 0.4, // مسافة بسيطة بين الروابط
+                  px: open ? 1.5 : 0, // padding أفقي
+                  py: 0.6, // تقليل الـ padding العمودي لجعل المستطيل "نحيف"
+                  minHeight: 38, // تحديد ارتفاع ثابت وصغير للمستطيل
+                  justifyContent: open ? "initial" : "center",
+                  bgcolor: isActive
+                    ? `${theme.palette.primary.main}15`
+                    : "transparent",
+                  color: isActive ? "primary.main" : "text.secondary",
+                  "&:hover": {
+                    bgcolor: isActive
+                      ? `${theme.palette.primary.main}25`
+                      : "action.hover",
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 1.2 : 0, // تقريب الأيقونة من النص
+                    color: isActive ? "primary.main" : "inherit",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+                </ListItemIcon>
 
-          {/* Badge الطلبات المعلقة - صغرنا حجمه أيضاً */}
-          {open && label === "Orders" && pendingOrdersCount > 0 && (
-            <Box 
-              sx={{ 
-                height: 18, 
-                minWidth: 18, 
-                px: 0.6,
-                bgcolor: 'primary.main',
-                color: 'white',
-                borderRadius: 1,
-                fontSize: '0.65rem', 
-                fontWeight: 'bold',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              {pendingOrdersCount}
-            </Box>
-          )}
-        </ListItemButton>
-      </Tooltip>
-    );
-  })}
-</List>
+                {open && (
+                  <ListItemText
+                    primary={label}
+                    primaryTypographyProps={{
+                      fontSize: "0.82rem", // تصغير الخط قليلاً ليتناسب مع المستطيل النحيف
+                      fontWeight: isActive ? 600 : 500,
+                      letterSpacing: "0.01em",
+                    }}
+                  />
+                )}
+
+                {/* Badge الطلبات المعلقة - صغرنا حجمه أيضاً */}
+                {open && label === "Orders" && pendingOrdersCount > 0 && (
+                  <Box
+                    sx={{
+                      height: 18,
+                      minWidth: 18,
+                      px: 0.6,
+                      bgcolor: "primary.main",
+                      color: "white",
+                      borderRadius: 1,
+                      fontSize: "0.65rem",
+                      fontWeight: "bold",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {pendingOrdersCount}
+                  </Box>
+                )}
+              </ListItemButton>
+            </Tooltip>
+          );
+        })}
+      </List>
 
       {/* 3. Footer Section (User, Theme, Logout) */}
-      <Box sx={{ p: 2, borderTop: `1px solid ${theme.palette.divider}`, bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)' }}>
+      <Box
+        sx={{
+          p: 2,
+          borderTop: `1px solid ${theme.palette.divider}`,
+          bgcolor:
+            theme.palette.mode === "dark"
+              ? "rgba(255,255,255,0.02)"
+              : "rgba(0,0,0,0.02)",
+        }}
+      >
         {/* User Info */}
-        <Box sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: 1.5, 
-          mb: 2,
-          justifyContent: open ? 'flex-start' : 'center'
-        }}>
-          <Avatar 
-            sx={{ 
-              width: 36, 
-              height: 36, 
-              bgcolor: 'primary.main', 
-              fontSize: '0.9rem',
-              fontWeight: 'bold'
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            mb: 2,
+            justifyContent: open ? "flex-start" : "center",
+          }}
+        >
+          <Avatar
+            sx={{
+              width: 36,
+              height: 36,
+              bgcolor: "primary.main",
+              fontSize: "0.9rem",
+              fontWeight: "bold",
             }}
           >
             {user?.name?.[0]}
           </Avatar>
           {open && (
-            <Box sx={{ overflow: 'hidden' }}>
-              <Typography variant="subtitle2" noWrap sx={{ fontWeight: 700, fontSize: '0.85rem' }}>
+            <Box sx={{ overflow: "hidden" }}>
+              <Typography
+                variant="subtitle2"
+                noWrap
+                sx={{ fontWeight: 700, fontSize: "0.85rem" }}
+              >
                 {user?.name}
               </Typography>
-              <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'block', fontSize: '0.7rem' }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                noWrap
+                sx={{ display: "block", fontSize: "0.7rem" }}
+              >
                 {isAdmin ? "Manager" : "Customer"}
               </Typography>
             </Box>
           )}
         </Box>
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
           {/* Theme Toggle */}
           <Tooltip title={open ? "" : "Toggle Theme"} placement="right">
             <ListItemButton
               onClick={toggleColorMode}
-              sx={{ borderRadius: 2, justifyContent: open ? "initial" : "center", px: open ? 1.5 : 0, minHeight: 40 }}
+              sx={{
+                borderRadius: 2,
+                justifyContent: open ? "initial" : "center",
+                px: open ? 1.5 : 0,
+                minHeight: 40,
+              }}
             >
               <ListItemIcon sx={{ minWidth: 0, mr: open ? 1.5 : 0 }}>
-                {theme.palette.mode === "dark" ? <LightModeRounded fontSize="small" /> : <DarkModeRounded fontSize="small" />}
+                {theme.palette.mode === "dark" ? (
+                  <LightModeRounded fontSize="small" />
+                ) : (
+                  <DarkModeRounded fontSize="small" />
+                )}
               </ListItemIcon>
-              {open && <ListItemText primary="Theme Mode" primaryTypographyProps={{ fontSize: '0.8rem', fontWeight: 500 }} />}
+              {open && (
+                <ListItemText
+                  primary="Theme Mode"
+                  primaryTypographyProps={{
+                    fontSize: "0.8rem",
+                    fontWeight: 500,
+                  }}
+                />
+              )}
             </ListItemButton>
           </Tooltip>
 
@@ -703,19 +756,29 @@ export const Sidebar = ({
                 logout();
                 router.replace("/");
               }}
-              sx={{ 
-                borderRadius: 2, 
-                justifyContent: open ? "initial" : "center", 
+              sx={{
+                borderRadius: 2,
+                justifyContent: open ? "initial" : "center",
                 px: open ? 1.5 : 0,
                 minHeight: 40,
-                color: 'error.main',
-                "&:hover": { bgcolor: 'error.lighter' } 
+                color: "error.main",
+                "&:hover": { bgcolor: "error.lighter" },
               }}
             >
-              <ListItemIcon sx={{ minWidth: 0, mr: open ? 1.5 : 0, color: 'inherit' }}>
+              <ListItemIcon
+                sx={{ minWidth: 0, mr: open ? 1.5 : 0, color: "inherit" }}
+              >
                 <LogOut size={18} />
               </ListItemIcon>
-              {open && <ListItemText primary="Logout" primaryTypographyProps={{ fontSize: '0.8rem', fontWeight: 600 }} />}
+              {open && (
+                <ListItemText
+                  primary="Logout"
+                  primaryTypographyProps={{
+                    fontSize: "0.8rem",
+                    fontWeight: 600,
+                  }}
+                />
+              )}
             </ListItemButton>
           </Tooltip>
         </Box>

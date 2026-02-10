@@ -14,7 +14,7 @@ import MealModal from "./MenuDrawer";
 
 interface Props {
   mode?: "add" | "edit";
-  restaurantId: string;
+  restaurantId?: string;
   categoryId?: string;
   item?: any;
 }

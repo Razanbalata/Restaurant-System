@@ -15,7 +15,7 @@ interface DialogProps {
   open: boolean;
   onClose: () => void;
   mode: "add" | "edit";
-  restaurantId: string;
+  restaurantId?: string;
   category?: any;
 }
 

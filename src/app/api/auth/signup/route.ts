@@ -177,7 +177,6 @@ export const POST = async (req: NextRequest) => {
         },
       },
       token,
-      user.role,
       201
     );
   } catch (error) {

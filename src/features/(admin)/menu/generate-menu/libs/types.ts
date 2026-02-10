@@ -19,7 +19,7 @@ export type GenerateMenuResponse = {
 };
 
 export type Payload = {
-  restaurantId: string;
+  restaurantId: string ;
   categoryId: string;
   meals: GeneratedMeal[];
 };

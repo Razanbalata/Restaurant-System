@@ -5,7 +5,7 @@ import { Trash2 } from "lucide-react"; // أيقونة أرشق وأحدث
 import { useCategories } from "../api/useCategories";
 
 interface DeleteCategoryBtnProps {
-  restaurantId: string;
+  restaurantId?: string;
   categoryId: string;
 }
 

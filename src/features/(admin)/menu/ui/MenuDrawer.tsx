@@ -48,7 +48,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
     price: 0,
     description: "",
     category_id: "", // نستخدم الـ ID بدلاً من الاسم
-    image_url: null as File | null,
+    image_url:"",
   });
 
   // 2. جلب التصنيفات الحقيقية من السيرفر
@@ -72,7 +72,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
         price: initialData.price || 0,
         description: initialData.description || "",
         category_id: initialData.category_id || "",
-        image_url: null,
+        image_url: initialData.image_url || "",
       });
     } else {
       setFormData({
@@ -80,7 +80,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
         price: 0,
         description: "",
         category_id: "",
-        image_url: null,
+        image_url: "",
       });
     }
   }, [initialData, open, isEdit]);
@@ -102,8 +102,9 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
   } else {
     addMenuItem.mutate(
       { 
+        
         meals: [payload], 
-        restaurantId: selectedRestaurant?.id, 
+        restaurantId:String(selectedRestaurant?.id), 
         categoryId: String(formData.category_id) 
       },
       { onSuccess: () => onClose() }
@@ -149,7 +150,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
           >
             <CloudUpload sx={{ fontSize: 40, color: "#FF5B22", mb: 1 }} />
             <Typography variant="body2" color="textSecondary">
-              {formData.image ? "Image selected" : "Upload meal image here"}
+              {formData.image_url ? "Image selected" : "Upload meal image here"}
             </Typography>
           </Box>
 
@@ -178,7 +179,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
                   {cat.name}
                 </MenuItem>
               ))}
-              <CategoryMutationButton restaurantId={selectedRestaurant.id} mode="add" />
+              <CategoryMutationButton restaurantId={selectedRestaurant?.id} mode="add" />
             </TextField>
 
             <TextField

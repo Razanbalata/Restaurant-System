@@ -105,7 +105,7 @@ export const OrderCard = ({ order }: Props) => {
           <Box 
             sx={{ 
               p: 2, 
-              bgcolor: alpha(theme.palette.action.hover, 0.4), 
+              bgcolor: alpha(theme.palette.background.default, 0.4), 
               borderRadius: 2,
               border: `1px solid ${theme.palette.divider}`
             }}
@@ -129,25 +129,15 @@ export const OrderCard = ({ order }: Props) => {
                 </Typography>
                 <Stack direction="row" spacing={1} alignItems="center">
                     <Typography variant="caption" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <Phone size={12} /> {order.phone}
+                        <Phone size={12} /> {order.customer_phone}
                     </Typography>
                     <Typography variant="caption" color="text.divider">|</Typography>
                     <Typography variant="caption" color="text.secondary" noWrap sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <MapPin size={12} /> {order.address}
+                        <MapPin size={12} /> {order.delivery_address}
                     </Typography>
                 </Stack>
               </Box>
-              <Tooltip title="View Details">
-                <IconButton 
-                    size="small" 
-                    sx={{ 
-                        bgcolor: theme.palette.background.paper,
-                        boxShadow: theme.shadows[1]
-                    }}
-                >
-                  <ChevronRight size={18} />
-                </IconButton>
-              </Tooltip>
+      
             </Stack>
           </Box>
 

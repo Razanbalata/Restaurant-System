@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
         },
       },
       token,
+      user.role, 
       200
     );
   } catch (error) {

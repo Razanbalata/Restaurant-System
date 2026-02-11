@@ -65,69 +65,43 @@
 //   return NextResponse.next();
 // }
 import { NextRequest, NextResponse } from "next/server";
+import { getUserRole, getSessionToken } from "@/shared/libs/auth/cookies";
 
-export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+export function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
 
-  const session = request.cookies.get("session")?.value;
-  const role = request.cookies.get("user_intent")?.value; // 'owner' | 'customer'
+  const session = getSessionToken(req);
+  const role = getUserRole(req); // "owner" أو "customer"
 
-  const isAuthPage =
-    pathname.startsWith("/login") ||
-    pathname.startsWith("/sign-up") ||
-    pathname.startsWith("/forget-password") ||
-    pathname.startsWith("/reset-password");
-
-  const isOwnerPage = pathname.startsWith("/owner");
+  // كل الشروط
+  const isOwnerPage = pathname.startsWith("/admin");
   const isCustomerPage = pathname.startsWith("/customer");
-  const isSharedPage = pathname.startsWith("/shared");
+  const isAuthPage = ["/login", "/sign-up", "/forget-password", "/reset-password"].some(p => pathname.startsWith(p));
 
-  /* =========================
-     غير مسجل دخول
-  ========================== */
-  if (!session && (isOwnerPage || isCustomerPage)) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  // غير مسجل دخول
+  if (!session) {
+    if (isOwnerPage || isCustomerPage) return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.next();
   }
 
-  // مش مسجل دخول + صفحة مشتركة
-  if (!session && isSharedPage) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  // منع العودة لصفحات auth
+  if (isAuthPage) {
+    const redirectTo = role === "owner" ? "/admin/dashboard" : "/customer/cart";
+    return NextResponse.redirect(new URL(redirectTo, req.url));
   }
 
-  /* =========================
-     مسجل دخول + Auth Pages
-  ========================== */
-  if (session && isAuthPage) {
-    const redirectTo = role === "owner" ? "/owner/dashboard" : "/customer/cart";
+  // حماية Owner
+  if (isOwnerPage && role !== "owner") return NextResponse.redirect(new URL("/unauthorized", req.url));
 
-    return NextResponse.redirect(new URL(redirectTo, request.url));
-  }
-
-  /* =========================
-     Customer داخل Owner
-  ========================== */
-  if (session && role === "customer" && isOwnerPage) {
-    return NextResponse.redirect(new URL("/unauthorized", request.url));
-  }
-
-  /* =========================
-     Owner داخل Customer
-  ========================== */
-  if (session && role === "owner" && isCustomerPage) {
-    return NextResponse.redirect(new URL("/owner/dashboard", request.url));
-  }
+  // حماية Customer
+  if (isCustomerPage && role !== "customer") return NextResponse.redirect(new URL("/unauthorized", req.url));
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    "/owner/:path*",
-    "/customer/:path*",
-    "/shared/:path*",
-    "/login",
-    "/sign-up",
-    "/forget-password",
-    "/reset-password",
-  ],
+  matcher: ["/admin", "/admin/:path*", "/customer", "/customer/:path*", "/login", "/sign-up", "/forget-password", "/reset-password"],
 };
+
+
+

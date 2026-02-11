@@ -45,7 +45,7 @@ export default function LoginForm() {
         if (res.user?.role === "restaurant_owner") {
           router.push("/shared/dashboard");
         } else {
-          router.push("/customer/restaurants");
+          router.push("/customer/cart");
         }
       },
     });

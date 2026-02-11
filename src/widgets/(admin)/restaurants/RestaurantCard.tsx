@@ -8,6 +8,7 @@ import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
 import { MapPin, Clock, UtensilsCrossed } from "lucide-react";
 import MutationButton from "@/features/(admin)/restaurant/mutations-restaurant/ui/MutationButton";
 import DeleteRestaurantBtn from "@/features/(admin)/restaurant/delete-restaurant/ui/DeleteRestaurantBtn";
+import { useRouter } from "next/navigation";
 
 interface RestaurantInfoCardProps {
   restaurant: any;
@@ -16,6 +17,7 @@ interface RestaurantInfoCardProps {
 
 export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardProps) => {
   const theme = useTheme();
+  const router = useRouter()
 
   return (
     <Box sx={{ width: "100%", position: "relative" }}>
@@ -156,6 +158,7 @@ export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardPr
                   "&:hover": { transform: "translateY(-2px)", boxShadow: theme.shadows[15] },
                   transition: "all 0.3s ease"
                 }}
+                onClick={()=>router.push("/shared/menu")}
               >
                 Order Now
               </Button>

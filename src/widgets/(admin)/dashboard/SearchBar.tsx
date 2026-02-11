@@ -106,7 +106,7 @@ export const SearchBar = () => {
   return (
     <Box
       ref={ref}
-      sx={{ width: "100%", maxWidth: 600, mx: "auto", position: "relative" }}
+      sx={{ width: "100%", maxWidth: 700, mx: "auto", position: "relative" }}
     >
       <Paper
         sx={{
@@ -116,6 +116,7 @@ export const SearchBar = () => {
           borderRadius: 2,
           bgcolor: theme.palette.background.paper,
           boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+          flex:1
         }}
       >
         <InputBase

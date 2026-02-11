@@ -1,10 +1,10 @@
 "use client";
 
-import { Box, CssBaseline } from "@mui/material";
+import { Box, CssBaseline, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { Sidebar } from "@/widgets/(admin)/dashboard/Sidebar";
 import TopNav from "@/widgets/(admin)/dashboard/TopNav";
-import { RestaurantProvider } from "../providers/RestaurantContext";
+import { RestaurantProvider } from "../../providers/RestaurantContext";
 
 const SIDEBAR_WIDTH = 260;
 const SIDEBAR_COLLAPSED = 80;
@@ -14,6 +14,8 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (

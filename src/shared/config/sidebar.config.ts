@@ -13,9 +13,9 @@ import {
 export const adminMenu = [
   { label: "My Restaurants", icon: BarChartRounded, path: "/shared/dashboard" },
   { label: "Dashboard", icon: DashboardRounded, path: "/shared/restaurantDetails", requiresRestaurant: true },
-  { label: "Live Orders", icon: ShoppingCartRounded, path: "/admin/orders", requiresRestaurant: true },
+  { label: "Live Orders", icon: ShoppingCartRounded, path: "/shared/admin/orders", requiresRestaurant: true },
   { label: "Menu Management", icon: RestaurantMenuRounded, path: "/shared/menu", requiresRestaurant: true },
-  { label: "Settings", icon: Settings, path: "/admin/settings", requiresRestaurant: true },
+  { label: "Settings", icon: Settings, path: "/shared/admin/settings", requiresRestaurant: true },
 ];
 
 

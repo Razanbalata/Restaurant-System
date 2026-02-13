@@ -75,7 +75,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body: OrderBody = await req.json();
-    console.log("📦 Received order body:", body);
 
     const { restaurantId, items, address, phone, notes } = body;
 
@@ -120,8 +119,6 @@ export async function POST(req: NextRequest) {
       await supabase.from("orders").delete().eq("id", order.id);
       return NextResponse.json({ error: itemsError.message }, { status: 500 });
     }
-
-    console.log("✅ Order and items inserted successfully:", order);
 
     return NextResponse.json(order, { status: 201 });
   });

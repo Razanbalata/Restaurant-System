@@ -74,7 +74,6 @@ export const SearchBar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-  console.log("res", results);
 
   const handleNavigate = (item: any) => {
     setOpen(false);
@@ -106,7 +105,7 @@ export const SearchBar = () => {
   return (
     <Box
       ref={ref}
-      sx={{ width: "100%", maxWidth: 700, mx: "auto", position: "relative" }}
+      sx={{ width: "100%", maxWidth: 1000, position: "relative" }}
     >
       <Paper
         sx={{

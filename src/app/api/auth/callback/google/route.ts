@@ -14,9 +14,6 @@ export async function GET(req: NextRequest) {
     const code = url.searchParams.get("code");
     const state = url.searchParams.get("state");
 
-    console.log("🔹 Received code:", code);
-    console.log("🔹 Received state:", state);
-
     if (!code)
       return NextResponse.json({ error: "No code provided" }, { status: 400 });
     if (!state)
@@ -25,14 +22,11 @@ export async function GET(req: NextRequest) {
     // ✅ جلب الـ cookies بشكل صحيح
     const cookieStore = await cookies();
     const savedState = cookieStore.get("google_oauth_state")?.value;
-    console.log("🔹 Saved state cookie:", savedState);
 
     // ✅ التحقق من state لمكافحة CSRF
     if (state !== savedState) {
-      console.log("❌ State mismatch! Possible CSRF attack.");
       return NextResponse.json({ error: "Invalid state" }, { status: 400 });
     }
-    console.log("✅ State check passed");
 
     // 🔹 تبادل code مع Google للحصول على tokens
     const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
@@ -46,7 +40,6 @@ export async function GET(req: NextRequest) {
         grant_type: "authorization_code",
       }),
     });
-    console.log("ttttttt",tokenRes)
 
     const tokenText = await tokenRes.text();
     let tokenData: any;
@@ -65,17 +58,14 @@ export async function GET(req: NextRequest) {
     }
 
     const { id_token } = tokenData;
-    console.log("🔹 Received id_token:", id_token);
 
     // 🔹 تحقق من id_token
     const verifyRes = await fetch(
       `https://oauth2.googleapis.com/tokeninfo?id_token=${id_token}`,
     );
     const googleUser = await verifyRes.json();
-    console.log("🔹 Google user info:", googleUser);
 
     if (googleUser.aud !== process.env.GOOGLE_CLIENT_ID) {
-      console.log("❌ Invalid audience in id_token");
       return NextResponse.json({ error: "Invalid audience" }, { status: 401 });
     }
 
@@ -86,7 +76,6 @@ export async function GET(req: NextRequest) {
       name: googleUser.name,
       picture: googleUser.picture,
     });
-    console.log("🔹 App user after handleGoogleUser:", appUser);
 
     // 🔹 إنشاء JWT
     const jwt = await createToken({
@@ -95,7 +84,6 @@ export async function GET(req: NextRequest) {
       name: appUser.name,
       role: appUser.role,
     });
-    console.log("🔹 JWT created");
 
     // 🔹 إعداد الرد ووضع JWT في cookie
     // 🔹 إعداد الرد ووضع JWT في cookie
@@ -104,7 +92,6 @@ export async function GET(req: NextRequest) {
 );
 
     setSessionCookie(response, jwt);
-    console.log("✅ JWT set in cookie");
 
     // ✅ مسح state cookie بالطريقة الصح
     response.cookies.set("google_oauth_state", "", {
@@ -112,7 +99,6 @@ export async function GET(req: NextRequest) {
       path: "/",
     });
 
-    console.log("✅ State cookie cleared");
 
     return response;
   } catch (err: any) {

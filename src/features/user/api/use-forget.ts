@@ -19,7 +19,6 @@ export const useForgotPasswordMutation = ({
             body:JSON.stringify(values)
         }
       );
-      console.log("Forgot password response:", response); // للتأكد من الاستجابة
       return response;
     },
     onSuccess: (data, variables) => {

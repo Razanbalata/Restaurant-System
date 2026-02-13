@@ -58,7 +58,6 @@ export default function ResetPasswordPage() {
 
   const onSubmit = (values: ResetPasswordForm) => {
     if (!token) return;
- console.log("Submitting reset with token:", token, "and values:", values);
     mutate(
       { token, password: values.password, confirmPassword: values.confirmPassword },
       {

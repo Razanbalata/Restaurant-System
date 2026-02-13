@@ -4,7 +4,7 @@ import { Box, CssBaseline, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { Sidebar } from "@/widgets/(admin)/dashboard/Sidebar";
 import TopNav from "@/widgets/(admin)/dashboard/TopNav";
-import { RestaurantProvider } from "../../providers/RestaurantContext";
+import { RestaurantProvider } from "../providers/RestaurantContext";
 
 const SIDEBAR_WIDTH = 260;
 const SIDEBAR_COLLAPSED = 80;
@@ -36,7 +36,6 @@ export default function AdminLayout({
             display: "flex",
             flexDirection: "column",
             height: "100vh",
-            // ml: sidebarOpen ? `${SIDEBAR_WIDTH}px` : `${SIDEBAR_COLLAPSED}px`,
             transition: "margin-left 0.3s ease",
           }}
         >

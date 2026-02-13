@@ -16,7 +16,6 @@ function AddToCartBtn({
   function handleAdd() {
    
         const parsedRestaurantId = Number(restaurantId);
-   console.log("Parsed Restaurant ID:", parsedRestaurantId);
     // 🚨 حماية قوية
     if (!parsedRestaurantId || Number.isNaN(parsedRestaurantId)) {
       console.error("❌ Invalid restaurantId in AddToCartBtn:", restaurantId);

@@ -9,8 +9,8 @@ import { useCart } from "@/features/(customer)/cart/api/useCart";
 type Props = {
   formData: {
     address: string;
-    phone: string;
-    notes?: string;
+    phone?: string;
+    notes: string;
   };
 };
 
@@ -18,7 +18,6 @@ export function PlaceOrderButton({ formData }: Props) {
   const { address, phone, notes } = formData;
   const router = useRouter();
   const { items, restaurantId, clearCart } = useCart();
-  console.log("resid",restaurantId);
   const { mutate, isPending } = usePlaceOrder();
   const handlePlaceOrder = () => {
   if (!address || !phone) {
@@ -37,7 +36,6 @@ export function PlaceOrderButton({ formData }: Props) {
   try {
     mutate(payload, {  
       onSuccess: (data) => {
-        console.log("✅ Order placed successfully:", data); 
         clearCart();
         router.replace("/customer/order"); // هذا يجب أن يعمل إذا وصلت هنا
       },

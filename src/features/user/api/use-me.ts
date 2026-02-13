@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { User } from "../model/type";
+import { User } from "@/features/libs/types"; 
 import { queryKeys } from "@/shared/keys/query-keys";
 
 type MeResponse = {

@@ -6,7 +6,8 @@ import {
   Skeleton, 
   Divider, 
   useTheme, 
-  alpha 
+  alpha, 
+  Container 
 } from "@mui/material";
 import { AppCard } from "@/shared/ui/Card/AppCard";
 
@@ -15,120 +16,108 @@ export function CartSkeleton() {
 
   return (
     <Box sx={{ 
-      p: { xs: 2, md: 4 }, 
-      maxWidth: 1200, 
-      mx: "auto",
-      // إضافة خلفية بسيطة جداً تتبع الثيم لتعزيز تجربة المستخدم أثناء التحميل
-      bgcolor: "transparent" 
+      bgcolor: theme.palette.background.default, 
+      minHeight: "100vh", 
+      py: { xs: 4, md: 8 } 
     }}>
-      
-      {/* عنوان الصفحة - مركز */}
-      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 6 }}>
-        <Skeleton 
-          variant="text" 
-          width="200px" 
-          height={60} 
-          sx={{ bgcolor: alpha(theme.palette.text.primary, 0.05) }} 
-        />
-      </Box>
+      <Container maxWidth="lg">
+        {/* عنوان الصفحة - Skeleton يحاكي النص الضخم */}
+        <Stack direction="row" alignItems="center" spacing={2} mb={6} justifyContent={{ xs: 'center', md: 'flex-start' }}>
+          <Skeleton variant="circular" width={40} height={40} sx={{ flexShrink: 0 }} />
+          <Skeleton variant="text" width={250} height={60} />
+        </Stack>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          gap: 4,
-          alignItems: "flex-start",
-          width: "100%",
-        }}
-      >
-        {/* الجزء الخاص بالمنتجات - Products List Skeleton */}
-        <Box sx={{ flex: 2, width: "100%", display: "flex", flexDirection: "column", gap: 2 }}>
-          {[1, 2, 3].map((i) => (
-            <AppCard 
-              key={i} 
-              sx={{ 
-                width: "100%",
-                borderColor: alpha(theme.palette.divider, 0.5), // ربط حدود الكارت بالثيم
-                bgcolor: theme.palette.background.paper
-              }}
-            >
-              <Stack
-                direction={{ xs: "column", sm: "row" }}
-                alignItems="center"
-                justifyContent="space-between"
-                spacing={2}
-              >
-                <Box display="flex" alignItems="center" gap={2} sx={{ width: '100%' }}>
-                  {/* صورة المنتج - استخدام borderRadius من الثيم */}
+        <Box sx={{ 
+          display: "flex", 
+          flexDirection: { xs: "column", md: "row" }, 
+          gap: 4, 
+          alignItems: "flex-start" 
+        }}>
+          
+          {/* قائمة المنتجات - Products List */}
+          <Stack spacing={2.5} sx={{ flex: 2, width: "100%" }}>
+            {[1, 2, 3].map((i) => (
+              <AppCard key={i} sx={{ 
+                p: 2.5, 
+                borderRadius: '24px',
+                border: `1px solid ${alpha(theme.palette.divider, 0.05)}`
+              }}>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  {/* محاكاة الصورة الاحترافية */}
                   <Skeleton 
                     variant="rectangular" 
-                    width={80} 
-                    height={80} 
                     sx={{ 
-                      borderRadius: theme.shape.borderRadius,
-                      bgcolor: alpha(theme.palette.action.hover, 0.1) 
+                      width: { xs: 70, sm: 90 }, 
+                      height: { xs: 70, sm: 90 }, 
+                      borderRadius: "16px",
+                      bgcolor: alpha(theme.palette.action.hover, 0.1)
                     }} 
                   />
-                  
-                  {/* نصوص المنتج */}
-                  <Box sx={{ flex: 1 }}>
-                    <Skeleton variant="text" width="60%" height={25} />
-                    <Skeleton variant="text" width="30%" height={20} />
+
+                  {/* محاكاة النصوص (الاسم والسعر) */}
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Skeleton variant="text" width="50%" height={30} sx={{ mb: 1 }} />
+                    <Skeleton variant="text" width="30%" height={25} />
                   </Box>
+
+                  {/* محاكاة كبسولة التحكم بالكمية */}
+                  <Skeleton 
+                    variant="rounded" 
+                    width={100} 
+                    height={45} 
+                    sx={{ 
+                      borderRadius: "12px",
+                      bgcolor: alpha(theme.palette.primary.main, 0.03),
+                      display: { xs: 'none', sm: 'block' } // إخفاء في الموبايل لتقليل الزحمة
+                    }} 
+                  />
+                </Stack>
+              </AppCard>
+            ))}
+          </Stack>
+
+          {/* ملخص الحساب - Summary Sidebar */}
+          <Box sx={{ flex: 1, width: "100%" }}>
+            <AppCard sx={{ 
+              p: 4, 
+              borderRadius: '28px',
+              border: `1px solid ${alpha(theme.palette.divider, 0.1)}`
+            }}>
+              <Skeleton variant="text" width="60%" height={35} sx={{ mb: 4 }} />
+              
+              <Stack spacing={2.5}>
+                <Box display="flex" justifyContent="space-between">
+                  <Skeleton variant="text" width="40%" />
+                  <Skeleton variant="text" width="20%" />
+                </Box>
+                <Box display="flex" justifyContent="space-between">
+                  <Skeleton variant="text" width="30%" />
+                  <Skeleton variant="text" width="20%" />
+                </Box>
+                
+                <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+                
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Skeleton variant="text" width="40%" height={40} />
+                  <Skeleton variant="text" width="30%" height={50} />
                 </Box>
 
-                {/* أزرار التحكم - ربط الحواف بالثيم */}
+                {/* زر الشراء الضخم */}
                 <Skeleton 
-                  variant="rounded" 
-                  width={120} 
-                  height={40} 
+                  variant="rectangular" 
+                  width="100%" 
+                  height={56} 
                   sx={{ 
-                    borderRadius: `${Number(theme.shape.borderRadius) * 2}px`,
-                    bgcolor: alpha(theme.palette.primary.main, 0.05) // تلميح خفيف بلون البراند
+                    borderRadius: "16px", 
+                    mt: 2,
+                    bgcolor: alpha(theme.palette.primary.main, 0.08)
                   }} 
                 />
               </Stack>
             </AppCard>
-          ))}
+          </Box>
         </Box>
-
-        {/* الجزء الخاص بالملخص - Summary Skeleton */}
-        <Box sx={{ flex: 1, width: "100%" }}>
-          <AppCard sx={{ bgcolor: theme.palette.background.paper }}>
-            <Skeleton variant="text" width="50%" height={30} sx={{ mb: 3 }} />
-            
-            <Stack spacing={2}>
-              <Box display="flex" justifyContent="space-between">
-                <Skeleton variant="text" width="40%" />
-                <Skeleton variant="text" width="20%" />
-              </Box>
-              <Box display="flex" justifyContent="space-between">
-                <Skeleton variant="text" width="30%" />
-                <Skeleton variant="text" width="20%" />
-              </Box>
-              
-              <Divider sx={{ my: 1, borderColor: alpha(theme.palette.divider, 0.8) }} />
-              
-              <Box display="flex" justifyContent="space-between">
-                <Skeleton variant="text" width="40%" height={40} />
-                <Skeleton variant="text" width="30%" height={40} />
-              </Box>
-
-              {/* زر تأكيد الطلب - استخدام لون البراند خفيف جداً لإعطاء انطباع بمكان الزر الرئيسي */}
-              <Skeleton 
-                variant="rectangular" 
-                width="100%" 
-                height={48} 
-                sx={{ 
-                  borderRadius: theme.shape.borderRadius, 
-                  mt: 2,
-                  bgcolor: alpha(theme.palette.primary.main, 0.1)
-                }} 
-              />
-            </Stack>
-          </AppCard>
-        </Box>
-      </Box>
+      </Container>
     </Box>
   );
 }

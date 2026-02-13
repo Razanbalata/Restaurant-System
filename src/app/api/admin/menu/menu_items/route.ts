@@ -51,7 +51,6 @@ export async function POST(req: NextRequest) {
     try {
       const body = await req.json();
       const { categoryId, restaurantId, items } = body;
-    console.log(body)
       // تحقق من الحقول الأساسية
       if (!categoryId || !restaurantId || !items || !Array.isArray(items) || !items.length) {
         return NextResponse.json(

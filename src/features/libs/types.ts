@@ -30,3 +30,10 @@ export interface Restaurant {
   createdAt: Date;
   updatedAt: Date;
 }
+export interface CartItem {
+  menuItemId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image?: string;
+}

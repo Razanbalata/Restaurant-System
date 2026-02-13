@@ -27,7 +27,6 @@ const transporter = nodemailer.createTransport({
       <p>This link will expire in 15 minutes.</p>
     `,
   });
-  console.log("dddd",transporter)
 
   return NextResponse.json({ success: true });
 }

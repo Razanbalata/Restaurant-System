@@ -16,10 +16,8 @@ export default function SettingsPage() {
   const { selectedRestaurant } = useRestaurant();
 
   const { data: user } = useMe();
-  console.log(user);
   const { data: restaurant } = useRestaurantById(selectedRestaurant?.id);
   const [isSaving, setIsSaving] = useState(false);
-  console.log("settt", restaurant);
   const [settings, setSettings] = useState({
     restaurantInfo: {
       name: restaurant?.name,

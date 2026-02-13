@@ -4,6 +4,7 @@ export type User = {
   name: string;
   createdAt: string;
   role:string,
+  phone?:string;
   hasRestaurant: boolean; // الحقل الجديد
   restaurant?: { id: number; name: string } | null;
 };

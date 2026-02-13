@@ -71,7 +71,6 @@ export const useRestaurants = () => {
         return res.json(); // تأكد أن ال API ترجع المطعم المحدث
       },
       onSuccess: (updatedRestaurant) => {
-        console.log("ddd", updatedRestaurant);
         // 1. تحديث بيانات المطعم الفردي في الكاش
         const restaurantId = String(updatedRestaurant.id);
 

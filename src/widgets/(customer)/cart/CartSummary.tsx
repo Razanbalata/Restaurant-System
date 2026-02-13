@@ -9,67 +9,75 @@ interface CartSummaryProps {
   isEmpty: boolean;
 }
 
+
 export function CartSummary({ total, subtotal, isEmpty }: CartSummaryProps) {
   const theme = useTheme();
   const router = useRouter();
-  const isPending = false; 
 
   return (
     <AppCard sx={{ 
-      p: 4, 
-      borderRadius: '28px', 
-      border: `1px solid ${theme.palette.divider}`,
-      boxShadow: theme.shadows[4],
-      bgcolor: theme.palette.background.default
+      p: 3, 
+      borderRadius: '32px', 
+      background: `linear-gradient(145deg, ${theme.palette.background.paper} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+      border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+      boxShadow: '0 20px 40px -12px rgba(0,0,0,0.05)',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
-      <Typography variant="h5" fontWeight="900" mb={4} textAlign="center">
+      {/* لمسة جمالية خلفية */}
+      <Box sx={{
+        position: 'absolute', top: -50, right: -50, width: 150, height: 150,
+        borderRadius: '50%', background: alpha(theme.palette.primary.main, 0.03)
+      }} />
+
+      <Typography variant="h5" fontWeight="900" mb={3} sx={{ letterSpacing: '-1px' }}>
         Order Summary
       </Typography>
 
-      <Stack spacing={2.5}>
+      <Stack spacing={2}>
         <Box display="flex" justifyContent="space-between">
-          <Typography color="text.secondary" fontWeight={600}>Subtotal</Typography>
-          <Typography fontWeight="800">{subtotal} ₪</Typography>
+          <Typography color="text.secondary" fontWeight={500}>Subtotal</Typography>
+          <Typography fontWeight={700} variant="body1">{subtotal} ₪</Typography>
         </Box>
 
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Stack direction="row" spacing={1} alignItems="center">
-            {/* <LocalTruckOutlinedIcon fontSize="small" color="success" /> */}
-            <Typography color="text.secondary" fontWeight={600}>Delivery Fees</Typography>
-          </Stack>
-          <Typography fontWeight="800" color="success.main">Free</Typography>
+        <Box display="flex" justifyContent="space-between">
+          <Typography color="text.secondary" fontWeight={500}>Delivery Fee</Typography>
+          <Typography fontWeight={700} color="success.main" variant="body1">FREE</Typography>
         </Box>
 
-        <Divider sx={{ borderStyle: 'dashed', my: 1 }} />
+        <Divider sx={{ my: 1, opacity: 0.6 }} />
 
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h5" fontWeight="900">Total</Typography>
-          <Typography variant="h4" fontWeight="900" color="primary">
-            {total} ₪
-          </Typography>
+        <Box display="flex" justifyContent="space-between" alignItems="flex-end" mb={2}>
+          <Typography variant="h6" fontWeight="800" fontSize={{sm:"1.1rem",md:"1rem"}}>Total Amount</Typography>
+          <Box sx={{ textAlign: 'right' }} display={{sm:"flex"}}>
+             <Typography variant="h6" fontWeight="950" color="primary.main" sx={{ lineHeight: 1 }}>
+              {total} ₪
+            </Typography>
+            <Typography variant="caption" color="text.secondary">Incl. VAT</Typography>
+          </Box>
         </Box>
 
         <Button
           fullWidth
-          size="large"
           variant="contained"
-          disabled={isEmpty || isPending}
+          disabled={isEmpty}
           onClick={() => router.push("/customer/checkout")}
           sx={{ 
-            py: 2, 
-            borderRadius: "16px", 
+            py: 2.5, 
+            borderRadius: "18px", 
             fontWeight: 900, 
             fontSize: "1.1rem",
-            boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
-            mt: 2
+            textTransform: 'none',
+            boxShadow: `0 12px 24px ${alpha(theme.palette.primary.main, 0.3)}`,
+            transition: 'all 0.3s ease',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: `0 15px 30px ${alpha(theme.palette.primary.main, 0.4)}`,
+            }
           }}
         >
-          {isPending ? "Processing..." : "Complete Purchase ✨"}
+          Check Out Now ✨
         </Button>
-        
-        <Typography variant="caption" color="text.secondary" textAlign="center" sx={{ mt: 2 }}>
-          Prices include applicable taxes
-        </Typography>
       </Stack>
     </AppCard>
   );

@@ -8,7 +8,6 @@ const RESET_PASSWORD_EXP = "2m"; // صلاحية التوكن 2 دقيقة
 
 export async function POST(req: Request) {
   const { email } = await req.json();
- console.log("email",email)
   // التحقق من وجود المستخدم
   const { data: user } = await supabase
     .from("users")
@@ -26,11 +25,7 @@ export async function POST(req: Request) {
 
   // الرابط لإعادة تعيين كلمة المرور
 const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
-
-
-
   // هنا ترسل الإيميل فعليًا (مثلاً عبر Supabase Email أو SMTP)
-  console.log("Reset password link (send via email):", resetLink);
 
     await fetch(`${process.env.NEXT_PUBLIC_API}/email/reset-password`, {
     method: "POST",

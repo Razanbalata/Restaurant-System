@@ -41,41 +41,5 @@ export const useOrders = (restaurantId?: string) => {
       },
   });
 
-  // ======= Real Time Feature
-
-  // useEffect(() => {
-  //   if (!restaurantId) return;
-
-  //   // الاشتراك في القناة
-  //   const channel = supabase
-  //     .channel(`orders-room-${restaurantId}`)
-  //     .on(
-  //       "postgres_changes",
-  //       {
-  //         event: "*", // استمع للإضافة، التعديل، والحذف
-  //         schema: "public",
-  //         table: "orders",
-  //         filter: `restaurant_id=eq.${restaurantId}`, // راقب مطعمك فقط!
-  //       },
-  //       (payload) => {
-  //         console.log("New change in orders:", payload);
-  //         // Update data immediately in browser
-  //         queryClient.invalidateQueries({ queryKey: ["orders", restaurantId] });
-  //       },
-  //     )
-  //     .subscribe((status, err) => {
-  //       if (status === "SUBSCRIBED") {
-  //         console.log("Connected to real-time broadcast! ✅");
-  //       }
-  //       if (status === "CHANNEL_ERROR") {
-  //         console.error("Failed to connect to channel: ❌", err);
-  //       }
-  //     });
-
-  //   return () => {
-  //     supabase.removeChannel(channel);
-  //   };
-  // }, [restaurantId, queryClient]);
-
   return { useOrdersQuery, updateOrderStatus };
 };

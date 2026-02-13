@@ -45,7 +45,7 @@ const TopNav = () => {
         {/* Left side: Logo + Search */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, flex: 1 }}>
           {/* Search */}
-          <Box sx={{ flex: 1 }}>
+          <Box>
             <SearchBar />
           </Box>
         </Box>

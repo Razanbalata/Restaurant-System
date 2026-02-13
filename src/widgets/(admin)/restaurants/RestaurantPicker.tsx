@@ -139,7 +139,7 @@ export const RestaurantPicker = () => {
 
   if (isLoading) {
     return (
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Container maxWidth="xl" sx={{ py: 4,px:0 }}>
         <RestaurantPickerSkeleton />
       </Container>
     );
@@ -147,11 +147,6 @@ export const RestaurantPicker = () => {
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" fontWeight={900} sx={{ color: "text.primary", mb: 1 }}>
-          Your Restaurants
-        </Typography>
-      </Box>
 
       {/* حاوية الفليكس الأساسية */}
       <Box
@@ -171,11 +166,11 @@ export const RestaurantPicker = () => {
                 xs: "1 1 100%", // سطر كامل في الموبايل
                 sm: "1 1 calc(50% - 24px)", // كرتين في التابلت (مع طرح الـ Gap)
                 md: "1 1 calc(33.333% - 24px)", // 3 كروت في اللابتوب
-                lg: '0 1 calc(25% - 18px)', // 4 كروت في الشاشات الكبيرة
-                xl: "0 1 calc(18% - 24px)", // 5 كروت في الشاشات الضخمة
+                lg: '0 1 calc(26% - 18px)', // 4 كروت في الشاشات الكبيرة
+                xl: "0 1 calc(25% - 24px)", // 5 كروت في الشاشات الضخمة
               },
               // تثبيت الحجم الأدنى لضمان عدم صغر الكارت بشكل مشوه
-              minWidth: { sm: "257px", xs: "100%" },
+              minWidth: { sm: "268px", xs: "100%" },
               display: "flex",
               justifyContent:"space-between"
             }}

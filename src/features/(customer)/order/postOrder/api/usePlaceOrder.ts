@@ -10,7 +10,6 @@ export const usePlaceOrder = () => {
   return useMutation({
     mutationFn: async (orderBody: any) => {
       const normalizedRestaurantId = Number(orderBody.restaurantId);
-      console.log("6️⃣ normalizedRestaurantId:", normalizedRestaurantId);
 
       if (Number.isNaN(normalizedRestaurantId)) {
         console.error("❌ restaurantId is NaN after normalization");
@@ -30,7 +29,6 @@ export const usePlaceOrder = () => {
       let data;
       try {
         data = await res.json();
-        console.log("9️⃣ Response JSON:", data);
       } catch (e) {
         console.error("❌ Failed to parse response JSON");
         throw new Error("Invalid server response");
@@ -41,14 +39,12 @@ export const usePlaceOrder = () => {
         throw new Error(data?.message || "Failed to create order");
       }
 
-      console.log("✅ Order created successfully");
       console.groupEnd();
 
       return data;
     },
 
     onSuccess: (data) => {
-      console.log("🎉 onSuccess data:", data);
 
       cart.clearCart();
 

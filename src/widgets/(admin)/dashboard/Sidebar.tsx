@@ -16,11 +16,12 @@ import { DarkModeRounded, LightModeRounded } from "@mui/icons-material";
 import { usePathname, useRouter } from "next/navigation";
 import { useMe } from "@/features/user/api/use-me";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
-import { adminMenu } from "@/shared/config/sidebar.config";
+import { adminMenu, customerMenu } from "@/shared/config/sidebar.config";
 import { useColorMode } from "@/app/providers/ThemeProvider";
 import { useLogout } from "@/features/user/api/use-logout";
 import { useOrders } from "@/features/(admin)/order/getOrder/api/useOrders";
 import { useMediaQuery } from "@mui/material";
+import ToggleTheme from "@/shared/ui/ToggleTheme";
 
 interface SidebarProps {
   open: boolean;
@@ -44,13 +45,13 @@ export const Sidebar = ({ open, onToggle }: SidebarProps) => {
     orders?.filter((o: any) =>
       ["pending", "confirmed", "preparing"].includes(o.status)
     ).length || 0;
-
-  const menuItems = adminMenu;
+  const isAdmin = user?.role === "restaurant_owner"
+  const menuItems = isAdmin ? adminMenu:customerMenu;
 
   return (
     <Box
       sx={{
-        width: isMobile ? 80 : open ? 250 : 80, // responsive
+        width: isMobile ? 80 : open ? 280 : 80, // responsive
         transition: "width 0.3s",
         height: "100vh",
         borderRight: `1px solid ${theme.palette.divider}`,
@@ -206,29 +207,8 @@ export const Sidebar = ({ open, onToggle }: SidebarProps) => {
       <Box sx={{ p: 2, borderTop: `1px solid ${theme.palette.divider}`, mt: "auto" }}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           {/* Theme toggle */}
-          <ListItemButton
-            onClick={toggleColorMode}
-            sx={{
-              borderRadius: 2,
-              justifyContent: open && !isMobile ? "initial" : "center",
-              px: open && !isMobile ? 1.5 : 0,
-              minHeight: 20,
-            }}
-          >
-            <ListItemIcon sx={{ minWidth: 0, mr: open && !isMobile ? 1.5 : 0 }}>
-              {theme.palette.mode === "dark" ? (
-                <LightModeRounded sx={{ fontSize: 18 }} />
-              ) : (
-                <DarkModeRounded sx={{ fontSize: 18 }}/>
-              )}
-            </ListItemIcon>
-            {open && !isMobile && (
-              <ListItemText
-                primary="Theme Mode"
-                primaryTypographyProps={{ fontSize: "0.8rem", fontWeight: 500 }}
-              />
-            )}
-          </ListItemButton>
+         
+          <ToggleTheme onToggle={toggleColorMode} open={open} />
 
           {/* Logout */}
           <ListItemButton

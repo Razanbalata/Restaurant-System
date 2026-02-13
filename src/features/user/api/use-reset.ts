@@ -21,7 +21,6 @@ export const useResetPasswordMutation = ({
         },
         body: JSON.stringify(values),
       });
-      console.log("Reset password response:", response); // للتأكد من الاستجابة
       return response;
     },
     onSuccess: (data, variables) => {

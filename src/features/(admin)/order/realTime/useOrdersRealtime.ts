@@ -24,7 +24,6 @@ export const useOrdersRealtime = (restaurantId?: string) => {
         },
         (payload) => {
           notifyOrderEvent(payload, "admin");
-           console.log("Order event payload:", payload);
           addNotification({
             id: Date.now(),
             type: payload.eventType,

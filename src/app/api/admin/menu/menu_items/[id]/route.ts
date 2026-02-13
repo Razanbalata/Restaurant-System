@@ -11,7 +11,6 @@ export async function PATCH(
     const { id } = await params;
 
     const { updates } = await req.json();
-    console.log("req", updates);
     const { data: item, error: itemError } = await supabase
       .from("menu_items")
       .select("category_id")

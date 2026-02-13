@@ -17,8 +17,8 @@ export const DishesList = ({ displayedMeals, categories, activeTab }: DishesList
     return (
       <Box sx={{ 
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-        py: 12, px: 2, border: `1px dashed ${theme.palette.divider}`, 
-        borderRadius: 8, bgcolor: alpha(theme.palette.action.hover, 0.02)
+        py: 12, border: `1px dashed ${theme.palette.divider}`, 
+        borderRadius: 2, bgcolor: alpha(theme.palette.action.hover, 0.02)
       }}>
         <UtensilsCrossed size={48} strokeWidth={1} color={theme.palette.text.disabled} />
         <Typography variant="body1" sx={{ mt: 2, fontWeight: 600, color: 'text.secondary' }}>
@@ -50,7 +50,7 @@ export const DishesList = ({ displayedMeals, categories, activeTab }: DishesList
       xs: '100%',
       sm: 'calc(50% - 12px)',
       md: 'calc(33.333% - 16px)',
-      lg: 'calc(25% - 18px)'
+      lg: 'calc(28% - 18px)'
     },
     flexGrow: 0,
     flexShrink: 0,

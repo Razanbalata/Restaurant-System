@@ -1,38 +1,68 @@
 'use client';
 
 import React from "react";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, IconButton, Tooltip, Stack } from "@mui/material";
 import { motion } from "framer-motion";
 import { FloatingFoodIcons } from "@/features/user/ui/FoodBackground";
-import ToggleTheme from "@/shared/ui/ToggleTheme"; // تأكد من مسار الاستيراد الصحيح
-import { useColorMode } from "../providers/ThemeProvider";  // أو أي مكان تدير فيه الحالة
+import ToggleTheme from "@/shared/ui/ToggleTheme";
+import { useColorMode } from "../providers/ThemeProvider"; 
+import { ArrowLeft } from "lucide-react"; // استيراد أيقونة العودة
+import { useRouter } from "next/navigation"; // لاستخدام التنقل
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const theme = useTheme();
-  // نفترض أن لديك Context يدير التبديل، إذا كان الـ Toggle داخلياً مرر الدالة المطلوبة
-   const { toggleColorMode } = useColorMode(); 
+  const router = useRouter();
+  const { toggleColorMode } = useColorMode(); 
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", width: "100%", bgcolor: "background.default", position: "relative" }}>
       
-      {/* --- زر تبديل الثيم الطافي --- */}
-      <Box sx={{ 
-        position: "absolute", 
-        top: 20, 
-        left: 20, 
-        zIndex: 100, // أعلى من كل شيء
-        bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)',
-        borderRadius: '12px',
-        backdropFilter: 'blur(8px)',
-        border: `1px solid ${theme.palette.divider}`
-      }}>
-        <ToggleTheme 
-            open={true} 
-            onToggle={toggleColorMode} 
-        />
-      </Box>
+      {/* --- مجموعة أزرار التحكم الطافية (Theme + Back) --- */}
+      <Stack 
+        direction="row" 
+        spacing={1} 
+        sx={{ 
+          position: "absolute", 
+          top: 20, 
+          left: 20, 
+          zIndex: 100 
+        }}
+      >
+        {/* زر العودة */}
+        <Box sx={{ 
+          bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)',
+          borderRadius: '12px',
+          backdropFilter: 'blur(8px)',
+          border: `1px solid ${theme.palette.divider}`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <Tooltip title="Go Back">
+            <IconButton 
+              onClick={() => router.back()} 
+              sx={{ color: 'text.primary', p: 1 }}
+            >
+              <ArrowLeft size={20} />
+            </IconButton>
+          </Tooltip>
+        </Box>
 
-      {/* 1. الخلفية المتحركة (تغطي نصف الشاشة الأيسر أو كامل الشاشة في الموبايل) */}
+        {/* زر تبديل الثيم */}
+        <Box sx={{ 
+          bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)',
+          borderRadius: '12px',
+          backdropFilter: 'blur(8px)',
+          border: `1px solid ${theme.palette.divider}`
+        }}>
+          <ToggleTheme 
+              open={true} 
+              onToggle={toggleColorMode} 
+          />
+        </Box>
+      </Stack>
+
+      {/* 1. الخلفية المتحركة */}
       <Box sx={{ position: "absolute", inset: 0, width: { xs: "100%", lg: "50%" }, zIndex: 0 }}>
         <FloatingFoodIcons />
       </Box>

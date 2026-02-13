@@ -37,16 +37,30 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormValues) => {
+ const onSubmit = (data: LoginFormValues) => {
     loginMutation.mutate(data, {
       onSuccess: (res) => {
-        // توجيه المستخدم حسب الرتبة
-        if (res.user?.role === "restaurant_owner") {
+        // فحص البيانات الراجعة في الكونسول (مهم جداً للتأكد من هيكلة الكائن)
+        console.log("Server Response:", res);
+
+        // تأكد هل الرول موجودة داخل res.user أم داخل res مباشرة؟
+        // سأقوم بتعديل الشرط ليكون أكثر مرونة
+        const userRole = res.user?.role || res.role;
+
+        if (userRole === "restaurant_owner") {
           router.push("/shared/dashboard");
-        } else {
+        } else if (userRole === "customer") {
           router.push("/customer/cart");
+        } else {
+          // في حال نجح الدخول ولكن الرول غير معروفة
+          console.warn("User role is missing or unknown:", userRole);
+          router.push("/"); // توجه للرئيسية كخيار بديل
         }
       },
+      onError: (error) => {
+        // هذا الجزء سيعمل الآن فوراً إذا كانت كلمة السر خطأ بفضل تعديل الـ Hook
+        console.error("Mutation failed:", error);
+      }
     });
   };
 

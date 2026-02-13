@@ -11,7 +11,7 @@ export function middleware(req: NextRequest) {
   // كل الشروط
   const isOwnerPage = pathname.startsWith("/admin");
   const isCustomerPage = pathname.startsWith("/customer");
-  const isAuthPage = ["/login", "/sign-up", "/forget-password", "/reset-password"].some(p => pathname.startsWith(p));
+  const isAuthPage = ["/login", "/signUp", "/forget-password", "/reset-password"].some(p => pathname.startsWith(p));
 
   // غير مسجل دخول
   if (!session) {
@@ -21,12 +21,12 @@ export function middleware(req: NextRequest) {
 
   // منع العودة لصفحات auth
   if (isAuthPage) {
-    const redirectTo = role === "owner" ? "/admin/dashboard" : "/customer/cart";
+    const redirectTo = role === "restaurant_owner" ? "/admin/dashboard" : "/customer/cart";
     return NextResponse.redirect(new URL(redirectTo, req.url));
   }
 
   // حماية Owner
-  if (isOwnerPage && role !== "owner") return NextResponse.redirect(new URL("/unauthorized", req.url));
+  if (isOwnerPage && role !== "restaurant_owner") return NextResponse.redirect(new URL("/unauthorized", req.url));
 
   // حماية Customer
   if (isCustomerPage && role !== "customer") return NextResponse.redirect(new URL("/unauthorized", req.url));

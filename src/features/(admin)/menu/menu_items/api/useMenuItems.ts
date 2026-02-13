@@ -75,6 +75,12 @@ export const useMenuItems = (categoryId: string) => {
         updateCache(newItems, variables.restaurantId, "add", variables.categoryId);
         toast.success("✅ Item added successfully!");
       },
+      onError: (error: any) => {
+        console.log(error)
+        toast.error("❌ Add Failed", {
+          description: error.message || "Something went wrong while adding the item.",
+        });
+      }
     });
 
   // 3️⃣ Update عنصر
@@ -93,6 +99,11 @@ export const useMenuItems = (categoryId: string) => {
         updateCache(updatedItem, variables.updates.restaurant_id, "update");
         toast.success("✅ Item updated successfully!");
       },
+      onError: (error: any) => {
+        toast.error("❌ Update Failed", {
+          description: error.message || "Could not save changes to the item.",
+        });
+      }
     });
 
   // 4️⃣ Delete عنصر
@@ -107,6 +118,11 @@ export const useMenuItems = (categoryId: string) => {
         updateCache(variables.id, variables.restaurantId, "delete", variables.catId);
         toast.success("✅ Item deleted successfully!");
       },
+      onError: (error: any) => {
+        toast.error("❌ Delete Failed", {
+          description: error.message || "The item could not be removed.",
+        });
+      }
     });
 
   return { useAdminMenuItems, useAddMenuItem, useUpdateMenuItem, useDeleteMenuItem };

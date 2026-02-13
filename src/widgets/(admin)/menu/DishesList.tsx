@@ -50,7 +50,7 @@ export const DishesList = ({ displayedMeals, categories, activeTab }: DishesList
       xs: '100%',
       sm: 'calc(50% - 12px)',
       md: 'calc(33.333% - 16px)',
-      lg: 'calc(28% - 18px)'
+      lg: 'calc(25% - 18px)'
     },
     flexGrow: 0,
     flexShrink: 0,

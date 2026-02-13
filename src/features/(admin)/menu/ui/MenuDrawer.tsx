@@ -14,13 +14,11 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Close, CloudUpload } from "@mui/icons-material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useMenuItems } from "../menu_items/api/useMenuItems";
 import { useCategories } from "../categories/api/useCategories";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
 import { CategoryMutationButton } from "../categories/ui/CategoryMutationBtn";
-
-// We added initialData to know if there is an edit
 
 interface MealItem {
   id: string;
@@ -31,7 +29,6 @@ interface MealItem {
   image_url?: string;
 }
 
-// 2. تعريف الـ Props للمكون
 interface MealModalProps {
   open: boolean;
   onClose: () => void;
@@ -40,31 +37,29 @@ interface MealModalProps {
 
 const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
   const { selectedRestaurant } = useRestaurant();
-  const isEdit = !!initialData; // If initial data is found, then we are in edit mode
+  const isEdit = !!initialData;
+  const fileInputRef = useRef<HTMLInputElement>(null); // مرجع لزر اختيار الملف المخفي
 
-  // 1. حالات الفورم
   const [formData, setFormData] = useState({
     name: "",
     price: 0,
     description: "",
-    category_id: "", // نستخدم الـ ID بدلاً من الاسم
-    image_url:"",
+    category_id: "",
+    image_url: "",
   });
 
-  // 2. جلب التصنيفات الحقيقية من السيرفر
+  // حالة لحفظ الملف الفعلي المختار لرفعه لاحقاً للسيرفر
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
   const { useAdminCategories } = useCategories(selectedRestaurant?.id);
   const { data: categoriesData } = useAdminCategories;
 
-  // 3. Hooks for adding and editing
-  const { useAddMenuItem, useUpdateMenuItem } = useMenuItems(
-   formData.category_id,
-  );
+  const { useAddMenuItem, useUpdateMenuItem } = useMenuItems(formData.category_id);
   const addMenuItem = useAddMenuItem();
   const updateMenuItem = useUpdateMenuItem();
 
   const isLoading = addMenuItem.isPending || updateMenuItem.isPending;
 
-  // 4. Populate data when editing or clear when adding
   useEffect(() => {
     if (isEdit && initialData) {
       setFormData({
@@ -82,35 +77,48 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
         category_id: "",
         image_url: "",
       });
+      setSelectedFile(null);
     }
   }, [initialData, open, isEdit]);
 
-  const onSave = () => {
-  // تجميع البيانات والتأكد من تحويل السعر لرقم والـ ID لنص
-  const payload = { 
-    ...formData, 
-    price: Number(formData.price),
-    category_id: String(formData.category_id), // مهم جداً
-    restaurant_id: selectedRestaurant?.id 
+  // دالة معالجة اختيار الصورة
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      // إنشاء رابط للمعاينة الفورية
+      const previewUrl = URL.createObjectURL(file);
+      setFormData({ ...formData, image_url: previewUrl });
+    }
   };
 
-  if (isEdit) {
-    updateMenuItem.mutate(
-      { id: String(initialData.id), updates: payload }, // نمرر الـ ID كـ String
-      { onSuccess: () => onClose() }
-    );
-  } else {
-    addMenuItem.mutate(
-      { 
-        
-        meals: [payload], 
-        restaurantId:String(selectedRestaurant?.id), 
-        categoryId: String(formData.category_id) 
-      },
-      { onSuccess: () => onClose() }
-    );
-  }
-};
+  const onSave = async () => {
+    // ملاحظة: هنا يجب إضافة كود رفع selectedFile إلى Supabase Storage 
+    // إذا نجح الرفع، نستبدل formData.image_url بالرابط الحقيقي الراجع من السيرفر.
+    
+    const payload = { 
+      ...formData, 
+      price: Number(formData.price),
+      category_id: String(formData.category_id),
+      restaurant_id: selectedRestaurant?.id 
+    };
+
+    if (isEdit) {
+      updateMenuItem.mutate(
+        { id: String(initialData?.id), updates: payload },
+        { onSuccess: () => onClose() }
+      );
+    } else {
+      addMenuItem.mutate(
+        { 
+          meals: [payload], 
+          restaurantId: String(selectedRestaurant?.id), 
+          categoryId: String(formData.category_id) 
+        },
+        { onSuccess: () => onClose() }
+      );
+    }
+  };
 
   return (
     <Dialog
@@ -120,13 +128,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
       maxWidth="sm"
       PaperProps={{ sx: { borderRadius: "24px", p: 1 } }}
     >
-      <DialogTitle
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Typography variant="h6" fontWeight="800">
           {isEdit ? "Edit Meal" : "Add New Meal"}
         </Typography>
@@ -137,21 +139,65 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
 
       <DialogContent>
         <Stack spacing={3} sx={{ mt: 1 }}>
-          {/* Image upload section (as in your code) */}
+          
+          {/* حقل اختيار الصورة المخفي */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+
+          {/* صندوق رفع الصورة البصري */}
           <Box
+            onClick={() => fileInputRef.current?.click()}
             sx={{
               border: "2px dashed #e0e0e0",
               borderRadius: "16px",
-              p: 4,
-              textAlign: "center",
+              height: 180,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
               cursor: "pointer",
+              position: "relative",
+              overflow: "hidden",
+              transition: "all 0.3s ease",
               "&:hover": { bgcolor: "#fafafa", borderColor: "#FF5B22" },
             }}
           >
-            <CloudUpload sx={{ fontSize: 40, color: "#FF5B22", mb: 1 }} />
-            <Typography variant="body2" color="textSecondary">
-              {formData.image_url ? "Image selected" : "Upload meal image here"}
-            </Typography>
+            {formData.image_url ? (
+              <>
+                <Box
+                  component="img"
+                  src={formData.image_url}
+                  sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+                <Box
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    bgcolor: "rgba(0,0,0,0.4)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    opacity: 0,
+                    transition: "0.3s",
+                    "&:hover": { opacity: 1 },
+                  }}
+                >
+                  <Typography color="white" fontWeight="700">Change Image</Typography>
+                </Box>
+              </>
+            ) : (
+              <>
+                <CloudUpload sx={{ fontSize: 40, color: "#FF5B22", mb: 1 }} />
+                <Typography variant="body2" color="textSecondary" fontWeight="600">
+                  Click to upload meal image
+                </Typography>
+              </>
+            )}
           </Box>
 
           <TextField
@@ -168,12 +214,9 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
               select
               label="Category"
               value={formData.category_id}
-              onChange={(e) =>
-                setFormData({ ...formData, category_id: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
               sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
             >
-              
               {categoriesData?.map((cat: { id: string; name: string }) => (
                 <MenuItem key={cat.id} value={cat.id}>
                   {cat.name}
@@ -187,9 +230,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
               label="Price ($)"
               type="number"
               value={formData.price}
-              onChange={(e) =>
-                setFormData({ ...formData, price: Number(e.target.value) })
-              }
+              onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
               sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
             />
           </Stack>
@@ -200,9 +241,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
             rows={3}
             label="Meal Description"
             value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             sx={{ "& .MuiOutlinedInput-root": { borderRadius: "12px" } }}
           />
         </Stack>
@@ -224,13 +263,7 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
             "&:hover": { bgcolor: "#e54a1a" },
           }}
         >
-          {isLoading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : isEdit ? (
-            "Save Changes"
-          ) : (
-            "Add Meal"
-          )}
+          {isLoading ? <CircularProgress size={24} color="inherit" /> : isEdit ? "Save Changes" : "Add Meal"}
         </Button>
       </DialogActions>
     </Dialog>

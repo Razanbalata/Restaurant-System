@@ -4,9 +4,12 @@ import { Box, Container, Stack, Typography, Button, alpha, useTheme } from "@mui
 import { Utensils } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import ToggleTheme from "@/shared/ui/ToggleTheme";
+import { useColorMode } from "@/app/providers/ThemeProvider";
 
 export const Navbar = () => {
   const theme = useTheme();
+  const {toggleColorMode} = useColorMode()
   return (
     <motion.nav
       initial={{ opacity: 0, y: -20 }}
@@ -39,6 +42,7 @@ export const Navbar = () => {
           </Stack>
 
           <Stack direction="row" spacing={1.5}>
+            <ToggleTheme onToggle={toggleColorMode} open={true}/>
             <Button component={Link} href="/login" variant="text" color="inherit" sx={{ fontWeight: 600 }}>Login</Button>
             <Button component={Link} href="/signUp" variant="contained" sx={{ borderRadius: "10px", px: 3 }}>Get Started</Button>
           </Stack>

@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
       name: googleUser.name,
       picture: googleUser.picture,
     });
-
+    console.log(appUser);
     // 🔹 إنشاء JWT
     const jwt = await createToken({
       userId: appUser.id,
@@ -85,13 +85,13 @@ export async function GET(req: NextRequest) {
       role: appUser.role,
     });
 
-    // 🔹 إعداد الرد ووضع JWT في cookie
-    // 🔹 إعداد الرد ووضع JWT في cookie
-    const response = NextResponse.redirect(
-  new URL("/shared/dashboard", req.url)
-);
+    const targetPath =
+      appUser.role === "restaurant_owner"
+        ? "/shared/dashboard"
+        : "/customer/cart";
+    const response = NextResponse.redirect(new URL(targetPath, req.url));
 
-    setSessionCookie(response, jwt);
+    setSessionCookie(response, jwt, appUser.role);
 
     // ✅ مسح state cookie بالطريقة الصح
     response.cookies.set("google_oauth_state", "", {
@@ -99,19 +99,17 @@ export async function GET(req: NextRequest) {
       path: "/",
     });
 
-
     return response;
   } catch (err: any) {
-  console.error("❌ Google callback error:", err);
+    console.error("❌ Google callback error:", err);
 
-  return NextResponse.json(
-    {
-      error: "Google authentication failed",
-      message: err?.message ?? "Unknown error",
-      stack: process.env.NODE_ENV === "development" ? err?.stack : undefined,
-    },
-    { status: 500 }
-  );
-}
-
+    return NextResponse.json(
+      {
+        error: "Google authentication failed",
+        message: err?.message ?? "Unknown error",
+        stack: process.env.NODE_ENV === "development" ? err?.stack : undefined,
+      },
+      { status: 500 },
+    );
+  }
 }

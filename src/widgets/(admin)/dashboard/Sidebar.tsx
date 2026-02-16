@@ -39,7 +39,7 @@ export const Sidebar = ({ open, onToggle }: SidebarProps) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   // Orders pending count
-  const { useOrdersQuery } = useOrders(selectedRestaurant?.id || "rest-1");
+  const { useOrdersQuery } = useOrders(selectedRestaurant?.id || "");
   const { data: orders } = useOrdersQuery;
   const pendingOrdersCount =
     orders?.filter((o: any) =>

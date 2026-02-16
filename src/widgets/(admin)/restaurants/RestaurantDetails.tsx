@@ -31,12 +31,18 @@ export default function RestaurantDetailPage() {
   // 4. التحقق من الملكية
   const isOwner = user?.role === "restaurant_owner" && restaurant?.owner_id === user.id;
 
-  if (isRestaurantLoading || isMenuLoading || !restaurant) {
+  if (isRestaurantLoading || isMenuLoading) {
     return <RestaurantDetailSkeleton />;
   }
 
+    // ==== حالة المالك الجديد بدون أي مطاعم ====
+if (!restaurant && user?.role === "restaurant_owner") {
+  return <NoRestaurantHero userName={user.name} />;
+}
+
+
   return (
-    <Box sx={{ bgcolor: theme.palette.mode === 'light' ? "#f8f9fa" : theme.palette.background.default, minHeight: "100vh" }}>
+    <Box sx={{ bgcolor:theme.palette.background.default, minHeight: "100vh" }}>
       
       {/* عرض بيانات المطعم الأساسية (الهيدر والبطاقة العائمة) */}
       <RestaurantInfoCard restaurant={restaurant} isOwner={isOwner} />
@@ -108,4 +114,5 @@ export default function RestaurantDetailPage() {
 // مكون Stack صغير للتنظيم إذا لم يكن مستورداً
 import { Stack } from "@mui/material";
 import { MenuItemMutationButton } from "@/features/(admin)/menu/ui/MenuItemMutationButton";import GenerateMenuButton from "@/features/(admin)/menu/ui/GenerateMenuButton";
+import { NoRestaurantHero } from "./NoRestaurantHero";
 

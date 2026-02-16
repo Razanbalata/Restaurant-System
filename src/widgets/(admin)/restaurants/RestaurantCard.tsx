@@ -1,23 +1,37 @@
 "use client";
 import React from "react";
-import { 
-  Paper, Stack, Typography, Rating, Divider, Chip, Box, 
-  Avatar, Button, useTheme, alpha 
+import {
+  Paper,
+  Stack,
+  Typography,
+  Rating,
+  Divider,
+  Chip,
+  Box,
+  Avatar,
+  Button,
+  useTheme,
+  alpha,
 } from "@mui/material";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
 import { MapPin, Clock, UtensilsCrossed } from "lucide-react";
 import MutationButton from "@/features/(admin)/restaurant/mutations-restaurant/ui/MutationButton";
 import DeleteRestaurantBtn from "@/features/(admin)/restaurant/delete-restaurant/ui/DeleteRestaurantBtn";
 import { useRouter } from "next/navigation";
+import { RestaurantStatusBtn } from "@/features/(admin)/restaurant/delete-restaurant/ui/RestaurantStatusBtn";
 
 interface RestaurantInfoCardProps {
   restaurant: any;
   isOwner: boolean;
 }
 
-export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardProps) => {
+export const RestaurantInfoCard = ({
+  restaurant,
+  isOwner,
+}: RestaurantInfoCardProps) => {
   const theme = useTheme();
-  const router = useRouter()
+  const router = useRouter();
+  console.log("res", restaurant);
 
   return (
     <Box sx={{ width: "100%", position: "relative" }}>
@@ -59,9 +73,10 @@ export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardPr
           backdropFilter: "blur(12px)",
           bgcolor: alpha(theme.palette.background.paper, 0.85),
           border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
-          boxShadow: theme.palette.mode === 'light' 
-            ? "0 20px 60px -12px rgba(0,0,0,0.08)" 
-            : "0 20px 60px -12px rgba(0,0,0,0.5)",
+          boxShadow:
+            theme.palette.mode === "light"
+              ? "0 20px 60px -12px rgba(0,0,0,0.08)"
+              : "0 20px 60px -12px rgba(0,0,0,0.5)",
         }}
       >
         <Stack
@@ -92,56 +107,68 @@ export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardPr
             </Avatar>
 
             <Box>
-              <Stack 
-                direction="row" 
-                alignItems="center" 
-                justifyContent={{ xs: "center", sm: "flex-start" }} 
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent={{ xs: "center", sm: "flex-start" }}
                 spacing={1.5}
                 mb={1.5}
               >
-                <Typography 
-                  variant="h2" 
-                  sx={{ 
-                    fontWeight: 900, 
+                <Typography
+                  variant="h2"
+                  sx={{
+                    fontWeight: 900,
                     fontSize: { xs: "1.8rem", md: "3rem" },
-                    letterSpacing: "-0.04em"
+                    letterSpacing: "-0.04em",
                   }}
                 >
                   {restaurant.name}
                 </Typography>
-                <VerifiedRoundedIcon color="primary" sx={{ fontSize: { xs: 24, md: 36 } }} />
+                <VerifiedRoundedIcon
+                  color="primary"
+                  sx={{ fontSize: { xs: 24, md: 36 } }}
+                />
               </Stack>
 
-              <Stack 
-                direction="row" 
-                spacing={2} 
+              <Stack
+                direction="row"
+                spacing={2}
                 justifyContent={{ xs: "center", sm: "flex-start" }}
                 alignItems="center"
               >
-                <Chip 
-                  label={restaurant.category || "General"} 
-                  sx={{ 
-                    fontWeight: 800, 
+                <Chip
+                  label={restaurant.category || "General"}
+                  sx={{
+                    fontWeight: 800,
                     bgcolor: alpha(theme.palette.primary.main, 0.1),
                     color: "primary.main",
-                    borderRadius: "12px"
-                  }} 
+                    borderRadius: "12px",
+                  }}
                 />
                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                   <Rating value={4.8} readOnly size="small" />
-                  <Typography variant="subtitle2" fontWeight={900}>4.8</Typography>
+                  <Typography variant="subtitle2" fontWeight={900}>
+                    4.8
+                  </Typography>
                 </Box>
               </Stack>
             </Box>
           </Stack>
 
           {/* Right Side: Action Buttons */}
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              flexWrap: "wrap",
+              justifyContent: "center",
+            }}
+          >
             {isOwner ? (
               <Stack direction="row" spacing={1.5}>
                 {/* مكوناتك الخاصة بالأدمن */}
                 <MutationButton mode="edit" restaurant={restaurant} />
-                <DeleteRestaurantBtn r={restaurant} />
+                <RestaurantStatusBtn r={restaurant} />
               </Stack>
             ) : (
               <Button
@@ -155,10 +182,13 @@ export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardPr
                   fontWeight: 900,
                   fontSize: "1rem",
                   boxShadow: `0 12px 24px ${alpha(theme.palette.primary.main, 0.3)}`,
-                  "&:hover": { transform: "translateY(-2px)", boxShadow: theme.shadows[15] },
-                  transition: "all 0.3s ease"
+                  "&:hover": {
+                    transform: "translateY(-2px)",
+                    boxShadow: theme.shadows[15],
+                  },
+                  transition: "all 0.3s ease",
                 }}
-                onClick={()=>router.push("/shared/menu")}
+                onClick={() => router.push("/shared/menu")}
               >
                 Order Now
               </Button>
@@ -169,28 +199,57 @@ export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardPr
         <Divider sx={{ my: { xs: 4, md: 6 }, opacity: 0.5 }} />
 
         {/* Bottom Stats: Info Grid */}
-        <Box 
-          sx={{ 
-            display: "grid", 
-            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr" }, 
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr 1fr" },
             gap: { xs: 4, md: 2 },
-            textAlign: { xs: "center", sm: "left" }
+            textAlign: { xs: "center", sm: "left" },
           }}
         >
-          <InfoItem 
-            icon={<MapPin size={22} color={theme.palette.primary.main} />} 
-            label="Location" 
-            value={`${restaurant.city}, ${restaurant.country}`} 
+          <InfoItem
+            icon={<MapPin size={22} color={theme.palette.primary.main} />}
+            label="Location"
+            value={`${restaurant.city}, ${restaurant.country}`}
           />
-          <InfoItem 
-            icon={<Clock size={22} color={theme.palette.primary.main} />} 
-            label="Avg. Prep Time" 
-            value="25 - 35 mins" 
+          <InfoItem
+            icon={<Clock size={22} color={theme.palette.primary.main} />}
+            label="Avg. Prep Time"
+            value="25 - 35 mins"
           />
-          <InfoItem 
-            icon={<Box sx={{ width: 12, height: 12, bgcolor: "#4CAF50", borderRadius: "50%", animation: "pulse 2s infinite" }} />} 
-            label="Status" 
-            value="Open Now" 
+          <InfoItem
+            icon={
+              <Box
+                sx={{
+                  width: 12,
+                  height: 12,
+                  // اللون يتغير بناءً على حالة النشاط
+                  bgcolor: restaurant.is_active ? "#4CAF50" : "#757575",
+                  borderRadius: "50%",
+                  // الأنميشن (النبض) يظهر فقط عندما يكون المطعم نشطاً
+                  animation: restaurant.is_active
+                    ? "pulse 2s infinite"
+                    : "none",
+                  "@keyframes pulse": {
+                    "0%": {
+                      transform: "scale(0.95)",
+                      boxShadow: "0 0 0 0 rgba(76, 175, 80, 0.7)",
+                    },
+                    "70%": {
+                      transform: "scale(1)",
+                      boxShadow: "0 0 0 10px rgba(76, 175, 80, 0)",
+                    },
+                    "100%": {
+                      transform: "scale(0.95)",
+                      boxShadow: "0 0 0 0 rgba(76, 175, 80, 0)",
+                    },
+                  },
+                }}
+              />
+            }
+            label="Status"
+            // نص الحالة يتغير ليصبح مفهوم للمستخدم
+            value={restaurant.is_active ? "Active" : "Archived"}
           />
         </Box>
       </Paper>
@@ -199,15 +258,23 @@ export const RestaurantInfoCard = ({ restaurant, isOwner }: RestaurantInfoCardPr
 };
 
 // Sub-component for Grid Items
-const InfoItem = ({ icon, label, value }: { icon: any, label: string, value: string }) => (
+const InfoItem = ({
+  icon,
+  label,
+  value,
+}: {
+  icon: any;
+  label: string;
+  value: string;
+}) => (
   <Stack spacing={0.5} alignItems={{ xs: "center", sm: "flex-start" }}>
-    <Typography 
-      variant="caption" 
-      sx={{ 
-        fontWeight: 900, 
-        textTransform: "uppercase", 
+    <Typography
+      variant="caption"
+      sx={{
+        fontWeight: 900,
+        textTransform: "uppercase",
         letterSpacing: "0.1em",
-        color: "text.secondary"
+        color: "text.secondary",
       }}
     >
       {label}

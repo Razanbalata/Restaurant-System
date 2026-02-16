@@ -2,17 +2,15 @@
 
 import { createContext, useContext, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
+import { useRestaurants } from "@/features/(admin)/restaurant/get-restaurants/api/useRestaurants"; // hook API لجلب المطاعم الخاصة بالمالك
 
-// ===== 1️⃣ Define Restaurant Type =====
 export interface Restaurant {
   id: string;
   name: string;
   city?: string;
   image?: string;
-  // أي حقل آخر تحتاجينه
 }
 
-// ===== 2️⃣ Define Context Type =====
 interface RestaurantContextType {
   selectedRestaurant: Restaurant | null;
   setSelectedRestaurant: Dispatch<SetStateAction<Restaurant | null>>;
@@ -20,30 +18,38 @@ interface RestaurantContextType {
   selectRestaurant: (restaurant: Restaurant, redirect?: boolean) => void;
 }
 
-// ===== 3️⃣ Create Context =====
 const RestaurantContext = createContext<RestaurantContextType | undefined>(undefined);
 
-// ===== 4️⃣ Provider Component =====
 export const RestaurantProvider = ({ children }: { children: React.ReactNode }) => {
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
 
-  // Load from localStorage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem("selectedRestaurant");
-    if (saved) {
-      try {
-        setSelectedRestaurant(JSON.parse(saved));
-      } catch {
-        localStorage.removeItem("selectedRestaurant");
-        setSelectedRestaurant(null);
-      }
-    }
-    setIsReady(true);
-  }, []);
+  const { useAdminRestaurants } = useRestaurants();
+  const {data:ownerRestaurants ,isLoading} = useAdminRestaurants
 
-  // Sync to localStorage whenever selectedRestaurant changes
+  useEffect(() => {
+    if (!isLoading && ownerRestaurants) {
+      const saved = localStorage.getItem("selectedRestaurant");
+      if (saved) {
+        try {
+          const parsed: Restaurant = JSON.parse(saved);
+          const exists = ownerRestaurants.some((r:any) => r.id === parsed.id);
+          if (exists) {
+            setSelectedRestaurant(parsed);
+          } else {
+            setSelectedRestaurant(null);
+            localStorage.removeItem("selectedRestaurant");
+          }
+        } catch {
+          setSelectedRestaurant(null);
+          localStorage.removeItem("selectedRestaurant");
+        }
+      }
+      setIsReady(true);
+    }
+  }, [isLoading, ownerRestaurants]);
+
   useEffect(() => {
     if (isReady) {
       if (selectedRestaurant) {
@@ -54,11 +60,10 @@ export const RestaurantProvider = ({ children }: { children: React.ReactNode }) 
     }
   }, [selectedRestaurant, isReady]);
 
-  // Function to select a restaurant + optional redirect
   const selectRestaurant = (restaurant: Restaurant, redirect: boolean = true) => {
     setSelectedRestaurant(restaurant);
     if (redirect) {
-      router.push(`/owner/restaurants/${restaurant.id}`);
+      router.push(`/shared/restaurantsDetails/${restaurant.id}`);
     }
   };
 
@@ -71,11 +76,8 @@ export const RestaurantProvider = ({ children }: { children: React.ReactNode }) 
   );
 };
 
-// ===== 5️⃣ Custom Hook =====
 export const useRestaurant = (): RestaurantContextType => {
   const context = useContext(RestaurantContext);
-  if (!context) {
-    throw new Error("useRestaurant must be used inside RestaurantProvider");
-  }
+  if (!context) throw new Error("useRestaurant must be used inside RestaurantProvider");
   return context;
 };

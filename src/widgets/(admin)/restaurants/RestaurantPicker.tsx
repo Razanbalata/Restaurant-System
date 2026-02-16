@@ -139,40 +139,54 @@ export const RestaurantPicker = () => {
 
   if (isLoading) {
     return (
-      <Container maxWidth="xl" sx={{ py: 4,px:0 }}>
+      <Container maxWidth="xl" sx={{ py: 4, px: 0 }}>
         <RestaurantPickerSkeleton />
+      </Container>
+    );
+  }
+
+  // حالة لما ما فيه أي مطاعم
+  if (!restaurantsQuery.data || restaurantsQuery.data.length === 0) {
+    return (
+      <Container maxWidth="xl" sx={{ py: 4, textAlign: "center" }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          {user?.role === "restaurant_owner"
+            ? "You don't have any restaurants yet."
+            : "No restaurants available at the moment."}
+        </Typography>
+        {user?.role === "restaurant_owner" && (
+          <Typography variant="body2" color="text.secondary">
+            Click on "Add Restaurant" to create your first one.
+          </Typography>
+        )}
       </Container>
     );
   }
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-
-      {/* حاوية الفليكس الأساسية */}
       <Box
         sx={{
           display: "flex",
-          flexWrap: "wrap", // يسمح بنزول الكروت لسطر جديد
-          gap: 1, // المسافة بين الكروت
-          justifyContent: "flex-start", // محاذاة الكروت لليسار (أو اليمين حسب الـ RTL)
+          flexWrap: "wrap",
+          gap: 1,
+          justifyContent: "flex-start",
         }}
       >
-        {restaurantsQuery.data?.map((res: any) => (
+        {restaurantsQuery.data.map((res: any) => (
           <Box
             key={res.id}
             sx={{
-              // التحكم في العرض بناءً على حجم الشاشة (Responsive Flex Basis)
               flex: {
-                xs: "1 1 100%", // سطر كامل في الموبايل
-                sm: "1 1 calc(50% - 24px)", // كرتين في التابلت (مع طرح الـ Gap)
-                md: "1 1 calc(33.333% - 24px)", // 3 كروت في اللابتوب
-                lg: '0 1 calc(26% - 18px)', // 4 كروت في الشاشات الكبيرة
-                xl: "0 1 calc(25% - 24px)", // 5 كروت في الشاشات الضخمة
+                xs: "1 1 100%",
+                sm: "1 1 calc(50% - 24px)",
+                md: "1 1 calc(33.333% - 24px)",
+                lg: "0 1 calc(26% - 18px)",
+                xl: "0 1 calc(25% - 24px)",
               },
-              // تثبيت الحجم الأدنى لضمان عدم صغر الكارت بشكل مشوه
               minWidth: { sm: "268px", xs: "100%" },
               display: "flex",
-              justifyContent:"space-between"
+              justifyContent: "space-between",
             }}
           >
             <RestaurantCard res={res} onSelect={handleSelect} role={user?.role} />

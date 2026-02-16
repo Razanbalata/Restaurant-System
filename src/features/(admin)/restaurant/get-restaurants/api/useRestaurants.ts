@@ -4,7 +4,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useRestaurants = () => {
-  // ✅ 1. Fetch owner's restaurants
+  // ✅ الخطوة 1: انقل queryClient إلى هنا ليكون متاحاً لكل الدوال
+  const queryClient = useQueryClient();
+
   const useAdminRestaurants = useQuery({
     queryKey: queryKeys.owner.restaurants(),
     queryFn: async () => {
@@ -18,49 +20,26 @@ export const useRestaurants = () => {
   });
 
   const useAddRestaurant = () => {
-    const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: async (newRestaurant: {
-        name: string;
-        description?: string;
-        city?: string;
-        country?: string;
-      }) => {
+      mutationFn: async (newRestaurant: Partial<Restaurant>) => {
         const res = await fetch("/api/admin/restaurants", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...newRestaurant }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newRestaurant),
         });
-        if (!res.ok) {
-          throw new Error("Failed to add restaurant");
-        }
+        if (!res.ok) throw new Error("Failed to add restaurant");
         const data = await res.json();
         return data.restaurant;
       },
-      onSuccess: (variables) => {
+      onSuccess: () => {
         toast.success("Restaurant added successfully!");
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.owner.restaurants(),
-        });
-      },
-      onError(error: Error) {
-        toast.error("An error occurred while adding the restaurant", {
-          description: error.message, // Show details below title
-        });
+        queryClient.invalidateQueries({ queryKey: queryKeys.owner.restaurants() });
       },
     });
   };
 
   const useUpdateRestaurant = () => {
-    const queryClient = useQueryClient();
-
-    return useMutation<
-      Restaurant,
-      Error,
-      { id: string; updates: Partial<Restaurant> }
-    >({
+    return useMutation<Restaurant, Error, { id: string; updates: Partial<Restaurant> }>({
       mutationFn: async ({ id, updates }) => {
         const res = await fetch(`/api/admin/restaurants/${id}`, {
           method: "PATCH",
@@ -68,61 +47,63 @@ export const useRestaurants = () => {
           body: JSON.stringify(updates),
         });
         if (!res.ok) throw new Error("Failed to update restaurant");
-        return res.json(); // تأكد أن ال API ترجع المطعم المحدث
+        return res.json();
       },
-      onSuccess: (updatedRestaurant) => {
-        // 1. تحديث بيانات المطعم الفردي في الكاش
-        const restaurantId = String(updatedRestaurant.id);
-
-        // 1. تحديث كاش المطعم الفردي
-        queryClient.setQueryData(
-          queryKeys.owner.restaurant(restaurantId),
-          updatedRestaurant,
-        );
-
-        // 2. تحديث قائمة المطاعم
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.owner.restaurants(),
-          exact: false,
-        });
-
+      onSuccess: (updated) => {
+        queryClient.setQueryData(queryKeys.owner.restaurant(String(updated.id)), updated);
+        queryClient.invalidateQueries({ queryKey: queryKeys.owner.restaurants() });
         toast.success("Restaurant updated successfully!");
       },
-      onError(error: Error) {
-        toast.error("An error occurred while updating the restaurant", {
-          description: error.message,
-        });
-      },
     });
   };
 
-  const useDeleteRestaurant = () => {
-    const queryClient = useQueryClient(); // 2. جلب النسخة الأصلية من الـ client
+ // useRestaurants.ts
 
-    return useMutation({
-      mutationFn: async (id: string) => {
-        const res = await fetch(`/api/admin/restaurants/${id}`, {
-          method: "DELETE",
-        });
+const useDeleteRestaurant = () => {
+  const queryClient = useQueryClient();
 
-        if (!res.ok) throw new Error("Failed to delete restaurant");
-      },
+  return useMutation({
+    mutationFn: async ({ id, hard }: { id: string; hard: boolean }) => {
+      console.log("📡 HOOK: Starting Fetch...", { id, hard });
+      const res = await fetch(`/api/admin/restaurants/${id}${hard ? '?hard=true' : ''}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        console.error("📡 HOOK: Fetch Failed", err);
+        throw new Error(err.error || "Failed");
+      }
+      return res.json();
+    },
+   onSuccess: (data, variables) => {
+  console.log("🎉 HOOK SUCCESS: Server responded");
 
-      onSuccess: () => {
-        toast.success("Restaurant deleted successfully!");
-        // 3. الحل الأفضل للحذف هو عمل invalidate لكل الـ restaurants
-        // لضمان اختفاء العنصر من أي قائمة يظهر فيها
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.owner.restaurants(),
-        });
-      },
-      onError(error: Error) {
-        toast.error("An error occurred while deleting the restaurant", {
-          description: error.message, // عرض التفاصيل تحت العنوان
-        });
-      },
-    });
-  };
+  // 1. تحديث قائمة المطاعم (للسيدبار والداشبورد)
+  queryClient.invalidateQueries({
+    queryKey: queryKeys.owner.restaurants(),
+  });
+
+  // 2. تحديث بيانات المطعم الحالي (لصفحة DetailPage)
+  // نستخدم variables.id لأنه المعرف الذي تم إرساله في الطلب
+  queryClient.invalidateQueries({
+    queryKey: queryKeys.owner.restaurant(String(variables.id)),
+  });
+
+  // 3. عرض التوست المناسب بناءً على الحالة الجديدة الراجعة من السيرفر
+  if (variables.hard) {
+    toast.success("Restaurant deleted permanently!");
+  } else {
+    const statusMsg = data.is_active ? "Restaurant Activated! 🟢" : "Restaurant Archived! 🟡";
+    toast.success(statusMsg);
+  }
+
+  console.log("✨ Both Cache Keys (List & Individual) are invalidated!");
+},
+    onError: (error) => {
+      console.error("🔴 HOOK ERROR:", error.message);
+    }
+  });
+};
 
   return {
     useAdminRestaurants,

@@ -1,3 +1,4 @@
+import { ThemeContext } from "@emotion/react";
 import {
   Box,
   Container,
@@ -5,12 +6,14 @@ import {
   Stack,
   Skeleton,
   Divider,
-  Grid
+  Grid,
+  useTheme
 } from "@mui/material";
 
 export const RestaurantDetailSkeleton = () => {
+  const theme = useTheme()
   return (
-    <Box sx={{ bgcolor: "#f8f9fa", minHeight: "100vh" }}>
+    <Box sx={{ bgcolor: theme.palette.background.default, minHeight: "100vh" }}>
       {/* 1. Banner Skeleton */}
       <Skeleton 
         variant="rectangular" 
@@ -78,7 +81,7 @@ export const RestaurantDetailSkeleton = () => {
             </Box>
 
             {/* About Section Skeleton */}
-            <Box sx={{ bgcolor: "#F7F8FA", p: 3, borderRadius: "20px" }}>
+            <Box sx={{ bgcolor: theme.palette.background.default, p: 3, borderRadius: "20px" }}>
               <Skeleton variant="text" width="150px" height={30} sx={{ mb: 1 }} />
               <Skeleton variant="text" width="100%" />
               <Skeleton variant="text" width="100%" />

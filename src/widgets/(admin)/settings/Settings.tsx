@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Box, Typography, Button, Grid, CircularProgress } from "@mui/material";
+import { Box, Typography, Button, Grid, CircularProgress, Paper, useTheme, alpha } from "@mui/material";
 import { Save } from "lucide-react";
 import { toast } from "sonner";
 import { InfoSection } from "./info-section";
@@ -11,12 +11,16 @@ import { useMe } from "@/features/user/api/use-me";
 import { useRestaurantById } from "@/features/(admin)/restaurant/get-restaurants/api/useRestaurantById";
 import { useRestaurant } from "@/app/providers/RestaurantContext";
 import { useRestaurants } from "@/features/(admin)/restaurant/get-restaurants/api/useRestaurants";
+import { RestaurantMenuOutlined } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
+import { SettingsSkeleton } from "@/shared/ui/Skeletons/SettingsSkeleton";
 
 export default function SettingsPage() {
   const { selectedRestaurant } = useRestaurant();
-
+  const theme = useTheme()
+  const router = useRouter()
   const { data: user } = useMe();
-  const { data: restaurant } = useRestaurantById(selectedRestaurant?.id);
+  const { data: restaurant,isPending:isRestaurantLoading } = useRestaurantById(selectedRestaurant?.id);
   const [isSaving, setIsSaving] = useState(false);
   const [settings, setSettings] = useState({
     restaurantInfo: {
@@ -41,6 +45,48 @@ export default function SettingsPage() {
   const handleSave = async () => {
     updateMutation.mutate({ id: restaurant.id, updates: settings.restaurantInfo });
   };
+
+
+
+ // 1. حالة التحميل (تظهر أول شيء طالما الـ API شغال)
+  if (isRestaurantLoading) {
+    return <SettingsSkeleton />;
+  }
+
+  // 2. حالة عدم وجود مطعم (تظهر فقط بعد ما نتأكد إن التحميل خلص وما في بيانات)
+  if (!restaurant && user?.role === "restaurant_owner") {
+    return (
+      <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>
+        <Paper
+          sx={{
+            p: 6,
+            textAlign: "center",
+            borderRadius: "24px",
+            border: `2px dashed ${theme.palette.divider}`,
+            bgcolor: alpha(theme.palette.background.paper, 0.5),
+            maxWidth: 600,
+            width: '100%'
+          }}
+        >
+          <RestaurantMenuOutlined sx={{ fontSize: 60, color: theme.palette.primary.main, mb: 2, opacity: 0.3 }} />
+          <Typography variant="h5" fontWeight={700} gutterBottom>
+            No Restaurant Yet
+          </Typography>
+          <Typography color="text.secondary">
+            You currently don’t have a restaurant. Add your first restaurant to manage your settings!
+          </Typography>
+          <Button
+            variant="contained"
+            sx={{ mt: 3, borderRadius: '12px', px: 4 }}
+            onClick={() => router.push("/shared/dashboard")}
+          >
+            Add Restaurant
+          </Button>
+        </Paper>
+      </Box>
+    );
+  }
+
 
   return (
     <Box sx={{ p: 4, maxWidth: 1100, mx: "auto" }}>

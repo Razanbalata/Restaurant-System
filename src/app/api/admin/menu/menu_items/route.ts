@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/shared/api/supabaseClient";
-import { getCurrentUser, withAuth } from "@/shared/libs/auth/auth-file";
+import { withAuth } from "@/shared/libs/auth/auth-file";
 import { verifyRestaurantOwner } from "@/shared/libs/auth/verifyRestaurantOwner";
 
 // GET all items for a category (Owner)
 export async function GET(req: NextRequest) {
   return withAuth(req, async (req, user) => {
     const categoryId = req.nextUrl.searchParams.get("categoryId");
-    if (!categoryId)
+    if (!categoryId) {
       return NextResponse.json(
         { error: "categoryId required" },
-        { status: 400 },
+        { status: 400 }
       );
-
+    }
 
     // Fetch category to verify restaurant ownership
     const { data: category, error: catError } = await supabase
@@ -20,17 +20,25 @@ export async function GET(req: NextRequest) {
       .select("restaurant_id")
       .eq("id", categoryId)
       .single();
-    if (catError || !category)
+
+    if (catError || !category) {
       return NextResponse.json(
         { error: "Category not found" },
-        { status: 404 },
+        { status: 404 }
       );
+    }
 
     const ownership = await verifyRestaurantOwner(
       category.restaurant_id,
-      user.userId,
+      user.userId
     );
-    if (!ownership.ok) return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
+
+    if (!ownership.ok) {
+      return ownership.response ?? NextResponse.json(
+        { error: "Ownership check failed" },
+        { status: 403 }
+      );
+    }
 
     const { data, error } = await supabase
       .from("menu_items")
@@ -38,8 +46,9 @@ export async function GET(req: NextRequest) {
       .eq("category_id", categoryId)
       .order("created_at", { ascending: true });
 
-    if (error)
+    if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
 
     return NextResponse.json(data);
   });
@@ -51,53 +60,63 @@ export async function POST(req: NextRequest) {
     try {
       const body = await req.json();
       const { categoryId, restaurantId, items } = body;
-      // تحقق من الحقول الأساسية
-      if (!categoryId || !restaurantId || !items || !Array.isArray(items) || !items.length) {
-        return NextResponse.json(
-          { error: "Missing categoryId, restaurantId, or items" },
-          { status: 400 }
+
+      if (!categoryId || !restaurantId || !items || !Array.isArray(items)) {
+        return NextResponse.json({ error: "Missing data" }, { status: 400 });
+      }
+
+      // التحقق من الملكية
+      const ownership = await verifyRestaurantOwner(restaurantId, user.userId);
+      
+      // الإصلاح هنا: إضافة الـ Nullish coalescing لضمان عدم رجوع undefined
+      if (!ownership.ok) {
+        return ownership.response ?? NextResponse.json(
+          { error: "You don't have permission to modify this restaurant" },
+          { status: 403 }
         );
       }
 
-      // تحقق من ملكية المطعم عبر الكاتيجوري
-      const { data: category, error: catError } = await supabase
-        .from("categories")
-        .select("restaurant_id")
-        .eq("id", categoryId)
-        .single();
-
-      if (catError || !category) {
-        return NextResponse.json({ error: "Category not found" }, { status: 404 });
-      }
-
-      const ownership = await verifyRestaurantOwner(restaurantId, user.userId);
-      if (!ownership.ok) {
-        return ownership.response ?? NextResponse.json({ error: "Ownership check failed" }, { status: 403 });
-      }
-
-      // إضافة كل الوجبات
       const insertData = items.map((item: any) => ({
         category_id: categoryId,
         name: item.name,
         description: item.description || "",
         price: item.price,
-        restaurant_id:restaurantId,
-        image_url: item.image_url || null, // إذا فيها صورة
+        restaurant_id: restaurantId,
+        image_url: item.image_url || null,
       }));
 
+      // 1. الإضافة مع جلب بيانات القسم المرتبطة
       const { data, error } = await supabase
         .from("menu_items")
         .insert(insertData)
-        .select("*"); // ترجع كل العناصر المضافة
+        .select(`
+          *,
+          categories (
+            id,
+            name
+          )
+        `);
 
       if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
 
-      return NextResponse.json({ added: data, count: data.length }, { status: 201 });
+      // 2. تنسيق البيانات لتطابق ما يتوقعه الـ UI
+      const formattedData = data.map((item: any) => ({
+        ...item,
+        category_id: item.category_id,
+        categoryName: item.categories?.name,
+      }));
+
+      return NextResponse.json(
+        { added: formattedData, count: data.length },
+        { status: 201 }
+      );
     } catch (err: any) {
-      console.error("POST /menu_items error:", err);
-      return NextResponse.json({ error: err.message }, { status: 500 });
+      return NextResponse.json(
+        { error: err.message || "Internal Server Error" },
+        { status: 500 }
+      );
     }
   });
 }

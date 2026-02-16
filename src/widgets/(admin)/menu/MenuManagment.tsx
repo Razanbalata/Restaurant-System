@@ -20,46 +20,45 @@ export default function MenuManagementPage() {
   const [activeTab, setActiveTab] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
 
-   const { useAdminCategories } = useCategories(selectedRestaurant?.id);
+  const { useAdminCategories } = useCategories(selectedRestaurant?.id);
   const { data: categories, isLoading: catLoading } = useAdminCategories;
 
   const selectedCategoryId = useMemo(() => {
     return activeTab !== 0 && categories ? categories[activeTab - 1]?.id : null;
   }, [activeTab, categories]);
 
-  const { data: allMeals, isLoading: allLoading } = useMenu(
-    activeTab === 0 ? selectedRestaurant?.id : "",
-  );
-  const { useAdminMenuItems } = useMenuItems(
-    activeTab !== 0 ? selectedCategoryId || "" : "",
-  );
-  const { data: categoryMeals, isLoading: catItemsLoading } = useAdminMenuItems;
+const { data: allMeals, isLoading: allLoading } = useMenu(selectedRestaurant?.id);
 
-  const displayedMeals = useMemo(() => {
+  // ✅ ثبت الـ hook لتكون مستقرة
+  const menuItemsHook = useMenuItems(selectedCategoryId || "");
+  const { data: categoryMeals, isLoading: catItemsLoading } = menuItemsHook.useAdminMenuItems;
+
+const displayedMeals = useMemo(() => {
     const baseMeals = activeTab === 0 ? allMeals : categoryMeals;
-    if (!baseMeals) return [];
+    if (!Array.isArray(baseMeals)) return [];
+    
     return baseMeals.filter((m: any) =>
-      m.name?.toLowerCase().includes(searchQuery.toLowerCase()),
+      m.name?.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [activeTab, allMeals, categoryMeals, searchQuery]);
+  console.log("📊 ActiveTab:", activeTab);
+console.log("📊 allMeals (ALL tab):", allMeals);
+console.log("📊 categoryMeals (CATEGORY tab):", categoryMeals);
+console.log("📊 displayedMeals:", displayedMeals);
 
-  if (
-    !isReady ||
-    catLoading ||
-    (activeTab === 0 ? allLoading : catItemsLoading)
-  ) {
+
+
+  if (!isReady || catLoading || (activeTab === 0 ? allLoading : catItemsLoading)) {
     return <MenuManagementSkeleton />;
   }
 
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
-      {/* 1. الهيدر */}
       <MenuHeader
         restaurantId={selectedRestaurant?.id}
         restaurantName={selectedRestaurant?.name}
       />
 
-      {/* 2. الفلاتر (البحث والـ Select) */}
       <MenuFilters
         categories={categories || []}
         activeTab={activeTab}
@@ -69,7 +68,6 @@ export default function MenuManagementPage() {
         restaurantId={selectedRestaurant?.id}
       />
 
-      {/* 3. قائمة الوجبات (الكومبوننت الجديد) */}
       <DishesList
         displayedMeals={displayedMeals}
         categories={categories || []}
@@ -78,3 +76,4 @@ export default function MenuManagementPage() {
     </Container>
   );
 }
+

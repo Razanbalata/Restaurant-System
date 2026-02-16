@@ -1,21 +1,37 @@
-
 "use client";
-import { Box, Typography, Paper, useTheme, alpha, Stack, Switch, Chip } from '@mui/material';
+import { Box, Typography, Paper, useTheme, alpha, Stack, Chip } from '@mui/material';
 import { Clock } from 'lucide-react';
-import Image from 'next/image';
 import { MenuItemMutationButton } from '@/features/(admin)/menu/ui/MenuItemMutationButton';
 import DeleteMenuItem from '@/features/(admin)/menu/ui/DeleteMenuItemBtn';
 import AddToCartBtn from '@/features/(customer)/cart/ui/AddToCartBtn';
 import { useMe } from '@/features/user/api/use-me';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ToggleMenuItem from '@/features/(admin)/menu/ui/ToggleAvailability';
 import { getSmartImage } from '@/shared/config/food-images';
 
 export default function FoodCard({ item }: { item: any }) {
   const { data: user } = useMe();
-  const [isAvailable,seIisAvailable] = useState(item.is_active)
+  const [isAvailable] = useState(item.is_active);
   const theme = useTheme();
   const isAdmin = user?.role === "restaurant_owner";
+
+  // حالة الرابط: نبدأ بالرابط الموجود، وإذا فشل نستخدم getSmartImage
+  const [imgSrc, setImgSrc] = useState(item.image_url || getSmartImage(item.name));
+
+  // تحديث الصورة إذا تغير الـ item (مثلاً عند تعديل البيانات)
+  useEffect(() => {
+    if (item.image_url) {
+      setImgSrc(item.image_url);
+    }
+  }, [item.image_url]);
+
+  const handleImageError = () => {
+    // إذا فشل تحميل الصورة (سواء blob أو رابط مكسور)، نضع الصورة الذكية البديلة
+    const fallback = getSmartImage(item.name);
+    if (imgSrc !== fallback) {
+      setImgSrc(fallback);
+    }
+  };
 
   return (
     <Paper 
@@ -24,28 +40,25 @@ export default function FoodCard({ item }: { item: any }) {
         width: "100%", 
         borderRadius: 1, 
         overflow: 'hidden', 
-        // استخدام Divider Theme للحواف
         border: `1px solid ${theme.palette.divider}`,
-        transition: theme.transitions.create(['border-color', 'box-shadow', 'transform'], {
-          duration: theme.transitions.duration.shorter,
-        }),
+        transition: theme.transitions.create(['border-color', 'box-shadow', 'transform']),
         '&:hover': {
           borderColor: theme.palette.primary.main,
-          boxShadow: theme.shadows[2], // استخدام نظام الـ Shadows من الثيم
+          boxShadow: theme.shadows[2],
           transform: 'translateY(-2px)'
         },
-        // استخدام ألوان الأكشن من الثيم للحالة غير المتوفرة
         bgcolor: isAvailable ? 'background.paper' : alpha(theme.palette.action.disabledBackground, 0.3),
       }}
     >
       {/* Image Section */}
       <Box sx={{ position: 'relative', height: 180, overflow: 'hidden', bgcolor: 'action.hover' }}>
-        <Image
-          src={getSmartImage(item.name)} 
-          alt={item.name} 
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          style={{ 
+        {/* استخدمنا <img> العادية هنا لأنها تدعم onError بشكل أفضل مع روابط الـ blob */}
+        <Box
+          component="img"
+          src={imgSrc}
+          alt={item.name}
+          onError={handleImageError}
+          sx={{ 
             width: '100%', 
             height: '100%', 
             objectFit: 'cover', 
@@ -53,17 +66,17 @@ export default function FoodCard({ item }: { item: any }) {
             transition: 'filter 0.3s ease'
           }}
         />
+        
         <Box sx={{ position: 'absolute', top: 12, right: 12 }}>
           <Chip 
             label={`${item.price} $`}
-            // جعل الـ Chip يتناسق مع خلفية الورقة والحواف
             sx={{ 
               bgcolor: 'background.paper', 
               color: 'text.primary',
               fontWeight: 800, 
               border: `1px solid ${theme.palette.divider}`, 
               height: 28,
-              backdropFilter: 'blur(4px)', // لمسة عصرية
+              backdropFilter: 'blur(4px)',
             }} 
           />
         </Box>

@@ -18,46 +18,52 @@ export const useMenuItems = (categoryId: string) => {
   });
 
   // دالة مساعدة موحدة لتحديث الكاش لأي عملية
-  const updateCache = (
-    updatedItem: any,
-    restaurantId: string,
-    action: "add" | "update" | "delete",
-    catId?: string
-  ) => {
-    const keys = [
-      queryKeys.customer.menu(restaurantId), // كل العناصر
-      queryKeys.menu.menuItems(catId || updatedItem?.category_id || categoryId), // التصنيف
-    ];
+const updateCache = (apiResponse: any, restaurantId: string, action: "add" | "update" | "delete", catId?: string) => {
+  const rawItems = apiResponse?.added ? apiResponse.added : Array.isArray(apiResponse) ? apiResponse : [apiResponse];
+  
+  // 1. مفاتيح الكاش
+  const allTabKey = queryKeys.customer.menu(restaurantId);
+  const categoryTabKey = queryKeys.menu.menuItems(String(catId || rawItems[0]?.category_id || categoryId));
 
-    keys.forEach((key) => {
-      queryClient.setQueryData(key, (oldData: any) => {
-        if (!oldData || !Array.isArray(oldData)) {
-          if (action === "add") return Array.isArray(updatedItem) ? updatedItem : [updatedItem];
-          return [];
-        }
+  // --- تحديث كاش "القسم المحدد" ---
+  queryClient.setQueryData(categoryTabKey, (old: any) => {
+    const current = Array.isArray(old) ? [...old] : [];
+    if (action === "add") return [...current, ...rawItems];
+    if (action === "update") return current.map(i => String(i.id) === String(rawItems[0].id) ? {...i, ...rawItems[0]} : i);
+    if (action === "delete") return current.filter(i => String(i.id) !== String(rawItems[0]?.id || apiResponse));
+    return current;
+  });
 
-        if (action === "update") {
-          return oldData.map((item: any) =>
-            String(item.id) === String(updatedItem.id) ? { ...item, ...updatedItem } : item
-          );
-        }
+  // --- تحديث كاش "تبويبة الكل" (هنا السحر) ---
+  queryClient.setQueryData(allTabKey, (old: any) => {
+    const current = Array.isArray(old) ? [...old] : [];
+    
+    if (action === "add") {
+      // نحتاج لمحاكاة الـ flatMap الموجود في useMenu
+      const mappedItems = rawItems.map((item:any) => ({
+        ...item,
+        category_id: item.category_id || catId,
+        // أضف أي حقول إضافية يتوقعها useMenu هنا
+      }));
+      return [...current, ...mappedItems];
+    }
 
-        if (action === "add") {
-          const newItems = Array.isArray(updatedItem) ? updatedItem : [updatedItem];
-          return [...newItems, ...oldData];
-        }
+    if (action === "update") {
+      return current.map(i => String(i.id) === String(rawItems[0].id) ? {...i, ...rawItems[0]} : i);
+    }
 
-        if (action === "delete") {
-          const idToRemove = updatedItem.id || updatedItem;
-          return oldData.filter((item: any) => String(item.id) !== String(idToRemove));
-        }
+    if (action === "delete") {
+      const idToDelete = rawItems[0]?.id || apiResponse; // في الحذف نمرر الـ id مباشرة أحياناً
+      return current.filter(i => String(i.id) !== String(idToDelete));
+    }
+    
+    return current;
+  });
 
-        return oldData;
-      });
-
-      queryClient.invalidateQueries({ queryKey: key });
-    });
-  };
+  // ⚡ إخطار الواجهة بالتحديث دون إعادة طلب من السيرفر
+  queryClient.invalidateQueries({ queryKey: allTabKey, refetchType: 'none' });
+  queryClient.invalidateQueries({ queryKey: categoryTabKey, refetchType: 'none' });
+};
 
   // 2️⃣ Add عنصر
   const useAddMenuItem = () =>
@@ -72,15 +78,16 @@ export const useMenuItems = (categoryId: string) => {
         return res.json();
       },
       onSuccess: (newItems, variables) => {
+        console.log("✅ Add Success! Returned from API:", newItems, variables);
         updateCache(newItems, variables.restaurantId, "add", variables.categoryId);
         toast.success("✅ Item added successfully!");
       },
       onError: (error: any) => {
-        console.log(error)
+        console.log(error);
         toast.error("❌ Add Failed", {
           description: error.message || "Something went wrong while adding the item.",
         });
-      }
+      },
     });
 
   // 3️⃣ Update عنصر
@@ -103,7 +110,7 @@ export const useMenuItems = (categoryId: string) => {
         toast.error("❌ Update Failed", {
           description: error.message || "Could not save changes to the item.",
         });
-      }
+      },
     });
 
   // 4️⃣ Delete عنصر
@@ -122,7 +129,7 @@ export const useMenuItems = (categoryId: string) => {
         toast.error("❌ Delete Failed", {
           description: error.message || "The item could not be removed.",
         });
-      }
+      },
     });
 
   return { useAdminMenuItems, useAddMenuItem, useUpdateMenuItem, useDeleteMenuItem };

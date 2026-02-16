@@ -12,16 +12,17 @@ const FOOD_MAPPING = [
 const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
 
 export const getSmartImage = (name: string, currentUrl?: string) => {
-  // 1. إذا فيه صورة أصلية ارجع بها فوراً
-  if (currentUrl && currentUrl.startsWith('http')) return currentUrl;
+  // 1. السماح بالروابط العادية (http) وروابط المعاينة (blob)
+  if (currentUrl && (currentUrl.startsWith('http') || currentUrl.startsWith('blob'))) {
+    return currentUrl;
+  }
   
-  const lowerName = name.toLowerCase();
+  const lowerName = name?.toLowerCase() || "";
 
-  // 2. ابحث عن أول عنصر بيحتوي على كلمة مفتاحية موجودة في الاسم
+  // 2. ابحث عن مطابقة في الكلمات المفتاحية
   const match = FOOD_MAPPING.find(item => 
     item.keywords.some(keyword => lowerName.includes(keyword))
   );
 
-  // 3. ارجع بصورة المطابقة أو الصورة الافتراضية
   return match ? match.url : DEFAULT_IMAGE;
 };

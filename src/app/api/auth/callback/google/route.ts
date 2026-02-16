@@ -88,7 +88,7 @@ export async function GET(req: NextRequest) {
     // 🔹 إعداد الرد ووضع JWT في cookie
     // 🔹 إعداد الرد ووضع JWT في cookie
     const response = NextResponse.redirect(
-  new URL("/dashboard", req.url)
+  new URL("/shared/dashboard", req.url)
 );
 
     setSessionCookie(response, jwt);

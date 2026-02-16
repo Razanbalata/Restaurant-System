@@ -9,10 +9,11 @@ export function useMenu(restaurantId?: string) {
       const res = await fetch(`/api/customer/menu/categories?restaurantId=${restaurantId}`);
       if (!res.ok) throw new Error("Failed to fetch menu");
       const categories = await res.json();
+      
       return categories.flatMap((category: any) =>
         category.items.map((item: any) => ({
           ...item,
-          categoryId: category.id,
+          category_id: category.id, // تأكد من استخدام نفس الاسم في السيرفر
           categoryName: category.name,
         }))
       );

@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, useTheme } from "@mui/material";
 import React from "react";
 import { useCartStore } from "../model/useCartStore";
 import { toast } from "sonner";
@@ -10,7 +10,7 @@ function AddToCartBtn({
   item: any;
   restaurantId?: string;
 }) {
-  
+  const theme = useTheme()
   const addItem = useCartStore((state) => state.addItem);
 
   function handleAdd() {
@@ -43,6 +43,7 @@ function AddToCartBtn({
         borderRadius: "12px",
         py: 1.2,
         backgroundColor: "#000",
+        color:"#fff",
         "&:hover": { backgroundColor: "#333" },
       }}
       onClick={handleAdd}

@@ -19,18 +19,19 @@ export function SettingsSkeleton() {
             <Skeleton variant="circular" width={40} height={40} sx={{ mb: 2 }} />
             <Skeleton variant="rectangular" height={300} sx={{ borderRadius: 2 }} />
           </Paper>
+          <Paper variant="outlined" sx={{ p: 3, borderRadius: 3,mt:2 }}>
+             <Skeleton variant="rectangular" height={200} sx={{ borderRadius: 2 }} />
+          </Paper>
         </Grid>
 
         {/* Right Column */}
         <Grid size={{xs:12,md:6}} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          
           <Paper variant="outlined" sx={{ p: 3, borderRadius: 3 }}>
              <Skeleton variant="rectangular" height={200} sx={{ borderRadius: 2 }} />
           </Paper>
           <Paper variant="outlined" sx={{ p: 3, borderRadius: 3 }}>
-             <Skeleton variant="rectangular" height={150} sx={{ borderRadius: 2 }} />
-          </Paper>
-          <Paper variant="outlined" sx={{ p: 3, borderRadius: 3 }}>
-             <Skeleton variant="rectangular" height={250} sx={{ borderRadius: 2 }} />
+             <Skeleton variant="rectangular" height={350} sx={{ borderRadius: 2 }} />
           </Paper>
         </Grid>
       </Grid>

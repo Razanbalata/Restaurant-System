@@ -138,13 +138,15 @@ export default function SettingsPage() {
           sx={{ display: "flex", flexDirection: "column", gap: 3 }}
         >
           <InfoSection data={settings.restaurantInfo} onChange={updateSettings} />
+       <NotificationsSection data={settings} onChange={updateSettings} />
+        
         </Grid>
         <Grid
           size={{ xs: 12, md: 6 }}
           sx={{ display: "flex", flexDirection: "column", gap: 3 }}
         >
+          
           <OperationalSection data={settings} onChange={updateSettings} />
-          <NotificationsSection data={settings} onChange={updateSettings} />
           <SecuritySection restayrantId={restaurant?.id} />
         </Grid>
       </Grid>

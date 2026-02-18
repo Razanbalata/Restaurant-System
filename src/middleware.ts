@@ -12,7 +12,7 @@ export function middleware(req: NextRequest) {
   const isOwnerPage = pathname.startsWith("/admin");
   const isCustomerPage = pathname.startsWith("/customer");
   const isAuthPage = ["/login", "/signUp", "/forget-password", "/reset-password"].some(p => pathname.startsWith(p));
-
+  const isLandingPage = pathname === "/";
   // غير مسجل دخول
   if (!session) {
     if (isOwnerPage || isCustomerPage) return NextResponse.redirect(new URL("/login", req.url));
@@ -20,7 +20,7 @@ export function middleware(req: NextRequest) {
   }
 
   // منع العودة لصفحات auth
-  if (isAuthPage) {
+  if (isAuthPage|| isLandingPage) {
     const redirectTo = role === "restaurant_owner" ? "/admin/dashboard" : "/customer/cart";
     return NextResponse.redirect(new URL(redirectTo, req.url));
   }
@@ -35,7 +35,7 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*", "/customer", "/customer/:path*", "/login", "/sign-up", "/forget-password", "/reset-password"],
+  matcher: ["/","/admin", "/admin/:path*", "/customer", "/customer/:path*", "/login", "/signUp", "/forget-password", "/reset-password"],
 };
 
 

@@ -12,9 +12,10 @@ type Props = {
     phone?: string;
     notes: string;
   };
+  disabled?: boolean;
 };
 
-export function PlaceOrderButton({ formData }: Props) {
+export function PlaceOrderButton({ formData,disabled  }: Props) {
   const { address, phone, notes } = formData;
   const router = useRouter();
   const { items, restaurantId, clearCart } = useCart();
@@ -55,7 +56,7 @@ export function PlaceOrderButton({ formData }: Props) {
       fullWidth
       size="large"
       variant="contained"
-      disabled={isPending}
+      disabled={isPending || disabled}
       onClick={handlePlaceOrder}
     >
       {isPending ? "Processing order..." : "Confirm Order Now"}

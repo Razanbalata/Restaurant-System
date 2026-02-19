@@ -52,7 +52,7 @@ const filteredOrders = useMemo(() => {
 
   if (isLoading) {
     return (
-      <Box className="flex items-center justify-center py-20">
+      <Box className="flex items-center justify-center py-5">
         <OrderCardSkeleton />
       </Box>
     );

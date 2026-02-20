@@ -3,11 +3,10 @@ import { useMe } from '@/features/user/api/use-me';
 import { Box, Typography, Button, Stack } from '@mui/material';
 import { Plus } from 'lucide-react';
 
-// 1. تعريف الأنواع المتوقعة
 interface MenuHeaderProps {
   restaurantName?: string;
   restaurantId?: string;
-  categoryId?: string; // أضفت علامة الاستفهام لأنه قد لا يتوفر دائماً
+  categoryId?: string;
 }
 
 export const MenuHeader = ({ restaurantName, restaurantId, categoryId }:MenuHeaderProps) => {

@@ -8,10 +8,9 @@ export async function handleGoogleUser(googleUser: {
   name: string;
   picture: string;
 }) {
-  // 1️⃣ البحث عن مستخدم موجود بنفس google_id (تأكد من جلب الـ role)
   const { data: googleLinkedUser } = await supabase
     .from("users")
-    .select("id, email, name, role, avatar_url") // 👈 حدد الـ role صراحة لضمان وجودها
+    .select("id, email, name, role, avatar_url")
     .eq("google_id", googleUser.googleId)
     .single();
 
@@ -20,14 +19,12 @@ export async function handleGoogleUser(googleUser: {
     return googleLinkedUser;
   }
 
-  // 2️⃣ البحث بالمستخدم بنفس email
   const { data: emailUser } = await supabase
     .from("users")
-    .select("id, email, name, role") // 👈 تأكد من جلب الـ role هنا أيضاً
+    .select("id, email, name, role") 
     .eq("email", googleUser.email)
     .single();
 
-  // 3️⃣ إذا موجود بالايميل -> اربط google_id وحافظ على الـ role القديمة
   if (emailUser) {
     const { data: updatedUser, error: updateError } = await supabase
       .from("users")
@@ -37,14 +34,13 @@ export async function handleGoogleUser(googleUser: {
         provider: "google",
       })
       .eq("id", emailUser.id)
-      .select("id, email, name, role") // 👈 استرجع الـ role المحدثة
+      .select("id, email, name, role")
       .single();
 
     if (updateError) throw updateError;
     return updatedUser;
   }
 
-  // 4️⃣ مستخدم جديد كلياً
   console.log("🆕 Creating new Google user with default role: customer");
   const { data: newUser, error: insertError } = await supabase
     .from("users")
@@ -54,10 +50,10 @@ export async function handleGoogleUser(googleUser: {
       avatar_url: googleUser.picture,
       google_id: googleUser.googleId,
       provider: "google",
-      role: "customer", // 👈 الـ Role الافتراضية للجدد
+      role: "customer",
       password: null,
     })
-    .select("id, email, name, role") // 👈 استرجع الـ role
+    .select("id, email, name, role")
     .single();
 
   if (insertError) throw insertError;

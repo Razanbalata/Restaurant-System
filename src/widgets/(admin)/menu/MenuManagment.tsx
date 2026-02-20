@@ -29,7 +29,6 @@ export default function MenuManagementPage() {
 
 const { data: allMeals, isLoading: allLoading } = useMenu(selectedRestaurant?.id);
 
-  // ✅ ثبت الـ hook لتكون مستقرة
   const menuItemsHook = useMenuItems(selectedCategoryId || "");
   const { data: categoryMeals, isLoading: catItemsLoading } = menuItemsHook.useAdminMenuItems;
 

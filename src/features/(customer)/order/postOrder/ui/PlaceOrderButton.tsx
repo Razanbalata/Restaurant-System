@@ -38,7 +38,7 @@ export function PlaceOrderButton({ formData,disabled  }: Props) {
     mutate(payload, {  
       onSuccess: (data) => {
         clearCart();
-        router.replace("/customer/order"); // هذا يجب أن يعمل إذا وصلت هنا
+        router.replace("/customer/order");
       },
       onError: (err: any) => {
         console.error("❌ Order failed:", err);

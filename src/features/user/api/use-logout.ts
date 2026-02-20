@@ -22,7 +22,7 @@ export const useLogout = () => {
     },
     onError:(error)=>{
       toast.error("An error occurred during logout", {
-        description: error.message, // عرض التفاصيل تحت العنوان
+        description: error.message,
       }
       )
     }

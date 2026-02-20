@@ -6,8 +6,8 @@ import { motion } from "framer-motion";
 import { FloatingFoodIcons } from "@/features/user/ui/FoodBackground";
 import ToggleTheme from "@/shared/ui/ToggleTheme";
 import { useColorMode } from "../providers/ThemeProvider"; 
-import { ArrowLeft } from "lucide-react"; // استيراد أيقونة العودة
-import { useRouter } from "next/navigation"; // لاستخدام التنقل
+import { ArrowLeft } from "lucide-react"; 
+import { useRouter } from "next/navigation";   
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   const theme = useTheme();

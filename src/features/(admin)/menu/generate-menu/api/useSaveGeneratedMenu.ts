@@ -15,7 +15,6 @@ export const useSaveMenu = () => {
 
   return useMutation({
     mutationFn: async ({ restaurantId, categoryId, meals }: Payload) => {
-      // إذا كان عنصر واحد فقط، حوله لمصفوفة
       const itemsToSave = Array.isArray(meals) ? meals : [meals];
 
       const res = await fetch("/api/admin/menu/menu_items", {
@@ -29,11 +28,10 @@ export const useSaveMenu = () => {
         throw new Error(error.error || "Failed to save menu");
       }
 
-      return res.json(); // يرجع البيانات المحفوظة
+      return res.json(); 
     },
     onSuccess: (data, variables) => {
       toast.success("✅ Menu saved successfully!");
-      // تحديث الكاش
       queryClient.invalidateQueries({
         queryKey: queryKeys.menu.menuItems(String(data.categoryId)),
       });

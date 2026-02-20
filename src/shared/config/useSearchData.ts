@@ -10,9 +10,9 @@ import { useCartStore } from '@/features/(customer)/cart/model/useCartStore';
 import { useMe } from '@/features/user/api/use-me';
 
 export function useSearchData() {
-  const { data: user } = useMe(); // بيانات المستخدم
+  const { data: user } = useMe();
 
-  const { selectedRestaurant } = useRestaurant(); // المطعم المحدد حالياً للأونر
+  const { selectedRestaurant } = useRestaurant();
   // ===================== Owner =====================
   const {  useAdminRestaurants } = useRestaurants();
   const { data: adminRestaurants } = useAdminRestaurants;
@@ -34,7 +34,6 @@ export function useSearchData() {
   return {
     user,
 
-    // بيانات الأونر
     admin: {
       restaurants: adminRestaurants || [],
       categories: adminCategories || [],
@@ -42,7 +41,6 @@ export function useSearchData() {
       orders: orders || [],
     },
 
-    // بيانات الزبون
     customer: {
       restaurants: restaurants || [],
       menuItems: menuItems || [],

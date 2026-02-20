@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
-import { useRestaurants } from "@/features/(admin)/restaurant/get-restaurants/api/useRestaurants"; // hook API لجلب المطاعم الخاصة بالمالك
+import { useRestaurants } from "@/features/(admin)/restaurant/get-restaurants/api/useRestaurants"; 
 
 export interface Restaurant {
   id: string;

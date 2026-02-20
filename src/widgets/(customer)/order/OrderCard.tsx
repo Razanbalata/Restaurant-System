@@ -49,17 +49,15 @@ export const OrderCard = ({ order }: { order: any }) => {
           borderRadius: '16px',
           overflow: 'hidden',
           border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
-          mb: 2 // أضفنا margin bottom بسيط عشان نفصل عن النوتس
+          mb: 2 
         }}>
           {order.items?.map((item: any) => (
             <OrderItemRow key={item.id} item={item} />
           ))}
         </Box>
 
-        {/* Information Stack: الجوال، الملاحظات، والعنوان */}
         <Stack spacing={1.5} sx={{ px: 1, mt: 2 }}>
           
-          {/* رقم الجوال - يظهر فقط إذا وجد */}
           {order.customerPhone && (
             <Stack direction="row" spacing={1.5} alignItems="center">
               <PhoneEnabledOutlined sx={{ fontSize: 18, color: 'success.main' }} />
@@ -69,7 +67,6 @@ export const OrderCard = ({ order }: { order: any }) => {
             </Stack>
           )}
 
-          {/* الملاحظات - تظهر بتصميم مميز كأنها "Label" */}
           {order.notes && (
             <Stack direction="row" spacing={1.5} alignItems="flex-start">
               <DescriptionOutlined sx={{ fontSize: 18, color: 'warning.main', mt: 0.2 }} />
@@ -86,7 +83,6 @@ export const OrderCard = ({ order }: { order: any }) => {
 
           <Divider sx={{ borderStyle: 'dashed', my: 0.5 }} />
 
-          {/* الموقع */}
           <Stack direction="row" spacing={1.5} alignItems="center">
             <LocationOnOutlined sx={{ fontSize: 18, color: 'primary.main' }} />
             <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.primary'}} noWrap >

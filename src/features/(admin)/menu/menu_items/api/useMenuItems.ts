@@ -6,7 +6,6 @@ import { queryKeys } from "@/shared/keys/query-keys";
 export const useMenuItems = (categoryId: string) => {
   const queryClient = useQueryClient();
 
-  // 1️⃣ Fetch عناصر المنيو لتصنيف محدد
   const useAdminMenuItems = useQuery({
     queryKey: queryKeys.menu.menuItems(String(categoryId)),
     queryFn: async () => {
@@ -17,15 +16,12 @@ export const useMenuItems = (categoryId: string) => {
     enabled: !!categoryId,
   });
 
-  // دالة مساعدة موحدة لتحديث الكاش لأي عملية
 const updateCache = (apiResponse: any, restaurantId: string, action: "add" | "update" | "delete", catId?: string) => {
   const rawItems = apiResponse?.added ? apiResponse.added : Array.isArray(apiResponse) ? apiResponse : [apiResponse];
   
-  // 1. مفاتيح الكاش
   const allTabKey = queryKeys.customer.menu(restaurantId);
   const categoryTabKey = queryKeys.menu.menuItems(String(catId || rawItems[0]?.category_id || categoryId));
 
-  // --- تحديث كاش "القسم المحدد" ---
   queryClient.setQueryData(categoryTabKey, (old: any) => {
     const current = Array.isArray(old) ? [...old] : [];
     if (action === "add") return [...current, ...rawItems];
@@ -34,16 +30,13 @@ const updateCache = (apiResponse: any, restaurantId: string, action: "add" | "up
     return current;
   });
 
-  // --- تحديث كاش "تبويبة الكل" (هنا السحر) ---
   queryClient.setQueryData(allTabKey, (old: any) => {
     const current = Array.isArray(old) ? [...old] : [];
     
     if (action === "add") {
-      // نحتاج لمحاكاة الـ flatMap الموجود في useMenu
       const mappedItems = rawItems.map((item:any) => ({
         ...item,
         category_id: item.category_id || catId,
-        // أضف أي حقول إضافية يتوقعها useMenu هنا
       }));
       return [...current, ...mappedItems];
     }
@@ -53,19 +46,17 @@ const updateCache = (apiResponse: any, restaurantId: string, action: "add" | "up
     }
 
     if (action === "delete") {
-      const idToDelete = rawItems[0]?.id || apiResponse; // في الحذف نمرر الـ id مباشرة أحياناً
+      const idToDelete = rawItems[0]?.id || apiResponse; 
       return current.filter(i => String(i.id) !== String(idToDelete));
     }
     
     return current;
   });
 
-  // ⚡ إخطار الواجهة بالتحديث دون إعادة طلب من السيرفر
   queryClient.invalidateQueries({ queryKey: allTabKey, refetchType: 'none' });
   queryClient.invalidateQueries({ queryKey: categoryTabKey, refetchType: 'none' });
 };
 
-  // 2️⃣ Add عنصر
   const useAddMenuItem = () =>
     useMutation({
       mutationFn: async ({ restaurantId, categoryId, meals }: Payload) => {
@@ -90,7 +81,6 @@ const updateCache = (apiResponse: any, restaurantId: string, action: "add" | "up
       },
     });
 
-  // 3️⃣ Update عنصر
   const useUpdateMenuItem = () =>
     useMutation({
       mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
@@ -113,7 +103,6 @@ const updateCache = (apiResponse: any, restaurantId: string, action: "add" | "up
       },
     });
 
-  // 4️⃣ Delete عنصر
   const useDeleteMenuItem = () =>
     useMutation({
       mutationFn: async ({ id }: { id: string; restaurantId: string; catId: string }) => {

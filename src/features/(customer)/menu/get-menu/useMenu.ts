@@ -13,7 +13,7 @@ export function useMenu(restaurantId?: string) {
       return categories.flatMap((category: any) =>
         category.items.map((item: any) => ({
           ...item,
-          category_id: category.id, // تأكد من استخدام نفس الاسم في السيرفر
+          category_id: category.id,
           categoryName: category.name,
         }))
       );

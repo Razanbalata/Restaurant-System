@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { IconButton, Tooltip, alpha, useTheme } from "@mui/material";
-import { Trash2 } from "lucide-react"; // أيقونة أرشق وأحدث
+import { Trash2 } from "lucide-react"; 
 import { useCategories } from "../api/useCategories";
 
 interface DeleteCategoryBtnProps {
@@ -16,7 +16,6 @@ function DeleteCategoryBtn({ restaurantId, categoryId }: DeleteCategoryBtnProps)
 
   const handleDelete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    // يفضل مستقبلاً استبدال confirm بـ Dialog مخصص بنفس الستايل
     if (window.confirm("Are you sure you want to delete this category?")) {
       deleteCategory.mutate(id);
     }
@@ -30,7 +29,7 @@ function DeleteCategoryBtn({ restaurantId, categoryId }: DeleteCategoryBtnProps)
         sx={{
           width: 28,
           height: 28,
-          borderRadius: "6px", // متناسق مع زوايا أزرار التعديل
+          borderRadius: "6px", 
           color: "text.disabled",
           transition: "all 0.2s ease",
           "&:hover": {

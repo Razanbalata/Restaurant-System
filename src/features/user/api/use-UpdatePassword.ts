@@ -36,7 +36,6 @@ export const useUpdatePassword = () => {
 
       toast.success("Password updated successfully!");
 
-      // لو عندك بيانات المستخدم مخزنة في React Query
       queryClient.invalidateQueries({queryKey:queryKeys.auth.me()});
 
       return data;

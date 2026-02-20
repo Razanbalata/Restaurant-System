@@ -38,7 +38,7 @@ interface MealModalProps {
 const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
   const { selectedRestaurant } = useRestaurant();
   const isEdit = !!initialData;
-  const fileInputRef = useRef<HTMLInputElement>(null); // مرجع لزر اختيار الملف المخفي
+  const fileInputRef = useRef<HTMLInputElement>(null); 
 
   const [formData, setFormData] = useState({
     name: "",
@@ -48,7 +48,6 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
     image_url: "",
   });
 
-  // حالة لحفظ الملف الفعلي المختار لرفعه لاحقاً للسيرفر
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { useAdminCategories } = useCategories(selectedRestaurant?.id);
@@ -81,21 +80,17 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
     }
   }, [initialData, open, isEdit]);
 
-  // دالة معالجة اختيار الصورة
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      // إنشاء رابط للمعاينة الفورية
       const previewUrl = URL.createObjectURL(file);
       setFormData({ ...formData, image_url: previewUrl });
     }
   };
 
   const onSave = async () => {
-    // ملاحظة: هنا يجب إضافة كود رفع selectedFile إلى Supabase Storage 
-    // إذا نجح الرفع، نستبدل formData.image_url بالرابط الحقيقي الراجع من السيرفر.
-    
+  
     const payload = { 
       ...formData, 
       price: Number(formData.price),
@@ -140,7 +135,6 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
       <DialogContent>
         <Stack spacing={3} sx={{ mt: 1 }}>
           
-          {/* حقل اختيار الصورة المخفي */}
           <input
             type="file"
             ref={fileInputRef}
@@ -149,7 +143,6 @@ const MealModal = ({ open, onClose, initialData = null }: MealModalProps) => {
             onChange={handleFileChange}
           />
 
-          {/* صندوق رفع الصورة البصري */}
           <Box
             onClick={() => fileInputRef.current?.click()}
             sx={{

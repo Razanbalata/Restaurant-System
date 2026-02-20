@@ -13,7 +13,6 @@ interface RestaurantFormProps {
 export default function RestaurantForm({ restaurant, onClose }: RestaurantFormProps) {
   const theme = useTheme();
 
-  // بيانات الفورم
   const [formData, setFormData] = useState({
     name: "",
     city: "",
@@ -26,7 +25,6 @@ export default function RestaurantForm({ restaurant, onClose }: RestaurantFormPr
   const createMutation = useAddRestaurant();
   const updateMutation = useUpdateRestaurant();
 
-  // ✅ لو في restaurant، حط الديفولت values
   useEffect(() => {
     if (restaurant) {
       setFormData({

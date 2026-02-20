@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Shield } from "lucide-react";
 import { useState } from "react";
-import UpdatePasswordButton from "@/features/user/ui/UpdatePasswordButton"; // الزر المستقل
+import UpdatePasswordButton from "@/features/user/ui/UpdatePasswordButton";  
 
 export function SecuritySection({ restaurantId }: any) {
   const [formData, setFormData] = useState({

@@ -4,7 +4,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useRestaurants = () => {
-  // ✅ الخطوة 1: انقل queryClient إلى هنا ليكون متاحاً لكل الدوال
   const queryClient = useQueryClient();
 
   const useAdminRestaurants = useQuery({
@@ -78,18 +77,14 @@ const useDeleteRestaurant = () => {
    onSuccess: (data, variables) => {
   console.log("🎉 HOOK SUCCESS: Server responded");
 
-  // 1. تحديث قائمة المطاعم (للسيدبار والداشبورد)
   queryClient.invalidateQueries({
     queryKey: queryKeys.owner.restaurants(),
   });
 
-  // 2. تحديث بيانات المطعم الحالي (لصفحة DetailPage)
-  // نستخدم variables.id لأنه المعرف الذي تم إرساله في الطلب
   queryClient.invalidateQueries({
     queryKey: queryKeys.owner.restaurant(String(variables.id)),
   });
 
-  // 3. عرض التوست المناسب بناءً على الحالة الجديدة الراجعة من السيرفر
   if (variables.hard) {
     toast.success("Restaurant deleted permanently!");
   } else {

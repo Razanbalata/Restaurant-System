@@ -17,7 +17,6 @@ import { useParams, useRouter } from "next/navigation";
 import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenuRounded";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
-// المكونات التي قمنا بتطويرها
 import { RestaurantInfoCard } from "./RestaurantCard";
 import { RestaurantDetailSkeleton } from "@/shared/ui/Skeletons/RestaurantDetailSkeleton";
 
@@ -32,21 +31,17 @@ export default function RestaurantDetailPage() {
   const router = useRouter();
   const restaurantId = params.id as string;
 
-  // 1. جلب بيانات المستخدم الحالي وصلاحياته
   const { data: user } = useMe();
 
-  // 2. جلب بيانات المطعم (Source of Truth)
   const { data: restaurant, isLoading: isRestaurantLoading } =
     useRestaurantById(restaurantId);
 
-  // 3. جلب المنيو
   const { data: menuData = [], isLoading: isMenuLoading } =
     useMenu(restaurantId);
 
   const previewItems = menuData.slice(0, 4);
   console.log(previewItems)
 
-  // 4. التحقق من الملكية
   const isOwner =
     user?.role === "restaurant_owner" && restaurant?.owner_id === user.id;
 
@@ -54,7 +49,6 @@ export default function RestaurantDetailPage() {
     return <RestaurantDetailSkeleton />;
   }
 
-  // ==== حالة المالك الجديد بدون أي مطاعم ====
   if (!restaurant && user?.role === "restaurant_owner") {
     return <NoRestaurantHero userName={user.name} />;
   }
@@ -75,19 +69,11 @@ export default function RestaurantDetailPage() {
               Menu
             </Typography>
             {isOwner && (
-              //  <Button
-              //   variant="outlined"
-              //   startIcon={<AutoAwesomeIcon />}
-              //   sx={{ borderRadius: '12px', fontWeight: 700 }}
-              //  >
-              //    تحديث بواسطة AI
-              //  </Button>
               <GenerateMenuButton restaurantId={restaurantId} />
             )}
           </Stack>
 
           {menuData.length === 0 ? (
-            // حالة عدم وجود منيو
             <Paper
               sx={{
                 p: 8,
@@ -112,9 +98,6 @@ export default function RestaurantDetailPage() {
                 The restaurant hasn't added items yet, wait for us soon!
               </Typography>
               {isOwner && (
-                // <Button variant="contained" size="large" sx={{ borderRadius: '14px', px: 4 }}>
-                //   إضافة أول صنف الآن
-                // </Button>
                 <MenuItemMutationButton
                   mode="add"
                   restaurantId={restaurantId}
@@ -122,10 +105,8 @@ export default function RestaurantDetailPage() {
               )}
             </Paper>
           ) : (
-            // عرض المنيو في حال وجود بيانات
             <Grid container spacing={3}>
   {previewItems.map((item: any, index: number) => {
-    // تحديد الصورة: إذا كان هناك رابط صورة صالح نستخدمه، وإلا نستخدم getSmartImage
     const displayImage = (item.image_url || item.image) 
       ? getSmartImage(item.name, item.image_url || item.image) 
       : getSmartImage(item.name);
@@ -137,7 +118,7 @@ export default function RestaurantDetailPage() {
           onClick={() => router.push(`/shared/menu`)}
           sx={{
             display: "flex",
-            height: 110, // ارتفاع ثابت لتوحيد شكل الكروت
+            height: 110, 
             borderRadius: "20px",
             border: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
             transition: "all 0.3s ease",
@@ -157,7 +138,6 @@ export default function RestaurantDetailPage() {
               height: "100%",
               objectFit: "cover",
             }}
-            // التوجيه الشرطي للمصدر
             image={displayImage}
             alt={item.name}
           />
@@ -188,7 +168,7 @@ export default function RestaurantDetailPage() {
                 color="text.secondary"
                 sx={{
                   display: "-webkit-box",
-                  WebkitLineClamp: 1, // سطر واحد في المعاينة ليبقى الشكل نظيفاً
+                  WebkitLineClamp: 1,
                   WebkitBoxOrient: "vertical",
                   overflow: "hidden",
                   mt: 0.5,
@@ -245,7 +225,6 @@ export default function RestaurantDetailPage() {
   );
 }
 
-// مكون Stack صغير للتنظيم إذا لم يكن مستورداً
 import { Stack } from "@mui/material";
 import { MenuItemMutationButton } from "@/features/(admin)/menu/ui/MenuItemMutationButton";
 import GenerateMenuButton from "@/features/(admin)/menu/ui/GenerateMenuButton";

@@ -58,7 +58,6 @@ const filteredOrders = useMemo(() => {
     );
   }
 
-  // حساب الإحصائيات
   const stats = [
     { label: "Pending", color: "orange", count: orders?.filter((o:any) => o.status === "pending").length || 0 },
     { label: "Preparing", color: "purple", count: orders?.filter((o:any) => o.status === "preparing").length || 0 },

@@ -8,7 +8,6 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   transition: "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
   
   "&:hover": {
-    // تم التصحيح هنا من box-shadow إلى boxShadow
     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
   },
 }));

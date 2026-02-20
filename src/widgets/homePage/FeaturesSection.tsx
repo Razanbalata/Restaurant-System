@@ -1,5 +1,5 @@
 "use client";
-import { Box, Container, Typography, Grid, Card, alpha, useTheme, Stack } from "@mui/material"; // تأكد من استيراد Stack
+import { Box, Container, Typography, Grid, Card, alpha, useTheme, Stack } from "@mui/material";
 import { Users, ShoppingBag, Clock, Star, ChefHat, BarChart3, Utensils, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 

@@ -31,7 +31,6 @@ export const HeroSection = () => {
         overflow: "hidden",
       }}
     >
-      {/* Blurs الدوائر الملونة خلف الكلام */}
       <Box
         sx={{
           position: "absolute",
@@ -152,7 +151,6 @@ export const HeroSection = () => {
               { v: "4.9", l: "App Rating" },
               { v: "24/7", l: "Support" },
             ].map((s, i) => (
-              /* xs={6} يعني عنصرين بجانب بعض في الموبايل | md={3} يعني 4 عناصر في الديسكتوب */
               <Grid size={{xs:6,md:3}} key={i}>
                 <Box sx={{ textAlign: "center" }}>
                   <Typography
@@ -160,7 +158,7 @@ export const HeroSection = () => {
                     sx={{
                       fontWeight: 800,
                       color: "text.primary",
-                      fontSize: { xs: "1.875rem", md: "2.25rem" }, // تطابق text-3xl و text-4xl في تايلوند
+                      fontSize: { xs: "1.875rem", md: "2.25rem" }, 
                     }}
                   >
                     {s.v}
@@ -170,7 +168,7 @@ export const HeroSection = () => {
                     sx={{
                       mt: 1,
                       color: "text.secondary",
-                      fontSize: "0.875rem", // تطابق text-sm
+                      fontSize: "0.875rem", 
                     }}
                   >
                     {s.l}

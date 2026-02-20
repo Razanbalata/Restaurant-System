@@ -28,7 +28,7 @@ const RestaurantCard = ({ res, onSelect, role }: any) => {
     <Card
       onClick={() => onSelect(res)}
       sx={{
-        width: "100%", // الكارد يملأ حاوية الفليكس المخصصة له
+        width: "100%",  
         height: "100%",
         display: "flex",
         flexDirection: "column",
@@ -145,7 +145,6 @@ export const RestaurantPicker = () => {
     );
   }
 
-  // حالة لما ما فيه أي مطاعم
   if (!restaurantsQuery.data || restaurantsQuery.data.length === 0) {
     return (
       <Container maxWidth="xl" sx={{ py: 4, textAlign: "center" }}>

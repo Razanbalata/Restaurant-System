@@ -68,7 +68,7 @@ export function CartSkeleton() {
                     sx={{ 
                       borderRadius: "12px",
                       bgcolor: alpha(theme.palette.primary.main, 0.03),
-                      display: { xs: 'none', sm: 'block' } // إخفاء في الموبايل لتقليل الزحمة
+                      display: { xs: 'none', sm: 'block' }
                     }} 
                   />
                 </Stack>

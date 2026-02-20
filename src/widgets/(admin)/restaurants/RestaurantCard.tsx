@@ -56,7 +56,7 @@ export const RestaurantInfoCard = ({
       >
         <Box
           component="img"
-          src="/restaurant-cover.jpg" // استبدله بـ restaurant.cover_image
+          src="/restaurant-cover.jpg" 
           sx={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       </Box>
@@ -223,10 +223,8 @@ export const RestaurantInfoCard = ({
                 sx={{
                   width: 12,
                   height: 12,
-                  // اللون يتغير بناءً على حالة النشاط
                   bgcolor: restaurant.is_active ? "#4CAF50" : "#757575",
                   borderRadius: "50%",
-                  // الأنميشن (النبض) يظهر فقط عندما يكون المطعم نشطاً
                   animation: restaurant.is_active
                     ? "pulse 2s infinite"
                     : "none",
@@ -248,7 +246,6 @@ export const RestaurantInfoCard = ({
               />
             }
             label="Status"
-            // نص الحالة يتغير ليصبح مفهوم للمستخدم
             value={restaurant.is_active ? "Active" : "Archived"}
           />
         </Box>

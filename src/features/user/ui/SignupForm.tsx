@@ -16,7 +16,6 @@ export default function SignupForm() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  // المصدر الوحيد للحقيقة (Single Source of Truth)
   const [formData, setFormData] = useState({
     name: "",
     phone:"",
@@ -38,7 +37,6 @@ export default function SignupForm() {
     });
   };
 
-  // وظيفة موحدة لتحديث أي حقل في الـ Object
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };

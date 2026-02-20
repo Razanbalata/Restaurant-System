@@ -15,16 +15,13 @@ export async function POST(req: Request) {
     );
 
   try {
-    // 1️⃣ التحقق من التوكن
     const decoded = jwt.verify(token, RESET_PASSWORD_SECRET) as {
       userId: string;
     };
     const userId = decoded.userId;
 
-    // 2️⃣ تشفير الباسوورد الجديد
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 3️⃣ تحديث الباسوورد في Supabase
     await supabase
       .from("users")
       .update({ password: hashedPassword })

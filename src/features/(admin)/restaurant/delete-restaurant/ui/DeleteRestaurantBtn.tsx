@@ -19,9 +19,7 @@ function DeleteRestaurantBtn({ r }: DeleteRestaurantBtnProps) {
   function handleDelete(id: string, e: React.MouseEvent) {
     e.stopPropagation();
 
-    // رسالة تحذيرية أقوى للحذف النهائي
     if (window.confirm(`PERMANENT DELETE: Are you sure you want to delete "${r.name}"? This cannot be undone!`)) {
-      // تمرير الكائن المطلوب للهوك الجديد
       deleteMutation.mutate({ id, hard: true }, {
         onSuccess: () => {
           setSelectedRestaurant(null);
@@ -33,7 +31,7 @@ function DeleteRestaurantBtn({ r }: DeleteRestaurantBtnProps) {
 
   return (
     <Button
-      variant="contained" // جعلناه Contained ليدل على أنه إجراء خطير
+      variant="contained"        
       color="error"
       fullWidth
       disabled={deleteMutation.isPending}

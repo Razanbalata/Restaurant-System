@@ -15,10 +15,8 @@ export default function FoodCard({ item }: { item: any }) {
   const theme = useTheme();
   const isAdmin = user?.role === "restaurant_owner";
 
-  // حالة الرابط: نبدأ بالرابط الموجود، وإذا فشل نستخدم getSmartImage
   const [imgSrc, setImgSrc] = useState(item.image_url || getSmartImage(item.name));
 
-  // تحديث الصورة إذا تغير الـ item (مثلاً عند تعديل البيانات)
   useEffect(() => {
     if (item.image_url) {
       setImgSrc(item.image_url);
@@ -26,7 +24,6 @@ export default function FoodCard({ item }: { item: any }) {
   }, [item.image_url]);
 
   const handleImageError = () => {
-    // إذا فشل تحميل الصورة (سواء blob أو رابط مكسور)، نضع الصورة الذكية البديلة
     const fallback = getSmartImage(item.name);
     if (imgSrc !== fallback) {
       setImgSrc(fallback);
@@ -52,7 +49,6 @@ export default function FoodCard({ item }: { item: any }) {
     >
       {/* Image Section */}
       <Box sx={{ position: 'relative', height: 180, overflow: 'hidden', bgcolor: 'action.hover' }}>
-        {/* استخدمنا <img> العادية هنا لأنها تدعم onError بشكل أفضل مع روابط الـ blob */}
         <Box
           component="img"
           src={imgSrc}

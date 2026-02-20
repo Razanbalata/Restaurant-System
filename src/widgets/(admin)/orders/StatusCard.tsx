@@ -5,7 +5,7 @@ import { Card, CardContent, Box, Typography, useTheme } from "@mui/material";
 type Stat = {
   label: string;
   count: number;
-  color: string; // أي لون MUI أو HEX
+  color: string; 
 };
 
 type Props = {

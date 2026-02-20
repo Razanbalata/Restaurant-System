@@ -16,8 +16,8 @@ import { GeneratedMeal } from "../libs/types";
 import { menuReducer } from "../api/useMenuReducer"; 
 
 type Props = {
-  menu: GeneratedMeal[];        // من الـ AI
-  onChange?: (menu: GeneratedMeal[]) => void; // للـ parent
+  menu: GeneratedMeal[];          
+  onChange?: (menu: GeneratedMeal[]) => void; 
 };
 
 export const GeneratedMenuEditor: React.FC<Props> = ({
@@ -27,14 +27,12 @@ export const GeneratedMenuEditor: React.FC<Props> = ({
   const [state, dispatch] = useReducer(menuReducer, { items: [] });
   const lastSyncedFromProp = useRef<GeneratedMeal[] | null>(null);
 
-  // ⬅️ كل مرة ييجي menu جديد من الـ AI
   useEffect(() => {
     if (menu === lastSyncedFromProp.current) return;
     dispatch({ type: "SET_MENU", payload: menu });
     lastSyncedFromProp.current = menu;
   }, [menu]);
 
-  // ⬅️ نرجع التعديلات للأب
   useEffect(() => {
     // if the latest state.items was just synced from parent prop, don't emit back
     if (lastSyncedFromProp.current === state.items) return;
@@ -49,6 +47,7 @@ export const GeneratedMenuEditor: React.FC<Props> = ({
       </Typography>
     );
   }
+  console.log("state",state.items)
 
   return (
     <Stack spacing={2}>
@@ -95,7 +94,7 @@ export const GeneratedMenuEditor: React.FC<Props> = ({
 
               <TextField
                 label="Price (₪)"
-                type="number"
+                type="string"
                 value={item.price}
                 onChange={(e) =>
                   dispatch({

@@ -46,7 +46,7 @@ export const getTheme = (mode: "light" | "dark") => {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: "var(--radius, 12px)", // يقرأ من CSS للمرونة
+            borderRadius: "var(--radius, 12px)",
             padding: "10px 24px",
             boxShadow: "none",
             "&:hover": {

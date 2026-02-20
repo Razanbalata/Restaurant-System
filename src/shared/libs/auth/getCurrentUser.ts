@@ -5,7 +5,6 @@ import { supabase } from "@/shared/api/supabaseClient";
 
 export const getUserServer = async () => {
     try {
-        // 1. قراءة الـ cookie مباشرة من next/headers
         const cookieStore = await cookies();
         const sessionCookie = cookieStore.get("session");
         
@@ -14,14 +13,12 @@ export const getUserServer = async () => {
             return null;
         }
 
-        // 2. التحقق من صحة الـ token
         const payload = await verifyToken(sessionCookie.value);
         
         if (!payload) {
             return null;
         }
 
-        // 3. جلب بيانات المستخدم من قاعدة البيانات مباشرة
         const { data: user, error: dbError } = await supabase
             .from("users")
             .select("id, email, name, created_at,role")

@@ -8,7 +8,7 @@ import {
   alpha, 
   useTheme 
 } from "@mui/material";
-import { Plus, Pencil } from "lucide-react"; // أيقونات Lucide أرشق
+import { Plus, Pencil } from "lucide-react"; 
 
 import MealModal from "./MenuDrawer";
 
@@ -21,10 +21,10 @@ interface Props {
 
 export const MenuItemMutationButton = ({ mode = "add", item }: Props) => {
   const [open, setOpen] = useState(false);
-  const theme = useTheme(); // استخدام ثيم MUI للوصول للألوان والـ alpha
+  const theme = useTheme(); 
 
   const handleOpen = (e: React.MouseEvent) => {
-    e.stopPropagation(); // منع تفعيل أي حدث على الكارد عند الضغط على التعديل
+    e.stopPropagation(); 
     setOpen(true);
   };
 
@@ -69,7 +69,7 @@ export const MenuItemMutationButton = ({ mode = "add", item }: Props) => {
             px: 3,
             py: 1,
             fontWeight: 700,
-            textTransform: 'none', // لمنع تحويل النص لـ Capital بالكامل
+            textTransform: 'none',    
             transition: 'all 0.2s',
             "&:hover": { 
                 bgcolor: 'primary.dark',

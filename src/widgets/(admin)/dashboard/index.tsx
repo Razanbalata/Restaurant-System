@@ -26,7 +26,7 @@ export default function AdminDashboard() {
     <Box
       sx={{
         display: "flex",
-        bgcolor: theme.palette.background.default, // لون خلفية هادئ جداً ليبرز الكروت
+        bgcolor: theme.palette.background.default, 
         minHeight: "100vh",
       }}
     >
@@ -51,7 +51,6 @@ export default function AdminDashboard() {
             display: "flex",
             alignItems: "center",
             boxShadow: `0 20px 50px ${alpha(theme.palette.primary.main, 0.15)}`,
-            // إضافة صورة خلفية خفيفة مع التدرج
             background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.95)} 0%, ${alpha(theme.palette.primary.dark, 0.9)} 100%), 
                          url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1374&q=80')`,
             backgroundSize: "cover",
@@ -126,11 +125,9 @@ export default function AdminDashboard() {
 
               {user?.role === "restaurant_owner" && (
                 <Box sx={{ zIndex: 1 }}>
-                  {/* تغليف الـ MutationButton بـ Box لإضافة تأثيرات Hover */}
                   <Box
                     sx={{
                       "& > button": {
-                        // بافتراض أن MutationButton يعيد Button
                         bgcolor: "white !important",
                         color: "primary.main !important",
                         px: 4,

@@ -12,10 +12,17 @@ type Props = {
 export const GenerateMenuButton = ({ payload, onSuccess }: Props) => {
   const { mutate, isPending } = useGenerateMenu();
 
-  const handleClick = () => {
+const handleClick = () => {
     mutate(payload, {
       onSuccess: (data) => {
-        onSuccess(data.menu); // 🔥 دايمًا array
+        const cleanedMenu = data.menu.map((item: any) => ({
+          ...item,
+          price: typeof item.price === "string" 
+            ? parseFloat(item.price.replace(/[^0-9.]/g, "")) || 0 
+            : item.price,
+        }));
+
+        onSuccess(cleanedMenu); 
       },
     });
   };

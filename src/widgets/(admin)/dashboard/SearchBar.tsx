@@ -16,18 +16,17 @@ import { useRouter } from "next/navigation";
 export const SearchBar = () => {
   const theme = useTheme();
   const [query, setQuery] = useState("");
-  const [open, setOpen] = useState(false); // حالة ظهور القائمة
+  const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { user, admin, customer } = useSearchData();
   const router = useRouter();
 
   const data = user?.role === "restaurant_owner" ? admin : customer;
   const results = useMemo(() => {
-    if (!query || !data) return []; // تأكد أن data موجودة أولاً
+    if (!query || !data) return []; 
 
     const q = query.toLowerCase();
 
-    // نستخدم (data as any) لإخبار المحرك أننا نعرف ما نفعله وأن الحقول قد تكون موجودة أو لا
     const restaurants = Array.isArray((data as any)?.restaurants)
       ? (data as any).restaurants
       : [];
@@ -63,7 +62,6 @@ export const SearchBar = () => {
     return allItems.filter((item) => item.name?.toLowerCase().includes(q));
   }, [query, data]);
 
-  // ✅ لإغلاق القائمة عند الضغط خارج المكون
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -123,7 +121,7 @@ export const SearchBar = () => {
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
-            setOpen(true); // تفتح القائمة عند الكتابة
+            setOpen(true); 
           }}
           fullWidth
           sx={{ fontSize: "0.95rem" }}

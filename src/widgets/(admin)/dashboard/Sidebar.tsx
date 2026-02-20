@@ -43,10 +43,10 @@ export const Sidebar = ({ open, onToggle }: SidebarProps) => {
   const { data: orders } = useOrdersQuery;
   const pendingOrdersCount =
     orders?.filter((o: any) =>
-      ["pending", "confirmed", "preparing"].includes(o.status)
+      ["pending", "confirmed", "preparing"].includes(o.status),
     ).length || 0;
-  const isAdmin = user?.role === "restaurant_owner"
-  const menuItems = isAdmin ? adminMenu:customerMenu;
+  const isAdmin = user?.role === "restaurant_owner";
+  const menuItems = isAdmin ? adminMenu : customerMenu;
 
   return (
     <Box
@@ -93,7 +93,11 @@ export const Sidebar = ({ open, onToggle }: SidebarProps) => {
             <Typography
               variant="h6"
               noWrap
-              sx={{ fontWeight: 800, fontSize: "1.1rem", letterSpacing: "-0.02em" }}
+              sx={{
+                fontWeight: 800,
+                fontSize: "1.1rem",
+                letterSpacing: "-0.02em",
+              }}
             >
               FoodFlow
             </Typography>
@@ -124,7 +128,9 @@ export const Sidebar = ({ open, onToggle }: SidebarProps) => {
                   py: 0.6,
                   minHeight: 38,
                   justifyContent: open && !isMobile ? "initial" : "center",
-                  bgcolor: isActive ? `${theme.palette.primary.main}15` : "transparent",
+                  bgcolor: isActive
+                    ? `${theme.palette.primary.main}15`
+                    : "transparent",
                   color: isActive ? "primary.main" : "text.secondary",
                   "&:hover": {
                     bgcolor: isActive
@@ -155,35 +161,45 @@ export const Sidebar = ({ open, onToggle }: SidebarProps) => {
                   />
                 )}
 
-                {open && !isMobile && label === "Orders" && pendingOrdersCount > 0 && (
-                  <Box
-                    sx={{
-                      height: 18,
-                      minWidth: 18,
-                      px: 0.6,
-                      bgcolor: "primary.main",
-                      color: "white",
-                      borderRadius: 1,
-                      fontSize: "0.65rem",
-                      fontWeight: "bold",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {pendingOrdersCount}
-                  </Box>
-                )}
+                {open &&
+                  !isMobile &&
+                  label === "Orders" &&
+                  pendingOrdersCount > 0 && (
+                    <Box
+                      sx={{
+                        height: 18,
+                        minWidth: 18,
+                        px: 0.6,
+                        bgcolor: "primary.main",
+                        color: "white",
+                        borderRadius: 1,
+                        fontSize: "0.65rem",
+                        fontWeight: "bold",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {pendingOrdersCount}
+                    </Box>
+                  )}
               </ListItemButton>
             </Tooltip>
           );
         })}
       </List>
 
-      
-
       {/* User Avatar */}
-      <Box sx={{ p: 1, borderTop: `1px solid ${theme.palette.divider}`,display:"flex",alignItems:"center",justifyContent:"flex-start",gap:1 }}>
+      <Box
+        sx={{
+          p: 1,
+          borderTop: `1px solid ${theme.palette.divider}`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          gap: 1,
+        }}
+      >
         <Avatar
           sx={{
             width: 36,
@@ -204,17 +220,26 @@ export const Sidebar = ({ open, onToggle }: SidebarProps) => {
       </Box>
 
       {/* Footer: Theme + Logout */}
-      <Box sx={{ p: 2, borderTop: `1px solid ${theme.palette.divider}`, mt: "auto" }}>
+      <Box
+        sx={{
+          p: 2,
+          borderTop: `1px solid ${theme.palette.divider}`,
+          mt: "auto",
+        }}
+      >
         <Box sx={{ display: "flex", flexDirection: "column" }}>
           {/* Theme toggle */}
-         
+
           <ToggleTheme onToggle={toggleColorMode} open={open} />
 
           {/* Logout */}
           <ListItemButton
             onClick={() => {
-              logout();
-              router.replace("/");
+              logout(undefined, {
+                onSuccess: () => {
+                  router.replace("/");
+                },
+              });
             }}
             sx={{
               borderRadius: 2,
@@ -226,7 +251,11 @@ export const Sidebar = ({ open, onToggle }: SidebarProps) => {
             }}
           >
             <ListItemIcon
-              sx={{ minWidth: 0, mr: open && !isMobile ? 1.5 : 0, color: "inherit" }}
+              sx={{
+                minWidth: 0,
+                mr: open && !isMobile ? 1.5 : 0,
+                color: "inherit",
+              }}
             >
               <LogOut size={18} />
             </ListItemIcon>

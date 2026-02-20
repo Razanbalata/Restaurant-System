@@ -64,7 +64,7 @@ export const MenuManagementSkeleton = () => {
               {/* Image Skeleton */}
               <Skeleton 
                 variant="rectangular" 
-                height={160} // قللنا الارتفاع قليلاً ليتناسب مع 4 كروت
+                height={160}
                 animation="wave" 
                 sx={{ bgcolor: alpha(theme.palette.action.hover, 0.05) }} 
               />

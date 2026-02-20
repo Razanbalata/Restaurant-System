@@ -19,16 +19,13 @@ export async function GET(req: NextRequest) {
     if (!state)
       return NextResponse.json({ error: "No state provided" }, { status: 400 });
 
-    // ✅ جلب الـ cookies بشكل صحيح
     const cookieStore = await cookies();
     const savedState = cookieStore.get("google_oauth_state")?.value;
 
-    // ✅ التحقق من state لمكافحة CSRF
     if (state !== savedState) {
       return NextResponse.json({ error: "Invalid state" }, { status: 400 });
     }
 
-    // 🔹 تبادل code مع Google للحصول على tokens
     const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -59,7 +56,6 @@ export async function GET(req: NextRequest) {
 
     const { id_token } = tokenData;
 
-    // 🔹 تحقق من id_token
     const verifyRes = await fetch(
       `https://oauth2.googleapis.com/tokeninfo?id_token=${id_token}`,
     );
@@ -69,7 +65,6 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Invalid audience" }, { status: 401 });
     }
 
-    // 🔹 استخدام handleGoogleUser لتسجيل أو تحديث المستخدم
     const appUser = await handleGoogleUser({
       googleId: googleUser.sub,
       email: googleUser.email,
@@ -93,7 +88,6 @@ export async function GET(req: NextRequest) {
 
     setSessionCookie(response, jwt, appUser.role);
 
-    // ✅ مسح state cookie بالطريقة الصح
     response.cookies.set("google_oauth_state", "", {
       maxAge: 0,
       path: "/",

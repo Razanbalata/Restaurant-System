@@ -17,10 +17,8 @@ export function CheckoutSummary({ items, totalPrice }: any) {
   const theme = useTheme();
   const router = useRouter()
 
-  // هل يوجد صنف غير متوفر؟
   const hasUnavailable = items.some((item: any) => item.is_active === false);
 
-  // مجموع فقط الأصناف المتوفرة
   const activeTotal = items
     .filter((item: any) => item.is_active)
     .reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);

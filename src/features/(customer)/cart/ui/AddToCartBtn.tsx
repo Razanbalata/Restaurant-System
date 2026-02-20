@@ -16,7 +16,6 @@ function AddToCartBtn({
   function handleAdd() {
    
         const parsedRestaurantId = Number(restaurantId);
-    // 🚨 حماية قوية
     if (!parsedRestaurantId || Number.isNaN(parsedRestaurantId)) {
       console.error("❌ Invalid restaurantId in AddToCartBtn:", restaurantId);
       toast.error("Restaurant not loaded yet");
@@ -26,7 +25,7 @@ function AddToCartBtn({
 
     addItem(
       {
-        menuItemId: item.id.toString(), // ✅ المهم
+        menuItemId: item.id.toString(), 
         name: item.name,
         price: item.price,
        // quantity: 1,

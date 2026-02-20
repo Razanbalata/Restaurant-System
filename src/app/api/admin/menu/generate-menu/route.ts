@@ -23,7 +23,7 @@ Return ONLY valid JSON array like this:
 [
   {
     "name": "Meal Name",
-    "price": 0,
+    "price": "meal price",
     "description": "Description here",
     "image_url": "A valid image URL, must be publicly accessible, preferably from Unsplash related to the meal"
   }
@@ -37,7 +37,7 @@ Return ONLY valid JSON array like this:
 [
   {
     "name": "Meal Name",
-    "price": 0,
+    "price": "meal price",
     "description": "Description here",
     "image_url": "A valid image URL, must be publicly accessible, preferably from Unsplash related to the meal"
   }
@@ -49,8 +49,6 @@ Return ONLY valid JSON array like this:
 
     const cleanJson = text.replace(/```json|```/g, "").trim();
     const menu = JSON.parse(cleanJson);
-
-    // 🔐 حماية إضافية
     if (!Array.isArray(menu)) {
       throw new Error("AI did not return an array");
     }

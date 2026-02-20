@@ -6,14 +6,13 @@ import { OrderCard } from "./OrderCardd";
 
 interface OrderItemsListProps {
   items: any[];
-  hasRestaurant?: boolean; // جديد: لتحديد إذا المطعم موجود
+  hasRestaurant?: boolean; 
 }
 
 export const OrderItemsList = ({ items, hasRestaurant = true }: OrderItemsListProps) => {
   const theme = useTheme();
 
   if (!hasRestaurant) {
-    // حالة عدم وجود مطعم
     return (
       <Paper
         sx={{
@@ -37,7 +36,6 @@ export const OrderItemsList = ({ items, hasRestaurant = true }: OrderItemsListPr
   }
 
   if (!items || items.length === 0) {
-    // حالة عدم وجود طلبات
     return (
       <Paper
         sx={{

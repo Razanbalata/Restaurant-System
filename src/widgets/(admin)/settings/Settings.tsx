@@ -48,12 +48,10 @@ export default function SettingsPage() {
 
 
 
- // 1. حالة التحميل (تظهر أول شيء طالما الـ API شغال)
   if (isRestaurantLoading) {
     return <SettingsSkeleton />;
   }
 
-  // 2. حالة عدم وجود مطعم (تظهر فقط بعد ما نتأكد إن التحميل خلص وما في بيانات)
   if (!restaurant && user?.role === "restaurant_owner") {
     return (
       <Box sx={{ p: 4, display: 'flex', justifyContent: 'center' }}>

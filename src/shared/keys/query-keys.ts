@@ -4,11 +4,10 @@ export const queryKeys = {
    * AUTH / USER
    * ===================================================== */
   auth: {
-    me: () => ["auth", "me"] as const,                  // بيانات المستخدم الحالي
-    user: (userId: string) => ["user", userId] as const, // بيانات مستخدم محدد
-    users: () => ["users"] as const,                   // كل المستخدمين (Admin panel)
+    me: () => ["auth", "me"] as const,               
+    user: (userId: string) => ["user", userId] as const,
+    users: () => ["users"] as const,                  
   },
-
   /* =====================================================
    * CUSTOMER
    * ===================================================== */
@@ -59,4 +58,5 @@ export const queryKeys = {
    * GENERIC / UTILS
    * ===================================================== */
   invalidateAll: () => ["_all"] as const,
+
 };

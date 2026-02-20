@@ -11,7 +11,6 @@ interface OrderStatusTrackerProps {
 export const OrderStatusTracker: FC<OrderStatusTrackerProps> = ({ status }) => {
   const theme = useTheme();
 
-  // ترتيب الحالات لتحديد progress
   const statusFlow: OrderStatus[] = [
     "pending",
     "confirmed",

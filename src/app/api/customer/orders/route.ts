@@ -7,7 +7,6 @@ export async function GET(req: NextRequest) {
     if (!user)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    // Fetch orders مع ربط order_items و menu_items
     const { data, error } = await supabase
       .from("orders")
       .select(`
@@ -56,7 +55,7 @@ export async function GET(req: NextRequest) {
 }
 
 interface OrderItem {
-  menuItemId: number; // متوافق مع zustand store
+  menuItemId: number;  
   price: number;
   quantity: number;
 }
@@ -84,10 +83,10 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
 
-    // احسبي total
+    // total
     const total = items.reduce((acc, i) => acc + i.price * i.quantity, 0);
 
-    // خزن order
+    // order
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
@@ -104,7 +103,7 @@ export async function POST(req: NextRequest) {
     if (orderError)
       return NextResponse.json({ error: orderError.message }, { status: 500 });
 
-    // خزن order_items
+    // order_items
     const { error: itemsError } = await supabase.from("order_items").insert(
       items.map((i) => ({
         order_id: order.id,
@@ -115,7 +114,6 @@ export async function POST(req: NextRequest) {
     );
 
     if (itemsError) {
-      // rollback لو فشل تخزين items
       await supabase.from("orders").delete().eq("id", order.id);
       return NextResponse.json({ error: itemsError.message }, { status: 500 });
     }

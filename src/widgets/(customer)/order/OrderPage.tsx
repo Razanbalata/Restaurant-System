@@ -1,5 +1,3 @@
-// 
-
 
 "use client";
 
@@ -7,12 +5,10 @@ import React, { useMemo } from "react";
 import { Box, Stack, Container, Typography, alpha, useTheme } from "@mui/material";
 import { ReceiptLongOutlined } from "@mui/icons-material";
 
-// الاستيرادات الخاصة بالبيانات
 import { useGetOrders } from "@/features/(customer)/order/getOrder/api/useGetOrder";
 import { useCustomerOrdersRealtime } from "@/features/(customer)/order/realTime/useCustomerRealtime";
 import { useMe } from "@/features/user/api/use-me";
 
-// المكونات التي بنيناها للتو (تأكد من صحة المسار)
 import { OrderCard } from "./OrderCard"; 
 import OrderSkelton from "@/shared/ui/Skeletons/OrderSkelton";
 
@@ -21,10 +17,8 @@ export default function OrdersList() {
   const theme = useTheme();
   const { data: orders = [], isLoading } = useGetOrders(user?.id);
 
-  // تفعيل التحديث اللحظي
   useCustomerOrdersRealtime(user?.id);
 
-  // ترتيب الطلبات من الأحدث للأقدم
   const sortedOrders = useMemo(
     () => [...orders].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
     [orders]
@@ -39,7 +33,6 @@ export default function OrdersList() {
       py: 8 
     }}>
       <Container maxWidth="lg">
-        {/* Header بتصميم Tailwind */}
         <Stack direction="row" spacing={2} mb={6} alignItems="center">
           <Box sx={{ 
             p: 1.5, 

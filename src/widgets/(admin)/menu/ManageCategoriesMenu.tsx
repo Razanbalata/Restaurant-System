@@ -14,7 +14,6 @@ import {
   Tooltip
 } from "@mui/material";
 
-// بفرض أن هذه المكونات موجودة لديك كما في الكود السابق
 import { CategoryMutationButton } from "@/features/(admin)/menu/categories/ui/CategoryMutationBtn";
 import DeleteCategoryBtn from "@/features/(admin)/menu/categories/ui/DeleteCategoryBtn";
 
@@ -73,8 +72,8 @@ export const ManageCategoriesMenu = ({ categories, restaurantId }: ManageCategor
             mt: 1,
             borderRadius: "14px",
             border: `1px solid ${alpha(theme.palette.divider, 0.5)}`,
-            bgcolor: alpha(theme.palette.background.paper, 0.8), // تأثير الشفافية
-            backdropFilter: "blur(12px)", // تأثير الزجاج
+            bgcolor: alpha(theme.palette.background.paper, 0.8), 
+            backdropFilter: "blur(12px)",
             boxShadow: `0 10px 30px -10px ${alpha(theme.palette.common.black, 0.1)}`,
             p: 0,
             overflow: "hidden",

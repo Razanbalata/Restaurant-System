@@ -15,7 +15,7 @@ export async function GET(
         .from("restaurants")
         .select("*")
         .eq("id", restaurantId)
-        .single(); // تجلب كائن واحد فقط بدل مصفوفة
+        .single(); 
 
       if (error) {
         return NextResponse.json({ error: error.message }, { status: 400 });
@@ -90,7 +90,6 @@ export async function DELETE(
       
       console.log("🛠 [API MODE]:", isHardDelete ? "HARD DELETE (Permanent)" : "SOFT DELETE (Toggle Status)");
 
-      // 2. التحقق من ملكية المستخدم للمطعم
       const ownership = await verifyRestaurantOwner(restaurantId, userId);
       if (!ownership.ok) {
         console.error("❌ [API AUTH]: Ownership check failed for user:", userId);
@@ -101,7 +100,7 @@ export async function DELETE(
       }
 
       if (isHardDelete) {
-        // --- حالة الحذف النهائي (Hard Delete) ---
+        // (Hard Delete) ---
         console.log("⚠️ [API]: Executing Hard Delete from Supabase...");
         
         const { error: deleteError } = await supabase
@@ -122,10 +121,9 @@ export async function DELETE(
         });
 
       } else {
-        // --- حالة الأرشفة / التفعيل (Toggle is_active) ---
+        // --- (Toggle is_active) ---
         console.log("🔍 [API]: Fetching current status...");
 
-        // جلب الحالة الحالية للمطعم
         const { data: currentRestaurant, error: fetchError } = await supabase
           .from("restaurants")
           .select("is_active, name")
@@ -140,7 +138,6 @@ export async function DELETE(
         const newStatus = !currentRestaurant.is_active;
         console.log(`🔄 [API]: Toggling status from ${currentRestaurant.is_active} to ${newStatus}`);
 
-        // تحديث الحالة في قاعدة البيانات
         const { data: updatedData, error: updateError } = await supabase
           .from("restaurants")
           .update({ is_active: newStatus })
@@ -155,7 +152,6 @@ export async function DELETE(
 
         console.log("✅ [API]: Status updated successfully. New is_active:", updatedData.is_active);
         
-        // نرجع الكائن الكامل للمطعم المحدث لكي يستطيع الـ Frontend استخدامه
         return NextResponse.json(updatedData);
       }
 

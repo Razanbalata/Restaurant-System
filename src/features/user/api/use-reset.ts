@@ -24,7 +24,7 @@ export const useResetPasswordMutation = ({
       return response;
     },
     onSuccess: (data, variables) => {
-      onSuccess?.(data, variables); // التوجيه أو الرسائل تظهر في الكومبوننت
+      onSuccess?.(data, variables);
     },
     onError: (error, variables) => {
       onError?.(error, variables);

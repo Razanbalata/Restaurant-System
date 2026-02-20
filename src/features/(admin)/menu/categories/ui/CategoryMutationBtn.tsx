@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Button, IconButton, useTheme, alpha, Tooltip } from "@mui/material";
-import { Plus, PencilLine } from "lucide-react"; // أيقونات عصرية أكثر
+import { Plus, PencilLine } from "lucide-react"; 
 import CategoryDialog from "./CategoryDialog";
 
 interface Props {
@@ -22,9 +22,9 @@ export const CategoryMutationButton = ({ mode = "add", restaurantId, category }:
             size="small" 
             onClick={() => setOpen(true)} 
             sx={{ 
-              color: "text.secondary", // لون هادئ افتراضي
+              color: "text.secondary", 
               border: `1px solid ${theme.palette.divider}`,
-              borderRadius: 2, // حواف دائرية بسيطة (Shadcn style)
+              borderRadius: 2, 
               p: 0.8,
               transition: "all 0.2s",
               '&:hover': { 
@@ -44,9 +44,9 @@ export const CategoryMutationButton = ({ mode = "add", restaurantId, category }:
           startIcon={<Plus size={18} />} 
           onClick={() => setOpen(true)}
           sx={{ 
-            borderRadius: 2.5, // حواف Shadcn المميزة
+            borderRadius: 2.5, 
             fontWeight: 600,
-            textTransform: 'none', // إلغاء الحروف الكبيرة (Capitalization)
+            textTransform: 'none', 
             px: 2,
             py: 0.8,
             borderColor: theme.palette.divider,
@@ -63,7 +63,6 @@ export const CategoryMutationButton = ({ mode = "add", restaurantId, category }:
         </Button>
       )}
 
-      {/* الحوار الخاص بالإضافة أو التعديل */}
       <CategoryDialog 
         open={open} 
         onClose={() => setOpen(false)} 

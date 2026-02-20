@@ -14,15 +14,13 @@ export const useLogin = () => {
         body: JSON.stringify(data),
       });
 
-      // --- هاد الجزء هو السر ---
       const result = await res.json();
 
       if (!res.ok) {
-        // إذا كان الـ status code مش 200-299 ارمي خطأ يدوياً
         throw new Error(result.message || "Email or password incorrect");
       }
 
-      return result; // إذا الأمور تمام، بيرجع البيانات للـ onSuccess
+      return result;
     },
 
     onSuccess: (data) => {
@@ -32,7 +30,6 @@ export const useLogin = () => {
     },
     
     onError: (error: any) => {
-      // الآن هاد الجزء سيتم استدعاؤه فقط عند الخطأ الحقيقي
       toast.error(error.message || "An error occurred");
     },
   });

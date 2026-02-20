@@ -29,7 +29,7 @@ export const useSignup = () => {
     },
     onError(error) {
       toast.error("An error occurred during account creation", {
-        description: error.message, // عرض التفاصيل تحت العنوان   
+        description: error.message,  
       }
       )
     },

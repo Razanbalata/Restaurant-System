@@ -15,7 +15,6 @@ const transporter = nodemailer.createTransport({
 });
 
 
-  // إرسال الإيميل
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: email,

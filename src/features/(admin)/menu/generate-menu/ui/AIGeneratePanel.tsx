@@ -35,7 +35,6 @@ export const AIGenerateModal = ({ open, onClose, restaurantId }: Props) => {
   const { useAdminCategories } = useCategories(restaurantId);
   const categoriesQuery = useAdminCategories;
 
-  // 1️⃣ default category بدون useEffect
   const defaultCategory = categoriesQuery.data?.[0]?.name || "";
   const [categoryName, setCategoryName] = useState(defaultCategory);
   const [type, setType] = useState<AIGenerateType>("full");
@@ -43,18 +42,16 @@ export const AIGenerateModal = ({ open, onClose, restaurantId }: Props) => {
   const [menu, setMenu] = useState<GeneratedMeal[]>([]);
 
 
-  // 2️⃣ نحصل على object الكاتيجوري الحالي
   const category = useMemo(() => {
     return categoriesQuery.data?.find((c:any) => c.name === categoryName);
   }, [categoriesQuery.data, categoryName]);
 
   const handleClose = () => {
-  // فرغ كل القيم
   setCategoryName("");
   setPrompt("");
   setType("full");
   setMenu([]);
-  onClose(); // تستدعي الـ prop الأصلي
+  onClose(); 
 };
 
   
@@ -74,7 +71,6 @@ export const AIGenerateModal = ({ open, onClose, restaurantId }: Props) => {
 
       <DialogContent dividers>
         <Stack spacing={3}>
-          {/* اختيار أو إنشاء كاتيجوري */}
           <Stack direction="row" spacing={1} alignItems="center">
             {categoriesQuery.isLoading ? (
               <CircularProgress size={24} />
@@ -93,17 +89,13 @@ export const AIGenerateModal = ({ open, onClose, restaurantId }: Props) => {
               </Select>
             )}
 
-            {/* زر لإضافة كاتيجوري جديد */}
             <CategoryMutationButton restaurantId={restaurantId} mode="add" />
           </Stack>
 
-          {/* نوع التوليد */}
           <AIGenerateTypeSelector value={type} onChange={setType} />
 
-          {/* إدخال الـ prompt */}
           <AIPromptInput type={type} value={prompt} onChange={setPrompt} />
 
-          {/* زر Generate */}
           <GenerateMenuButton
             payload={{
               restaurantName: restaurantId,
@@ -114,7 +106,6 @@ export const AIGenerateModal = ({ open, onClose, restaurantId }: Props) => {
             onSuccess={(generatedMenu) => setMenu(generatedMenu)}
           />
 
-          {/* عرض الوجبات المولدة وتحريرها */}
           <GeneratedMenuEditor menu={menu} onChange={setMenu} />
         </Stack>
       </DialogContent>
@@ -122,11 +113,11 @@ export const AIGenerateModal = ({ open, onClose, restaurantId }: Props) => {
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
 
-        {/* حفظ المنيو مع حماية categoryId */}
         <SaveGeneratedMenuButton
           menu={menu}
           restaurantId={restaurantId}
-          categoryId={category?.id || ""} // لو undefined يبقى string فارغ
+          categoryId={category?.id || ""} 
+          onSuccess={onClose} 
         />
       </DialogActions>
     </Dialog>

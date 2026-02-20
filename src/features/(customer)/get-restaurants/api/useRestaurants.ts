@@ -15,7 +15,6 @@ export const useRestaurantsForCustomer = () => {
   return useQuery({
     queryKey: queryKeys.customer.restaurants(),
     queryFn: () => fetchRestaurants(),
-    // 2. التعديل هنا: بدلاً من true، نمرر الدالة المستوردة
     placeholderData: keepPreviousData, 
     staleTime: 1000 * 60 * 5,
   });

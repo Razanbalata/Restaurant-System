@@ -18,7 +18,6 @@ function DeleteMenuItem({ r }: { r: MenuItem }) {
 
   function handleDelete(id: string, e: React.MouseEvent) {
     e.stopPropagation();
-    // نصيحة: استبدل confirm بـ Dialog مخصص لاحقاً لزيادة الفخامة
     if (window.confirm(`Are you sure you want to delete "${r.name || 'this item'}"?`)) {
       deleteMenuItem.mutate({ id, restaurantId: r.restaurant_id,catId:r.category_id });
     }
@@ -32,7 +31,7 @@ function DeleteMenuItem({ r }: { r: MenuItem }) {
         sx={{
           width: 34,
           height: 34,
-          borderRadius: "10px", // نفس انحناء أزرار التعديل
+          borderRadius: "10px", 
           color: "text.secondary",
           border: `1px solid ${alpha(theme.palette.divider, 0.8)}`,
           bgcolor: alpha(theme.palette.background.paper, 0.5),
@@ -41,7 +40,7 @@ function DeleteMenuItem({ r }: { r: MenuItem }) {
             color: "error.main",
             bgcolor: alpha(theme.palette.error.main, 0.05),
             borderColor: alpha(theme.palette.error.main, 0.2),
-            transform: "translateY(-2px)", // رفعة خفيفة عند التمرير
+            transform: "translateY(-2px)", 
             boxShadow: `0 4px 12px ${alpha(theme.palette.error.main, 0.1)}`,
           },
         }}

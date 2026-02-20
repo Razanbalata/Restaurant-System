@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export const useRestaurantById = (restaurantId?: string) => {
   return useQuery({
-    queryKey: queryKeys.owner.restaurant(restaurantId), // ✅ key صحيح
+    queryKey: queryKeys.owner.restaurant(restaurantId), 
     queryFn: async () => {
       const res = await fetch(
         `/api/admin/restaurants/${restaurantId}`,
@@ -19,10 +19,10 @@ export const useRestaurantById = (restaurantId?: string) => {
         throw new Error("Failed to fetch restaurant");
       }
 
-      const data = await res.json(); // ✅ await هنا
+      const data = await res.json(); 
 
-      return data; // ✅ ترجع الداتا
+      return data; 
     },
-    enabled: !!restaurantId, // ✅
+    enabled: !!restaurantId, 
   });
 };

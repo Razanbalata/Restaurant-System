@@ -1,7 +1,6 @@
 import { queryKeys } from "@/shared/keys/query-keys";
 import { useQuery } from "@tanstack/react-query";
 
-// 1. هوك جلب تفاصيل المطعم
 export const useRestaurant = (id: string) => {
  return useQuery({
     queryKey: queryKeys.customer.restaurant(id),
@@ -13,7 +12,7 @@ export const useRestaurant = (id: string) => {
           "Content-Type": "application/json",
         },
         }
-      ); // ينادي ملف route.ts الذي كتبناه فوق
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch restaurant");
       }

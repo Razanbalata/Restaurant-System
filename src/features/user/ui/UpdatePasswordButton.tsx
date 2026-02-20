@@ -29,7 +29,6 @@ export default function UpdatePasswordButton({
       await mutateAsync({ oldPassword, newPassword });
       if (onSuccess) onSuccess();
     } catch {
-      // Toast يتم التعامل معه داخل الـ Hook
     }
   };
 

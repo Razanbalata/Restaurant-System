@@ -23,10 +23,8 @@ export const RestaurantPickerSkeleton = () => {
       <Box
         sx={{
           display: 'grid',
-          // 'repeat(auto-fill, minmax(280px, 1fr))' 
-          // هاي الجوهرة: بتخلي الكارد أقل عرض لها 280px وأي مساحة زيادة بتتوزع بالتساوي
           gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: 3, // المسافة بين الكروت
+          gap: 3,
         }}
       >
         {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (

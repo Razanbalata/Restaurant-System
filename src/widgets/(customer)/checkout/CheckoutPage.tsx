@@ -44,7 +44,6 @@ export default function CheckoutComponent() {
 );
 
 
-  // محاكاة حالة التحميل لو أردت (أو استخدم isLoading من السيرفر)
   const isLoading = false;
 
   if (isLoading) return <CheckoutSkeleton />;

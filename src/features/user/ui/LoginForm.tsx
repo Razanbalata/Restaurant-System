@@ -20,7 +20,6 @@ import {
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-// استيراد الـ Schema والـ Hook الخاص بك
 import { loginSchema, LoginFormValues } from "../libs/login.schema";
 import { useLogin } from "../api/use-login";
 
@@ -40,11 +39,7 @@ export default function LoginForm() {
  const onSubmit = (data: LoginFormValues) => {
     loginMutation.mutate(data, {
       onSuccess: (res) => {
-        // فحص البيانات الراجعة في الكونسول (مهم جداً للتأكد من هيكلة الكائن)
-        console.log("Server Response:", res);
 
-        // تأكد هل الرول موجودة داخل res.user أم داخل res مباشرة؟
-        // سأقوم بتعديل الشرط ليكون أكثر مرونة
         const userRole = res.user?.role || res.role;
 
         if (userRole === "restaurant_owner") {
@@ -52,13 +47,11 @@ export default function LoginForm() {
         } else if (userRole === "customer") {
           router.push("/customer/cart");
         } else {
-          // في حال نجح الدخول ولكن الرول غير معروفة
           console.warn("User role is missing or unknown:", userRole);
-          router.push("/"); // توجه للرئيسية كخيار بديل
+          router.push("/");
         }
       },
       onError: (error) => {
-        // هذا الجزء سيعمل الآن فوراً إذا كانت كلمة السر خطأ بفضل تعديل الـ Hook
         console.error("Mutation failed:", error);
       }
     });
@@ -185,7 +178,6 @@ export default function LoginForm() {
         variant="outlined"
         fullWidth
         size="large"
-        // استبدلنا الـ img بـ مكون SVG نظيف
         startIcon={
           <svg width="20" height="20" viewBox="0 0 24 24">
             <path
@@ -248,7 +240,7 @@ export default function LoginForm() {
             },
             transition: "all 0.2s"
           }}
-          onClick={() => router.push("/signUp")} // أو المسار الخاص بك للإنشاء
+          onClick={() => router.push("/signUp")}
         >
           Create an account
         </Typography>

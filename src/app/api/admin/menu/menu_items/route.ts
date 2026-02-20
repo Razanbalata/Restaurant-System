@@ -65,10 +65,8 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Missing data" }, { status: 400 });
       }
 
-      // التحقق من الملكية
       const ownership = await verifyRestaurantOwner(restaurantId, user.userId);
       
-      // الإصلاح هنا: إضافة الـ Nullish coalescing لضمان عدم رجوع undefined
       if (!ownership.ok) {
         return ownership.response ?? NextResponse.json(
           { error: "You don't have permission to modify this restaurant" },
@@ -85,7 +83,6 @@ export async function POST(req: NextRequest) {
         image_url: item.image_url || null,
       }));
 
-      // 1. الإضافة مع جلب بيانات القسم المرتبطة
       const { data, error } = await supabase
         .from("menu_items")
         .insert(insertData)
@@ -101,7 +98,6 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
 
-      // 2. تنسيق البيانات لتطابق ما يتوقعه الـ UI
       const formattedData = data.map((item: any) => ({
         ...item,
         category_id: item.category_id,

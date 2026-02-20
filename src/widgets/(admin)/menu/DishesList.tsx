@@ -1,7 +1,7 @@
 "use client";
 import { Box, Typography, useTheme, alpha } from "@mui/material";
 import FoodCard from "./DishesGrid";
-import { UtensilsCrossed } from "lucide-react"; // أيقونة للحالة الفارغة
+import { UtensilsCrossed } from "lucide-react";
 
 interface DishesListProps {
   displayedMeals: any[];
@@ -12,7 +12,6 @@ interface DishesListProps {
 export const DishesList = ({ displayedMeals, categories, activeTab }: DishesListProps) => {
   const theme = useTheme();
 
-  // 1. حالة عدم وجود وجبات (Empty State بتصميم أنيق)
   if (displayedMeals.length === 0) {
     return (
       <Box sx={{ 
@@ -31,21 +30,18 @@ export const DishesList = ({ displayedMeals, categories, activeTab }: DishesList
     );
   }
 
-  // دالة مساعدة لتوليد حاوية الفليكس
   const FlexContainer = ({ children }: { children: React.ReactNode }) => (
     <Box sx={{ 
       display: 'flex', 
       flexWrap: 'wrap', 
-      gap: 3, // المسافة بين الكروت
+      gap: 3,
       justifyContent: 'flex-start'
     }}>
       {children}
     </Box>
   );
 
-  // تنسيق الكارد ليكون ريسبونسيف داخل الفليكس
   const itemStyles = {
-    // xs: 100%, sm: 48% (2 items), md: 31% (3 items), lg: 23.5% (4 items)
     flexBasis: {
       xs: '100%',
       sm: 'calc(50% - 12px)',
@@ -54,10 +50,9 @@ export const DishesList = ({ displayedMeals, categories, activeTab }: DishesList
     },
     flexGrow: 0,
     flexShrink: 0,
-    minWidth: 0, // لمنع تمدد المحتوى خارج الحاوية
+    minWidth: 0, 
   };
 
-  // 2. حالة عرض "الكل" (Grouping)
   if (activeTab === 0) {
     return (
       <Box>
@@ -95,7 +90,6 @@ export const DishesList = ({ displayedMeals, categories, activeTab }: DishesList
     );
   }
 
-  // 3. حالة عرض "قسم محدد"
   return (
     <FlexContainer>
       {displayedMeals.map((meal) => (

@@ -21,7 +21,7 @@ export function middleware(req: NextRequest) {
 
   // منع العودة لصفحات auth
   if (isAuthPage|| isLandingPage) {
-    const redirectTo = role === "restaurant_owner" ? "/admin/dashboard" : "/customer/cart";
+    const redirectTo = role === "restaurant_owner" ? "/shared/dashboard" : "/customer/cart";
     return NextResponse.redirect(new URL(redirectTo, req.url));
   }
 

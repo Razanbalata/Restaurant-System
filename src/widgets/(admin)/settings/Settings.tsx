@@ -46,7 +46,7 @@ export default function SettingsPage() {
     updateMutation.mutate({ id: restaurant.id, updates: settings.restaurantInfo });
   };
 
-
+console.log("selectedRestaurant", selectedRestaurant);
 
   if (isRestaurantLoading) {
     return <SettingsSkeleton />;
@@ -145,7 +145,7 @@ export default function SettingsPage() {
         >
           
           <OperationalSection data={settings} onChange={updateSettings} />
-          <SecuritySection restayrantId={restaurant?.id} />
+          <SecuritySection restaurantId={restaurant?.id} />
         </Grid>
       </Grid>
     </Box>

@@ -20,7 +20,7 @@ export function SecuritySection({ restaurantId }: any) {
     newPass: "",
     confirmPass: "",
   });
-
+ console.log("restaurantId in SecuritySection:", restaurantId);
   return (
     <Card
       variant="outlined"
